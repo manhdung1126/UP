@@ -1,0 +1,2387 @@
+{
+  "retrievedAt": "2026-11-04",
+  "sourceVideoCount": 78,
+  "selectedExerciseCount": 45,
+  "selection": "Smallest original video for each exercise; one demonstration per exercise.",
+  "changes": "Scale to maximum 640px, H.264 MP4 yuv420p, 24fps, no audio, faststart. JPEG poster at 1s. License unchanged.",
+  "snapshotSha256": "73728cbec5f857c788f29d9cc89a180a8b382e4ad659d7a482a3d353f72ca53a",
+  "videos": [
+    {
+      "exerciseId": 12,
+      "original": {
+        "id": 74,
+        "uuid": "5148c579-5df2-4618-9a7b-a2e29ac4dd7d",
+        "exercise": 12,
+        "video": "https://wger.de/media/exercise-video/12/5148c579-5df2-4618-9a7b-a2e29ac4dd7d.MOV",
+        "is_main": false,
+        "size": 60138928,
+        "duration": "20.86",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "9ea2e87291d7445c801f058a13f4c2c62a14c34869577a1ae1601824778e0f66",
+      "src": "assets/videos/wger-12.mp4",
+      "poster": "assets/videos/wger-12.jpg",
+      "sha256": "6f9f25d2b374502cd8e76ecf37d61419591443f6cc7a6249f1bdfbf5dc4f804f",
+      "bytes": 1079671,
+      "posterSha256": "78d77d66b5d7a4da673858d41957295e8f11f70ee0de61ad127f1353a86c90e7",
+      "localExerciseId": "WGER_12"
+    },
+    {
+      "exerciseId": 46,
+      "original": {
+        "id": 30,
+        "uuid": "d45df7af-586b-42d0-bc56-d1e028812f12",
+        "exercise": 46,
+        "video": "https://wger.de/media/exercise-video/46/d45df7af-586b-42d0-bc56-d1e028812f12.MOV",
+        "is_main": false,
+        "size": 23571954,
+        "duration": "8.09",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "4246d6c1973de9cd0b56b0ff03ac75e759a5f27d68235be6748848de3d2e1d15",
+      "src": "assets/videos/wger-46.mp4",
+      "poster": "assets/videos/wger-46.jpg",
+      "sha256": "2d225277f67d7e3e8e8ee4421e0ab504809d69846879d3a2c46c095edbb16d73",
+      "bytes": 346836,
+      "posterSha256": "60da704fd30af87ebd928fe10466883ce32025b6df551a700bea0d4ba9051d82",
+      "localExerciseId": "WGER_46"
+    },
+    {
+      "exerciseId": 73,
+      "original": {
+        "id": 21,
+        "uuid": "2bdb390c-312c-4497-a722-5eed2c823e5a",
+        "exercise": 73,
+        "video": "https://wger.de/media/exercise-video/73/2bdb390c-312c-4497-a722-5eed2c823e5a.MOV",
+        "is_main": false,
+        "size": 1108545,
+        "duration": "15.93",
+        "width": 640,
+        "height": 352,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "f7ef457d364ed24fc1dff86a4c40f9801f42213300e9904b442d96430b869ecc",
+      "src": "assets/videos/wger-73.mp4",
+      "poster": "assets/videos/wger-73.jpg",
+      "sha256": "45180eb97d8587855d479d1be7de4b72911cfed47ad6034daf8566cc0d1169e1",
+      "bytes": 1046214,
+      "posterSha256": "11dad0d37eebd449087b0c81680a89b6ef45e3c30c355dc302065d5a2b3e5317",
+      "localExerciseId": "Barbell_Bench_Press_-_Medium_Grip"
+    },
+    {
+      "exerciseId": 75,
+      "original": {
+        "id": 17,
+        "uuid": "080c799b-8afd-4130-8d72-9cef0cd79f54",
+        "exercise": 75,
+        "video": "https://wger.de/media/exercise-video/75/080c799b-8afd-4130-8d72-9cef0cd79f54.MOV",
+        "is_main": false,
+        "size": 4543158,
+        "duration": "14.16",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "d96fa783d10b476965e926a2c88f4b6d69da5f9e91cd7656fbafadb001981afa",
+      "src": "assets/videos/wger-75.mp4",
+      "poster": "assets/videos/wger-75.jpg",
+      "sha256": "3407b5d6ac1df47f148a1f8c4fd543efb853a47621bcea7b639578f94cf51f29",
+      "bytes": 837252,
+      "posterSha256": "148bc049b7f046a322633663a052254edaf0d7b972c44b25ed5cbb8220367ff8",
+      "localExerciseId": "Dumbbell_Bench_Press"
+    },
+    {
+      "exerciseId": 82,
+      "original": {
+        "id": 7,
+        "uuid": "28b53647-27e7-47cf-8852-2ee666c8b628",
+        "exercise": 82,
+        "video": "https://wger.de/media/exercise-video/82/28b53647-27e7-47cf-8852-2ee666c8b628.MOV",
+        "is_main": false,
+        "size": 13386307,
+        "duration": "7.60",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "e0a0b55272b6ba9ccf30238802d65c1baf5d6526dbf23dbd940354bf42b73f05",
+      "src": "assets/videos/wger-82.mp4",
+      "poster": "assets/videos/wger-82.jpg",
+      "sha256": "6a7e080a5cac64eeea14782137196db266ced071aafae943022c7cef48771b23",
+      "bytes": 523653,
+      "posterSha256": "a0efa70dfb31a0b409c52321abe2c486bea0ee9e42b9de0d415345dabfa59066",
+      "localExerciseId": "WGER_82"
+    },
+    {
+      "exerciseId": 91,
+      "original": {
+        "id": 49,
+        "uuid": "483f4bff-e108-41f1-8e7b-0caf24952552",
+        "exercise": 91,
+        "video": "https://wger.de/media/exercise-video/91/483f4bff-e108-41f1-8e7b-0caf24952552.MOV",
+        "is_main": false,
+        "size": 22680665,
+        "duration": "12.34",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "2b75ac783df5a9557e280385f6b1181227c613f4ee1a5427a8a3477736b14a49",
+      "src": "assets/videos/wger-91.mp4",
+      "poster": "assets/videos/wger-91.jpg",
+      "sha256": "396d43ee6e8f62ca29181285d34fdab7d432d23c34c5168b2fc7f13a78bf8145",
+      "bytes": 802389,
+      "posterSha256": "83523c584b800b360f85dc9c444a49be4d6b390480465c9de1804e6c9eb3b70f",
+      "localExerciseId": "Barbell_Curl"
+    },
+    {
+      "exerciseId": 92,
+      "original": {
+        "id": 48,
+        "uuid": "8bfb917c-3d0d-49b9-8073-5d7e01c1b894",
+        "exercise": 92,
+        "video": "https://wger.de/media/exercise-video/92/8bfb917c-3d0d-49b9-8073-5d7e01c1b894.MOV",
+        "is_main": false,
+        "size": 31753930,
+        "duration": "10.94",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "4e5e4bbbf24385e8bbed16b7fb2905243041646f56031c3c3515073d6b9ace75",
+      "src": "assets/videos/wger-92.mp4",
+      "poster": "assets/videos/wger-92.jpg",
+      "sha256": "862e5b0b9fd6f46f49f701eae6a40b6e2c4e4bf20b482b9236adf8a602759b97",
+      "bytes": 480970,
+      "posterSha256": "dd0d89924d7980086af155cfd49fde831fae782d28c1a6887b163a8748dfe35d",
+      "localExerciseId": "Dumbbell_Bicep_Curl"
+    },
+    {
+      "exerciseId": 95,
+      "original": {
+        "id": 50,
+        "uuid": "ab770931-47d3-44fd-aef0-ac7a64c3b794",
+        "exercise": 95,
+        "video": "https://wger.de/media/exercise-video/95/ab770931-47d3-44fd-aef0-ac7a64c3b794.MOV",
+        "is_main": false,
+        "size": 34233084,
+        "duration": "10.45",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "4a7f995405ea08af81ede59bc07ed05458596b420a7ca596a154f9e27a24c2cb",
+      "src": "assets/videos/wger-95.mp4",
+      "poster": "assets/videos/wger-95.jpg",
+      "sha256": "e74556110b9296711a8941f490f147a5a4889ad6e54c8f2d78770a6802296bc0",
+      "bytes": 561920,
+      "posterSha256": "1e9959b45ef3e4f4b11083ebaa0694c456e786c55bd26977ca1856d041a472a5",
+      "localExerciseId": "WGER_95"
+    },
+    {
+      "exerciseId": 194,
+      "original": {
+        "id": 66,
+        "uuid": "dd9a663f-d8ba-4621-823b-13788ccb66bc",
+        "exercise": 194,
+        "video": "https://wger.de/media/exercise-video/194/dd9a663f-d8ba-4621-823b-13788ccb66bc.MOV",
+        "is_main": false,
+        "size": 4418928,
+        "duration": "10.17",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "faeefaad3f10f5dfeb95648e4e7bb494b64e0b2efb7085f3793fac00883d5d55",
+      "src": "assets/videos/wger-194.mp4",
+      "poster": "assets/videos/wger-194.jpg",
+      "sha256": "30c38460942fe7f2db834ff408cff5801b5719c7bd29f6352cc67dc94582e460",
+      "bytes": 753954,
+      "posterSha256": "da26c1c12f24fc8f4f17db4e8f0562ca269f72ecb91676d0a39b9d1bc5461ce6",
+      "localExerciseId": "WGER_194"
+    },
+    {
+      "exerciseId": 205,
+      "original": {
+        "id": 31,
+        "uuid": "c167ac34-ddbc-4e1b-8edf-1192e9d00e22",
+        "exercise": 205,
+        "video": "https://wger.de/media/exercise-video/205/c167ac34-ddbc-4e1b-8edf-1192e9d00e22.MOV",
+        "is_main": false,
+        "size": 49889363,
+        "duration": "17.09",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "6fc1b2969a40253e8f27eebee8d150efaec8dbe8bc668a348ad8562feee013a5",
+      "src": "assets/videos/wger-205.mp4",
+      "poster": "assets/videos/wger-205.jpg",
+      "sha256": "07a3ec16a326d92d4044b80cf2d7e65544953f4c438c2432535c4652c67b4219",
+      "bytes": 914307,
+      "posterSha256": "8373b0f8e05adaddeac5d670e69fdfa581a882915e7ebb69eea1a6060c444616",
+      "localExerciseId": "WGER_205"
+    },
+    {
+      "exerciseId": 206,
+      "original": {
+        "id": 33,
+        "uuid": "47a65c45-6fd1-4181-b71a-3a6c882e516b",
+        "exercise": 206,
+        "video": "https://wger.de/media/exercise-video/206/47a65c45-6fd1-4181-b71a-3a6c882e516b.MOV",
+        "is_main": false,
+        "size": 23850769,
+        "duration": "14.31",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "3d83e21334e0119fc831609c7581af02ec30642f1ebedf514d951ca25fd4d154",
+      "src": "assets/videos/wger-206.mp4",
+      "poster": "assets/videos/wger-206.jpg",
+      "sha256": "7a9f1e6a5f8742e98f729a3d8ac3e71a1af08fd22722a6156042083fa7c44225",
+      "bytes": 790350,
+      "posterSha256": "8f50512ac937ac48843675602f8d02c68e2c397a167ad0261b57f2a5734a9fd5",
+      "localExerciseId": "WGER_206"
+    },
+    {
+      "exerciseId": 211,
+      "original": {
+        "id": 57,
+        "uuid": "85f6eb25-a76c-409e-9af9-497794ac0dfb",
+        "exercise": 211,
+        "video": "https://wger.de/media/exercise-video/211/85f6eb25-a76c-409e-9af9-497794ac0dfb.MOV",
+        "is_main": false,
+        "size": 11837332,
+        "duration": "32.02",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "3ca3071ca6e4d19e6aac1197b22977932d527c7661a2cacb0652b6d976bc80ff",
+      "src": "assets/videos/wger-211.mp4",
+      "poster": "assets/videos/wger-211.jpg",
+      "sha256": "c24ddcfbbee491ad6c1c9c6fc2bbde0fd293cf370b748ad0bec0a361137f5881",
+      "bytes": 2283587,
+      "posterSha256": "7e404ebf94657fa5003f5fe9de541c3dc7fc558c1f3ade1fd9dafd57e4f003c1",
+      "localExerciseId": "WGER_211"
+    },
+    {
+      "exerciseId": 222,
+      "original": {
+        "id": 79,
+        "uuid": "eea93fcc-6a3c-4783-8f70-0234c791a001",
+        "exercise": 222,
+        "video": "https://wger.de/media/exercise-video/222/eea93fcc-6a3c-4783-8f70-0234c791a001.MOV",
+        "is_main": false,
+        "size": 20624981,
+        "duration": "8.57",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "88092b7fb9e905e706267d0c86a44c946ca261875640302e1b6956f12f262864",
+      "src": "assets/videos/wger-222.mp4",
+      "poster": "assets/videos/wger-222.jpg",
+      "sha256": "6304c5143d7826a4e5cc32a03a2233825e0fdf8947a2d86bbb966722f2572907",
+      "bytes": 617647,
+      "posterSha256": "1d1edbb7dec7fb4b13e9eeb98cb052a74ab41ab071fb2698863b9170d7605e25",
+      "localExerciseId": "Face_Pull"
+    },
+    {
+      "exerciseId": 245,
+      "original": {
+        "id": 60,
+        "uuid": "c253303e-9160-4f1f-b4fe-daf1e6c8661d",
+        "exercise": 245,
+        "video": "https://wger.de/media/exercise-video/245/c253303e-9160-4f1f-b4fe-daf1e6c8661d.MOV",
+        "is_main": false,
+        "size": 5813842,
+        "duration": "18.72",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "ea90aab3561008a60ae462277b49332be8d76567713fc90abe2ee4a047753f09",
+      "src": "assets/videos/wger-245.mp4",
+      "poster": "assets/videos/wger-245.jpg",
+      "sha256": "2501306cd7d88431a212935326f044b7ee63f65adc3e48a2452fbc5000eaefe3",
+      "bytes": 1114939,
+      "posterSha256": "2597c675068600fb25bd87c073fa2b76d5f89f87bcf2a48b21768ec82ffa2b3c",
+      "localExerciseId": "WGER_245"
+    },
+    {
+      "exerciseId": 246,
+      "original": {
+        "id": 63,
+        "uuid": "2a194d11-ff5d-4bdf-849e-1c441cf7b0b1",
+        "exercise": 246,
+        "video": "https://wger.de/media/exercise-video/246/2a194d11-ff5d-4bdf-849e-1c441cf7b0b1.MOV",
+        "is_main": false,
+        "size": 3211377,
+        "duration": "10.91",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "9afeeb3281e3eded5e7bcad08f38c31b151d0a42d4bc5638346b8f05cbaa5177",
+      "src": "assets/videos/wger-246.mp4",
+      "poster": "assets/videos/wger-246.jpg",
+      "sha256": "9dbdb057dbc4ccbf345185d0b172c6f4c26e32b50b7190945e5cfcc03b2aeb96",
+      "bytes": 586959,
+      "posterSha256": "3d7a34224f57e62fe55f04cbd293ea46361e6e342da60b39dfea72b8c5c2e690",
+      "localExerciseId": "WGER_246"
+    },
+    {
+      "exerciseId": 257,
+      "original": {
+        "id": 27,
+        "uuid": "93145935-29db-4e52-9d2d-174b1c30c098",
+        "exercise": 257,
+        "video": "https://wger.de/media/exercise-video/257/93145935-29db-4e52-9d2d-174b1c30c098.MOV",
+        "is_main": false,
+        "size": 27090822,
+        "duration": "8.25",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "0b3224e065a0be689366b0f4416ed49a4a89f36e4aaf68d238d705a5bf165a8b",
+      "src": "assets/videos/wger-257.mp4",
+      "poster": "assets/videos/wger-257.jpg",
+      "sha256": "2f0ca4055c06d92d30567da105f8b8631751d1b40c71d1e2544341f1a10ca4cb",
+      "bytes": 381534,
+      "posterSha256": "5c9a5e0cc41b390735503b6e7fd83ed1d7472c95f602ebc4b1c55390cbb45235",
+      "localExerciseId": "WGER_257"
+    },
+    {
+      "exerciseId": 272,
+      "original": {
+        "id": 51,
+        "uuid": "df069052-2173-4f24-855f-a0eebe729f24",
+        "exercise": 272,
+        "video": "https://wger.de/media/exercise-video/272/df069052-2173-4f24-855f-a0eebe729f24.MOV",
+        "is_main": false,
+        "size": 30154182,
+        "duration": "10.37",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "1bb9997de44f2c7b1ff182001c988ae1245006458a3a6e1bc85db52dcb1a4e38",
+      "src": "assets/videos/wger-272.mp4",
+      "poster": "assets/videos/wger-272.jpg",
+      "sha256": "e07dcbba6bb4820f7e205a3eb486e3b0d5f76cf0892bdbcfcdeee455f5ec1077",
+      "bytes": 428485,
+      "posterSha256": "26e4c36038fed1346b455b4d30bc409615fca3d490c7183d0fc416d85281ee5d",
+      "localExerciseId": "Hammer_Curls"
+    },
+    {
+      "exerciseId": 275,
+      "original": {
+        "id": 47,
+        "uuid": "af1fff93-eb58-4ba7-97a4-b38ee67853b4",
+        "exercise": 275,
+        "video": "https://wger.de/media/exercise-video/275/af1fff93-eb58-4ba7-97a4-b38ee67853b4.MOV",
+        "is_main": false,
+        "size": 38048587,
+        "duration": "11.85",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "3306077ea6ba80601490e4de5e37c31eafdb0af7457be1f7e2b877d481130dd8",
+      "src": "assets/videos/wger-275.mp4",
+      "poster": "assets/videos/wger-275.jpg",
+      "sha256": "1ae29194502fb828f387af8dba4afe554265eb45fe12ccdc1f3b9eb980855370",
+      "bytes": 762770,
+      "posterSha256": "d1b7578e30e53b4e388c496964b0ed42d833f3a46c04ac9359019e4fb24d0999",
+      "localExerciseId": "WGER_275"
+    },
+    {
+      "exerciseId": 294,
+      "original": {
+        "id": 72,
+        "uuid": "45bacf4b-1bb6-4d47-8bd1-9f00eddd4019",
+        "exercise": 294,
+        "video": "https://wger.de/media/exercise-video/294/45bacf4b-1bb6-4d47-8bd1-9f00eddd4019.MOV",
+        "is_main": false,
+        "size": 87548125,
+        "duration": "30.19",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "2d9af3456d9bf47f6f52ee31c8da2af883b58acdd02b161e32d23d90ab87a26b",
+      "src": "assets/videos/wger-294.mp4",
+      "poster": "assets/videos/wger-294.jpg",
+      "sha256": "10fbd101d6107ddbf5a44dee252b5a2305f3eeda1ca623944760f46418e9a675",
+      "bytes": 1429370,
+      "posterSha256": "3ad51e594978fdb61214a1194651b3da181b173229228247d43418735c3de1a7",
+      "localExerciseId": "WGER_294"
+    },
+    {
+      "exerciseId": 341,
+      "original": {
+        "id": 42,
+        "uuid": "0cbfeace-dda9-4166-8424-f51358e88a4f",
+        "exercise": 341,
+        "video": "https://wger.de/media/exercise-video/341/0cbfeace-dda9-4166-8424-f51358e88a4f.MOV",
+        "is_main": false,
+        "size": 34036878,
+        "duration": "11.96",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "41bc3318429e26325e3ece262250dd82d1de80345714ae20929db78d20607180",
+      "src": "assets/videos/wger-341.mp4",
+      "poster": "assets/videos/wger-341.jpg",
+      "sha256": "a7f6cac1915491e66473d887349a82b1e65d4507fa86cd291726bf2daf2a2ed5",
+      "bytes": 676247,
+      "posterSha256": "4ba0a544838a1f1cba4c75528a8972cb32a5081ad4986762a164d0563438976d",
+      "localExerciseId": "WGER_341"
+    },
+    {
+      "exerciseId": 348,
+      "original": {
+        "id": 6,
+        "uuid": "de69928a-8a35-4096-821c-1f46de5e0e03",
+        "exercise": 348,
+        "video": "https://wger.de/media/exercise-video/348/de69928a-8a35-4096-821c-1f46de5e0e03.MOV",
+        "is_main": false,
+        "size": 43874331,
+        "duration": "18.26",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "41c47c5efd245d0dfbcd25e4c1e6a4f46f2093281871df3503278ea9e5444d7f",
+      "src": "assets/videos/wger-348.mp4",
+      "poster": "assets/videos/wger-348.jpg",
+      "sha256": "8cc91412655b48c9ed64768becc92ef211fbe71e2f1248bfc488ae2dd1690805",
+      "bytes": 1659084,
+      "posterSha256": "dea8cb6c2041b1f83330bd8be9117aeb209f098bd5274a7bc9579a76c9645ca6",
+      "localExerciseId": "Side_Lateral_Raise"
+    },
+    {
+      "exerciseId": 349,
+      "original": {
+        "id": 5,
+        "uuid": "9896d82e-d8b6-48af-bdd5-b8545dc523e9",
+        "exercise": 349,
+        "video": "https://wger.de/media/exercise-video/349/9896d82e-d8b6-48af-bdd5-b8545dc523e9.MOV",
+        "is_main": false,
+        "size": 33127028,
+        "duration": "13.22",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "14b3c3fc75f882edd98b0af2f685441753349f239aeb5f4cb09c54a4809a7f58",
+      "src": "assets/videos/wger-349.mp4",
+      "poster": "assets/videos/wger-349.jpg",
+      "sha256": "021eeb2cb7e61eb7eeed01b61747e0325572abc0f15f589b3a9f9c870fc5984d",
+      "bytes": 991101,
+      "posterSha256": "bd314be9fb056db99358349be1594c6a5451a25c78506e0bdbe127c8687a2736",
+      "localExerciseId": "WGER_349"
+    },
+    {
+      "exerciseId": 365,
+      "original": {
+        "id": 35,
+        "uuid": "becaf013-5044-40d0-bae9-7ed60c973737",
+        "exercise": 365,
+        "video": "https://wger.de/media/exercise-video/365/becaf013-5044-40d0-bae9-7ed60c973737.MOV",
+        "is_main": false,
+        "size": 31825446,
+        "duration": "15.06",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "77d70320a6d87af02532379039874eaf805d569462cc540060b04da915fcecb3",
+      "src": "assets/videos/wger-365.mp4",
+      "poster": "assets/videos/wger-365.jpg",
+      "sha256": "929ace587fb7918dad6b4a3d7872a9e103abfdefd6cc987835c23265100de531",
+      "bytes": 976774,
+      "posterSha256": "7f48196398a7d6e49a3c45084fca3319ac59fb6c0ed0a46a5b9998799d929a7d",
+      "localExerciseId": "Lying_Leg_Curls"
+    },
+    {
+      "exerciseId": 366,
+      "original": {
+        "id": 37,
+        "uuid": "43df4b79-d4c3-4fbf-bcb5-e0d825b84120",
+        "exercise": 366,
+        "video": "https://wger.de/media/exercise-video/366/43df4b79-d4c3-4fbf-bcb5-e0d825b84120.MOV",
+        "is_main": false,
+        "size": 72266814,
+        "duration": "24.89",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "87d8c5fb1787d11942b20182fd08c0324288f9ab7a6665d949de8afa5048d244",
+      "src": "assets/videos/wger-366.mp4",
+      "poster": "assets/videos/wger-366.jpg",
+      "sha256": "273cba4a8d4c5224b175266aafa329e24f339ac04fa2c25eb72c105551151e57",
+      "bytes": 1632703,
+      "posterSha256": "ef454898ec9c583ff143acc56bdfc1baf2b3eae359881b64126900ebd0a7342f",
+      "localExerciseId": "WGER_366"
+    },
+    {
+      "exerciseId": 367,
+      "original": {
+        "id": 39,
+        "uuid": "e8113ae4-a0b4-42a2-8eaa-3263de64622e",
+        "exercise": 367,
+        "video": "https://wger.de/media/exercise-video/367/e8113ae4-a0b4-42a2-8eaa-3263de64622e.MOV",
+        "is_main": false,
+        "size": 41674596,
+        "duration": "14.89",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "8c9b3984d48599289589e7e7ce9209e395ae8f1a93b5bb0d7511153f5ca8d7d8",
+      "src": "assets/videos/wger-367.mp4",
+      "poster": "assets/videos/wger-367.jpg",
+      "sha256": "9dee2136ca80ef5580f555e5d8de8ff62df60e54bfe9ffdaecd8290f2ab2d14f",
+      "bytes": 1231133,
+      "posterSha256": "cb646e27eb76c25581972555a71273bd365375fd450566d1cd713f24f6d9d13e",
+      "localExerciseId": "WGER_367"
+    },
+    {
+      "exerciseId": 371,
+      "original": {
+        "id": 44,
+        "uuid": "6aae16b4-01b9-4eb4-935c-3250f84d2c59",
+        "exercise": 371,
+        "video": "https://wger.de/media/exercise-video/371/6aae16b4-01b9-4eb4-935c-3250f84d2c59.MOV",
+        "is_main": false,
+        "size": 57665329,
+        "duration": "34.69",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "a92f5677ce005b10385668c88e5cce77c57658b63f8808b8684be0a5abeaa2ef",
+      "src": "assets/videos/wger-371.mp4",
+      "poster": "assets/videos/wger-371.jpg",
+      "sha256": "11920c1013799664284d125936efe91027c87e8311a734e7f9d83ca47c138fff",
+      "bytes": 2478405,
+      "posterSha256": "7d15dd9a1201b192bfeb0f1109cb6315b30c6ff20f203c263f015cbfca225ab8",
+      "localExerciseId": "Leg_Press"
+    },
+    {
+      "exerciseId": 374,
+      "original": {
+        "id": 43,
+        "uuid": "5336822a-7803-45b3-a880-f2bbf37a28f2",
+        "exercise": 374,
+        "video": "https://wger.de/media/exercise-video/374/5336822a-7803-45b3-a880-f2bbf37a28f2.MOV",
+        "is_main": false,
+        "size": 45597793,
+        "duration": "21.51",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "631218201fd7ec1b30312be5d06ff196c904c3be8d6cd8f837fbfe53fc6ca13a",
+      "src": "assets/videos/wger-374.mp4",
+      "poster": "assets/videos/wger-374.jpg",
+      "sha256": "94c57239901e35106c686e1d72b62c7d62dd85ff23e38d5451d77b528a8f6369",
+      "bytes": 1537540,
+      "posterSha256": "d56beb2d0f40c25adfbdb2cbd387deec47bd78410a4bb89e97d15a9b437cf4bb",
+      "localExerciseId": "WGER_374"
+    },
+    {
+      "exerciseId": 375,
+      "original": {
+        "id": 40,
+        "uuid": "effa7a81-dbdd-4014-83ee-ddf0fd835301",
+        "exercise": 375,
+        "video": "https://wger.de/media/exercise-video/375/effa7a81-dbdd-4014-83ee-ddf0fd835301.MOV",
+        "is_main": false,
+        "size": 80419952,
+        "duration": "32.11",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "0b59e2f24a6ba1892ab1f136a1ef0b41aa8f5ded0f62a6fe38488d757095bfa1",
+      "src": "assets/videos/wger-375.mp4",
+      "poster": "assets/videos/wger-375.jpg",
+      "sha256": "a28ee72178a7c3f6f07191833a90fd118d0cdf19f80f21fa427acd40cc40a1f1",
+      "bytes": 2147447,
+      "posterSha256": "9b7f44bc71a37636c005ac74a9e1471512bb31824b17010b9aefc4f38b3d5711",
+      "localExerciseId": "WGER_375"
+    },
+    {
+      "exerciseId": 465,
+      "original": {
+        "id": 54,
+        "uuid": "5d2339a4-815f-46ba-aa19-8a763cfdeba0",
+        "exercise": 465,
+        "video": "https://wger.de/media/exercise-video/465/5d2339a4-815f-46ba-aa19-8a763cfdeba0.MOV",
+        "is_main": false,
+        "size": 46887882,
+        "duration": "14.32",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "7d02193438479b9322c92b6aa63db92424d3724abecd923212d3ceb5ce428948",
+      "src": "assets/videos/wger-465.mp4",
+      "poster": "assets/videos/wger-465.jpg",
+      "sha256": "21d0f4593977d7eec1926a7b8e18ff3e08c39ee6431cee82b892feb55f24f460",
+      "bytes": 811463,
+      "posterSha256": "9050e70810c38a417e53a54abc3716ebdcb1257e9301b3fafe09c164eea61091",
+      "localExerciseId": "WGER_465"
+    },
+    {
+      "exerciseId": 477,
+      "original": {
+        "id": 70,
+        "uuid": "2e23bb52-2782-40c8-bf88-fa2d2e2a9a0d",
+        "exercise": 477,
+        "video": "https://wger.de/media/exercise-video/477/2e23bb52-2782-40c8-bf88-fa2d2e2a9a0d.MOV",
+        "is_main": false,
+        "size": 57098527,
+        "duration": "18.77",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "4c459f322f506eb7bd0b51e7efd81aaf6bd1e10fc0569e182a4815dee325f1b8",
+      "src": "assets/videos/wger-477.mp4",
+      "poster": "assets/videos/wger-477.jpg",
+      "sha256": "5379b1e98343f06683678761510afc55a9dfa64a322fc89dd53e3356836b0f6d",
+      "bytes": 868541,
+      "posterSha256": "65a3f8dda184b1775e8a45173334de2a0a611f6aea794c64061b4069e71b0294",
+      "localExerciseId": "WGER_477"
+    },
+    {
+      "exerciseId": 507,
+      "original": {
+        "id": 2,
+        "uuid": "307e7276-a14d-4ea0-b579-f5b0dbc6f5af",
+        "exercise": 507,
+        "video": "https://wger.de/media/exercise-video/507/307e7276-a14d-4ea0-b579-f5b0dbc6f5af.MOV",
+        "is_main": false,
+        "size": 38136083,
+        "duration": "13.00",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "0526207ce774dd9e15c5be5198c3bd5233e2d434fcabe3db67f1060af51c5d84",
+      "src": "assets/videos/wger-507.mp4",
+      "poster": "assets/videos/wger-507.jpg",
+      "sha256": "0d1c6e54c201a3509e6d9e970db6f6e1ad6ca7088975a591f0dc99b151bfab8e",
+      "bytes": 621710,
+      "posterSha256": "28af8717ffb5688e56063c32475c550b6f18cd34a6a61bd78e7577c5bff9461b",
+      "localExerciseId": "Romanian_Deadlift"
+    },
+    {
+      "exerciseId": 512,
+      "original": {
+        "id": 1,
+        "uuid": "fff4c294-93f0-4926-b3a2-bf59ad4afaa5",
+        "exercise": 512,
+        "video": "https://wger.de/media/exercise-video/512/fff4c294-93f0-4926-b3a2-bf59ad4afaa5.MOV",
+        "is_main": false,
+        "size": 34332925,
+        "duration": "10.49",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "623708fc1e5b1fb1be2b1647a0fa044d0208b2ebea2a5ed6bf1a77e9c1e21b90",
+      "src": "assets/videos/wger-512.mp4",
+      "poster": "assets/videos/wger-512.jpg",
+      "sha256": "31fa3554236ff25aca7e4e65b77b7197a0c9b29c2520a7c4d79934f1a1f759a1",
+      "bytes": 583815,
+      "posterSha256": "d60fe9b6ae05df96026c34536abaf9e21bdf9d77a9338810bd79fda7b8ad9bf0",
+      "localExerciseId": "WGER_512"
+    },
+    {
+      "exerciseId": 537,
+      "original": {
+        "id": 24,
+        "uuid": "b9c937e9-daeb-42a9-be8e-7a77e368478c",
+        "exercise": 537,
+        "video": "https://wger.de/media/exercise-video/537/b9c937e9-daeb-42a9-be8e-7a77e368478c.MOV",
+        "is_main": false,
+        "size": 10602354,
+        "duration": "27.49",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "4861d89988c8e8886435e62064aedd68c04484f0c4646270d182307025c3a162",
+      "src": "assets/videos/wger-537.mp4",
+      "poster": "assets/videos/wger-537.jpg",
+      "sha256": "44c898e26824b87ee57a799f62bf84988417fd35e0f65f8e25908423ca71beb1",
+      "bytes": 2095560,
+      "posterSha256": "134a76226b27d48a6309ae6f32ae1b4916c75b10c012e0a2f3fe22baecaf1bcd",
+      "localExerciseId": "WGER_537"
+    },
+    {
+      "exerciseId": 538,
+      "original": {
+        "id": 16,
+        "uuid": "4349a6f6-4cee-4c09-828b-c5e7fc2c1ff1",
+        "exercise": 538,
+        "video": "https://wger.de/media/exercise-video/538/4349a6f6-4cee-4c09-828b-c5e7fc2c1ff1.MOV",
+        "is_main": false,
+        "size": 6205424,
+        "duration": "19.92",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "d7510c0a6a2bb7bd88bc89c0f5e1a7bbd1297794217c08e841140bcd75bb65fa",
+      "src": "assets/videos/wger-538.mp4",
+      "poster": "assets/videos/wger-538.jpg",
+      "sha256": "290367b5c3a9a5e5907a84bd9d5ba7083a4516c26924e1db8c563e82e2017e8e",
+      "bytes": 1091669,
+      "posterSha256": "e188713b4da82ca8b2d00d3d3b6775acf479924914fcfd2263f2db030907b1ef",
+      "localExerciseId": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+      "posterTimeSeconds": 9
+    },
+    {
+      "exerciseId": 543,
+      "original": {
+        "id": 11,
+        "uuid": "dbfd396b-1aab-4a64-a50b-2c31ff0a2cf7",
+        "exercise": 543,
+        "video": "https://wger.de/media/exercise-video/543/dbfd396b-1aab-4a64-a50b-2c31ff0a2cf7.MOV",
+        "is_main": false,
+        "size": 23511495,
+        "duration": "12.27",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "1b3f5619a871ea77871a17b777c606e793f1d728a8253bad45c13f3877e999d6",
+      "src": "assets/videos/wger-543.mp4",
+      "poster": "assets/videos/wger-543.jpg",
+      "sha256": "398592ce3bb77402770874e4ef023a2fb247ef455b8b838c0f64765d81bd8181",
+      "bytes": 681585,
+      "posterSha256": "2e7ce0af466e0808b86d77efc8dfb9a81d10c8f9fe72df8461588630eff64c1d",
+      "localExerciseId": "WGER_543"
+    },
+    {
+      "exerciseId": 567,
+      "original": {
+        "id": 12,
+        "uuid": "64f33c19-1d96-4b7c-af17-6c6a4941c614",
+        "exercise": 567,
+        "video": "https://wger.de/media/exercise-video/567/64f33c19-1d96-4b7c-af17-6c6a4941c614.MOV",
+        "is_main": false,
+        "size": 62860017,
+        "duration": "23.13",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "0151a7cd43894d60c1fe1ffb34f4f4b709fc17aa6a5913c7edea4a14c9113985",
+      "src": "assets/videos/wger-567.mp4",
+      "poster": "assets/videos/wger-567.jpg",
+      "sha256": "6dab77f82e1184de77bc414df60ec896048713d9eeb44f67063c2f684177ccfb",
+      "bytes": 1871056,
+      "posterSha256": "d27bd2403c1f347b02484edbca7a23953a962f5c05d1833e34f664d392d0a22d",
+      "localExerciseId": "Dumbbell_Shoulder_Press"
+    },
+    {
+      "exerciseId": 570,
+      "original": {
+        "id": 69,
+        "uuid": "bd1f14a3-9d2b-4ec0-b6b9-e82d739f7e60",
+        "exercise": 570,
+        "video": "https://wger.de/media/exercise-video/570/bd1f14a3-9d2b-4ec0-b6b9-e82d739f7e60.MOV",
+        "is_main": false,
+        "size": 31195824,
+        "duration": "10.74",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "572115679d3f255ac7343fdff31837dbb2368a1222b97a857dcd2945209c5d41",
+      "src": "assets/videos/wger-570.mp4",
+      "poster": "assets/videos/wger-570.jpg",
+      "sha256": "36af04970c5968e242a735e51f5f5d0da9fe715b88063881b2d50a3d4ac2890c",
+      "bytes": 682384,
+      "posterSha256": "13e92eff555a33f05e3cb09c61dcab14268c5834bd1316eacb05c53d866c2d44",
+      "localExerciseId": "WGER_570"
+    },
+    {
+      "exerciseId": 575,
+      "original": {
+        "id": 68,
+        "uuid": "a7d99f2b-86fc-433a-8ab1-83144c802296",
+        "exercise": 575,
+        "video": "https://wger.de/media/exercise-video/575/a7d99f2b-86fc-433a-8ab1-83144c802296.MOV",
+        "is_main": false,
+        "size": 35270778,
+        "duration": "11.01",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "0b5358cfd02191cd1bd28fc6cccddc463262b24ea2d5833a556254de7e2cba25",
+      "src": "assets/videos/wger-575.mp4",
+      "poster": "assets/videos/wger-575.jpg",
+      "sha256": "39ce39e544489e3bb038838cfb544ead52df97da447fcdc83d246430029d5b4e",
+      "bytes": 659762,
+      "posterSha256": "2ba7f8a14defa6cb4d0708add329faa9186a435edf881bfda416771a864f3763",
+      "localExerciseId": "WGER_575"
+    },
+    {
+      "exerciseId": 584,
+      "original": {
+        "id": 52,
+        "uuid": "109e8d5d-62a4-40ad-8813-2ccef5bc751f",
+        "exercise": 584,
+        "video": "https://wger.de/media/exercise-video/584/109e8d5d-62a4-40ad-8813-2ccef5bc751f.MOV",
+        "is_main": false,
+        "size": 30869204,
+        "duration": "13.02",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "b7f875efa49f4adc26331f9da7fce4b6db10bc8d346712256cdc5714ae89d3c4",
+      "src": "assets/videos/wger-584.mp4",
+      "poster": "assets/videos/wger-584.jpg",
+      "sha256": "5825fbc9b6234a22caaffbef562c787b4577afab1584a06d6da4ecb67febb784",
+      "bytes": 949061,
+      "posterSha256": "1a2e046a2ed4ed99814b7dd2d9fd85bba759b654d4affb0505d8d38d43ed42b3",
+      "localExerciseId": "WGER_584"
+    },
+    {
+      "exerciseId": 590,
+      "original": {
+        "id": 13,
+        "uuid": "a325ae2e-686b-4a1f-aff2-ba37fa3fa157",
+        "exercise": 590,
+        "video": "https://wger.de/media/exercise-video/590/a325ae2e-686b-4a1f-aff2-ba37fa3fa157.MOV",
+        "is_main": false,
+        "size": 27735168,
+        "duration": "20.71",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "81156e03df81f84c2ceef9f15ba5d4f55042600f6966365916cf5a3a20e7b65b",
+      "src": "assets/videos/wger-590.mp4",
+      "poster": "assets/videos/wger-590.jpg",
+      "sha256": "5918b5fa4e82809f76b339f00b9cbc5dc535853510d359f45785477e401b362a",
+      "bytes": 1002033,
+      "posterSha256": "ad8f9c458d6116e3141401d053859cc9fde5200a568cd7263e38b2959fd7f5e3",
+      "localExerciseId": "WGER_590"
+    },
+    {
+      "exerciseId": 622,
+      "original": {
+        "id": 15,
+        "uuid": "461171e5-2b16-407d-bf27-27aeef43f105",
+        "exercise": 622,
+        "video": "https://wger.de/media/exercise-video/622/461171e5-2b16-407d-bf27-27aeef43f105.MOV",
+        "is_main": false,
+        "size": 27311167,
+        "duration": "16.43",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "fe75fcc7d54693a0637624e048b32d64623d134358f1e5985ae9740ee3a68e49",
+      "src": "assets/videos/wger-622.mp4",
+      "poster": "assets/videos/wger-622.jpg",
+      "sha256": "c653460452097bc149084d7e8721bf5bf4d9207c2e8c70427dbe5e930d641a38",
+      "bytes": 790403,
+      "posterSha256": "629866ef9f7e763c2c44fddf7e350fdf7198d6ba4c89d38761f8feee72f97f9c",
+      "localExerciseId": "Standing_Calf_Raises"
+    },
+    {
+      "exerciseId": 655,
+      "original": {
+        "id": 76,
+        "uuid": "2d88a05b-bde3-4026-bfbf-524c11068dc5",
+        "exercise": 655,
+        "video": "https://wger.de/media/exercise-video/655/2d88a05b-bde3-4026-bfbf-524c11068dc5.MOV",
+        "is_main": false,
+        "size": 3407290,
+        "duration": "10.26",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "049c503eaaa174a957baade1b3b9a66fd63b414f00728a11c069742f1bd74ad3",
+      "src": "assets/videos/wger-655.mp4",
+      "poster": "assets/videos/wger-655.jpg",
+      "sha256": "62ac64325367db501ebdf52fb26fb50c8f4cb55b81ac86401cce4158477ea74a",
+      "bytes": 659102,
+      "posterSha256": "bac0d03064872ba60523f66beaf8a3250728fd0af235c478a84ed53f1181c070",
+      "localExerciseId": "WGER_655"
+    },
+    {
+      "exerciseId": 659,
+      "original": {
+        "id": 55,
+        "uuid": "1f2eb3b6-3185-429f-8330-26dc88f39aff",
+        "exercise": 659,
+        "video": "https://wger.de/media/exercise-video/659/1f2eb3b6-3185-429f-8330-26dc88f39aff.MOV",
+        "is_main": false,
+        "size": 7557215,
+        "duration": "15.09",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "2b1cb2e47da66abd03bba3ef51ff83f5aebb84e3ac31cbad2435db91417fdf0e",
+      "src": "assets/videos/wger-659.mp4",
+      "poster": "assets/videos/wger-659.jpg",
+      "sha256": "97587ab558a98f2727dc50701877c92bd8d4933e83c7f376265cc57e4c1d5fd3",
+      "bytes": 1416754,
+      "posterSha256": "eb469aaf98ca68a7eafaef3a35aed4bf26d7db914a370ee1b19f9c8e78e1ef65",
+      "localExerciseId": "Triceps_Pushdown_-_Rope_Attachment"
+    },
+    {
+      "exerciseId": 802,
+      "original": {
+        "id": 34,
+        "uuid": "85d1d7f8-c3c5-47e8-9b26-56896919e6e7",
+        "exercise": 802,
+        "video": "https://wger.de/media/exercise-video/802/85d1d7f8-c3c5-47e8-9b26-56896919e6e7.MOV",
+        "is_main": false,
+        "size": 23668353,
+        "duration": "12.72",
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "cc6cbe62cba5d51921ffea9601d56c32a8f3ecc0ec06d8dade67554fe82cf87b",
+      "src": "assets/videos/wger-802.mp4",
+      "poster": "assets/videos/wger-802.jpg",
+      "sha256": "3356e9545493ebdc9dbed9feffb0489a9725e21b45ee2fd09e37cda4b6debfeb",
+      "bytes": 631110,
+      "posterSha256": "e18282b2dea40a16503f2025a08fcd996e642f7be1b92dcfff14424a2014cc5f",
+      "localExerciseId": "WGER_802"
+    },
+    {
+      "exerciseId": 803,
+      "original": {
+        "id": 58,
+        "uuid": "99e0001f-217a-4b11-823c-014d24a5415e",
+        "exercise": 803,
+        "video": "https://wger.de/media/exercise-video/803/99e0001f-217a-4b11-823c-014d24a5415e.MOV",
+        "is_main": false,
+        "size": 4296447,
+        "duration": "9.36",
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "license": 2,
+        "license_title": "",
+        "license_object_url": "",
+        "license_author": "Goulart",
+        "license_author_url": "",
+        "license_derivative_source_url": "",
+        "author_history": [
+          "Goulart"
+        ]
+      },
+      "sourceSha256": "0fcf6f0bbab8987256d6799e6e4c665a9b4122f4497f41a38d0007452b45aea5",
+      "src": "assets/videos/wger-803.mp4",
+      "poster": "assets/videos/wger-803.jpg",
+      "sha256": "f54b9de2841a194e865f53f9e5cfa872216841f9a167740f7e1033abc26ae7a0",
+      "bytes": 815885,
+      "posterSha256": "d6b2bdbf4666303fc8ccd8419e08eb10aae76e2ba839a453014d0008c7e27ceb",
+      "localExerciseId": "WGER_803"
+    }
+  ],
+  "rejectedVideos": [
+    {
+      "exerciseId": 475,
+      "reason": "Identical binary to Pull Ups on Machine (477); do not attach an assisted-machine demonstration to the original unassisted Pullups record.",
+      "record": {
+        "exerciseId": 475,
+        "original": {
+          "id": 71,
+          "uuid": "83067ffe-ccb9-4e22-8507-5131b211ce74",
+          "exercise": 475,
+          "video": "https://wger.de/media/exercise-video/475/83067ffe-ccb9-4e22-8507-5131b211ce74.MOV",
+          "is_main": false,
+          "size": 57098527,
+          "duration": "18.77",
+          "width": 1920,
+          "height": 1080,
+          "codec": "hevc",
+          "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+          "license": 2,
+          "license_title": "",
+          "license_object_url": "",
+          "license_author": "Goulart",
+          "license_author_url": "",
+          "license_derivative_source_url": "",
+          "author_history": [
+            "Goulart"
+          ]
+        },
+        "sourceSha256": "4c459f322f506eb7bd0b51e7efd81aaf6bd1e10fc0569e182a4815dee325f1b8",
+        "src": "assets/videos/wger-475.mp4",
+        "poster": "assets/videos/wger-475.jpg",
+        "sha256": "5379b1e98343f06683678761510afc55a9dfa64a322fc89dd53e3356836b0f6d",
+        "bytes": 868541,
+        "posterSha256": "65a3f8dda184b1775e8a45173334de2a0a611f6aea794c64061b4069e71b0294",
+        "localExerciseId": "Pullups"
+      }
+    }
+  ],
+  "preservedExercises": [
+    {
+      "name": "Barbell Bench Press - Medium Grip",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "instructions": [
+        "Lie back on a flat bench. Using a medium width grip (a grip that creates a 90-degree angle in the middle of the movement between the forearms and the upper arms), lift the bar from the rack and hold it straight over you with your arms locked. This will be your starting position.",
+        "From the starting position, breathe in and begin coming down slowly until the bar touches your middle chest.",
+        "After a brief pause, push the bar back to the starting position as you breathe out. Focus on pushing the bar using your chest muscles. Lock your arms and squeeze your chest in the contracted position at the top of the motion, hold for a second and then start coming down slowly again. Tip: Ideally, lowering the weight should take about twice as long as raising it.",
+        "Repeat the movement for the prescribed amount of repetitions.",
+        "When you are done, place the bar back in the rack."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Barbell_Bench_Press_-_Medium_Grip/0.jpg",
+        "assets/exercises/Barbell_Bench_Press_-_Medium_Grip/1.jpg"
+      ],
+      "id": "Barbell_Bench_Press_-_Medium_Grip"
+    },
+    {
+      "name": "Dumbbell Bench Press",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "instructions": [
+        "Lie down on a flat bench with a dumbbell in each hand resting on top of your thighs. The palms of your hands will be facing each other.",
+        "Then, using your thighs to help raise the dumbbells up, lift the dumbbells one at a time so that you can hold them in front of you at shoulder width.",
+        "Once at shoulder width, rotate your wrists forward so that the palms of your hands are facing away from you. The dumbbells should be just to the sides of your chest, with your upper arm and forearm creating a 90 degree angle. Be sure to maintain full control of the dumbbells at all times. This will be your starting position.",
+        "Then, as you breathe out, use your chest to push the dumbbells up. Lock your arms at the top of the lift and squeeze your chest, hold for a second and then begin coming down slowly. Tip: Ideally, lowering the weight should take about twice as long as raising it.",
+        "Repeat the movement for the prescribed amount of repetitions of your training program."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Dumbbell_Bench_Press/0.jpg",
+        "assets/exercises/Dumbbell_Bench_Press/1.jpg"
+      ],
+      "id": "Dumbbell_Bench_Press"
+    },
+    {
+      "name": "Barbell Incline Bench Press - Medium Grip",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "instructions": [
+        "Lie back on an incline bench. Using a medium-width grip (a grip that creates a 90-degree angle in the middle of the movement between the forearms and the upper arms), lift the bar from the rack and hold it straight over you with your arms locked. This will be your starting position.",
+        "As you breathe in, come down slowly until you feel the bar on you upper chest.",
+        "After a second pause, bring the bar back to the starting position as you breathe out and push the bar using your chest muscles. Lock your arms in the contracted position, squeeze your chest, hold for a second and then start coming down slowly again. Tip: it should take at least twice as long to go down than to come up.",
+        "Repeat the movement for the prescribed amount of repetitions.",
+        "When you are done, place the bar back in the rack."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Barbell_Incline_Bench_Press_-_Medium_Grip/0.jpg",
+        "assets/exercises/Barbell_Incline_Bench_Press_-_Medium_Grip/1.jpg"
+      ],
+      "id": "Barbell_Incline_Bench_Press_-_Medium_Grip"
+    },
+    {
+      "name": "Pushups",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "instructions": [
+        "Lie on the floor face down and place your hands about 36 inches apart while holding your torso up at arms length.",
+        "Next, lower yourself downward until your chest almost touches the floor as you inhale.",
+        "Now breathe out and press your upper body back up to the starting position while squeezing your chest.",
+        "After a brief pause at the top contracted position, you can begin to lower yourself downward again for as many repetitions as needed."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Pushups/0.jpg",
+        "assets/exercises/Pushups/1.jpg"
+      ],
+      "id": "Pushups",
+      "model3d": {
+        "src": "assets/models/pushups.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "90deg 70deg 4m",
+        "cameraTarget": "0m 0.284m -0.107m",
+        "source": "OpenGym3D",
+        "license": "CC0-1.0"
+      }
+    },
+    {
+      "name": "Wide-Grip Lat Pulldown",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "middle back",
+        "shoulders"
+      ],
+      "instructions": [
+        "Sit down on a pull-down machine with a wide bar attached to the top pulley. Make sure that you adjust the knee pad of the machine to fit your height. These pads will prevent your body from being raised by the resistance attached to the bar.",
+        "Grab the bar with the palms facing forward using the prescribed grip. Note on grips: For a wide grip, your hands need to be spaced out at a distance wider than shoulder width. For a medium grip, your hands need to be spaced out at a distance equal to your shoulder width and for a close grip at a distance smaller than your shoulder width.",
+        "As you have both arms extended in front of you holding the bar at the chosen grip width, bring your torso back around 30 degrees or so while creating a curvature on your lower back and sticking your chest out. This is your starting position.",
+        "As you breathe out, bring the bar down until it touches your upper chest by drawing the shoulders and the upper arms down and back. Tip: Concentrate on squeezing the back muscles once you reach the full contracted position. The upper torso should remain stationary and only the arms should move. The forearms should do no other work except for holding the bar; therefore do not try to pull down the bar using the forearms.",
+        "After a second at the contracted position squeezing your shoulder blades together, slowly raise the bar back to the starting position when your arms are fully extended and the lats are fully stretched. Inhale during this portion of the movement.",
+        "Repeat this motion for the prescribed amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Wide-Grip_Lat_Pulldown/0.jpg",
+        "assets/exercises/Wide-Grip_Lat_Pulldown/1.jpg"
+      ],
+      "id": "Wide-Grip_Lat_Pulldown"
+    },
+    {
+      "name": "Seated Cable Rows",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "shoulders"
+      ],
+      "instructions": [
+        "For this exercise you will need access to a low pulley row machine with a V-bar. Note: The V-bar will enable you to have a neutral grip where the palms of your hands face each other. To get into the starting position, first sit down on the machine and place your feet on the front platform or crossbar provided making sure that your knees are slightly bent and not locked.",
+        "Lean over as you keep the natural alignment of your back and grab the V-bar handles.",
+        "With your arms extended pull back until your torso is at a 90-degree angle from your legs. Your back should be slightly arched and your chest should be sticking out. You should be feeling a nice stretch on your lats as you hold the bar in front of you. This is the starting position of the exercise.",
+        "Keeping the torso stationary, pull the handles back towards your torso while keeping the arms close to it until you touch the abdominals. Breathe out as you perform that movement. At that point you should be squeezing your back muscles hard. Hold that contraction for a second and slowly go back to the original position while breathing in.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Seated_Cable_Rows/0.jpg",
+        "assets/exercises/Seated_Cable_Rows/1.jpg"
+      ],
+      "id": "Seated_Cable_Rows"
+    },
+    {
+      "name": "Bent Over Barbell Row",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "shoulders"
+      ],
+      "instructions": [
+        "Holding a barbell with a pronated grip (palms facing down), bend your knees slightly and bring your torso forward, by bending at the waist, while keeping the back straight until it is almost parallel to the floor. Tip: Make sure that you keep the head up. The barbell should hang directly in front of you as your arms hang perpendicular to the floor and your torso. This is your starting position.",
+        "Now, while keeping the torso stationary, breathe out and lift the barbell to you. Keep the elbows close to the body and only use the forearms to hold the weight. At the top contracted position, squeeze the back muscles and hold for a brief pause.",
+        "Then inhale and slowly lower the barbell back to the starting position.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Bent_Over_Barbell_Row/0.jpg",
+        "assets/exercises/Bent_Over_Barbell_Row/1.jpg"
+      ],
+      "id": "Bent_Over_Barbell_Row"
+    },
+    {
+      "name": "Pullups",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "middle back"
+      ],
+      "instructions": [
+        "Grab the pull-up bar with the palms facing forward using the prescribed grip. Note on grips: For a wide grip, your hands need to be spaced out at a distance wider than your shoulder width. For a medium grip, your hands need to be spaced out at a distance equal to your shoulder width and for a close grip at a distance smaller than your shoulder width.",
+        "As you have both arms extended in front of you holding the bar at the chosen grip width, bring your torso back around 30 degrees or so while creating a curvature on your lower back and sticking your chest out. This is your starting position.",
+        "Pull your torso up until the bar touches your upper chest by drawing the shoulders and the upper arms down and back. Exhale as you perform this portion of the movement. Tip: Concentrate on squeezing the back muscles once you reach the full contracted position. The upper torso should remain stationary as it moves through space and only the arms should move. The forearms should do no other work other than hold the bar.",
+        "After a second on the contracted position, start to inhale and slowly lower your torso back to the starting position when your arms are fully extended and the lats are fully stretched.",
+        "Repeat this motion for the prescribed amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Pullups/0.jpg",
+        "assets/exercises/Pullups/1.jpg"
+      ],
+      "id": "Pullups"
+    },
+    {
+      "name": "Dumbbell Shoulder Press",
+      "force": "push",
+      "level": "intermediate",
+      "mechanic": "compound",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "instructions": [
+        "While holding a dumbbell in each hand, sit on a military press bench or utility bench that has back support. Place the dumbbells upright on top of your thighs.",
+        "Now raise the dumbbells to shoulder height one at a time using your thighs to help propel them up into position.",
+        "Make sure to rotate your wrists so that the palms of your hands are facing forward. This is your starting position.",
+        "Now, exhale and push the dumbbells upward until they touch at the top.",
+        "Then, after a brief pause at the top contracted position, slowly lower the weights back down to the starting position while inhaling.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Dumbbell_Shoulder_Press/0.jpg",
+        "assets/exercises/Dumbbell_Shoulder_Press/1.jpg"
+      ],
+      "id": "Dumbbell_Shoulder_Press"
+    },
+    {
+      "name": "Side Lateral Raise",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Pick a couple of dumbbells and stand with a straight torso and the dumbbells by your side at arms length with the palms of the hand facing you. This will be your starting position.",
+        "While maintaining the torso in a stationary position (no swinging), lift the dumbbells to your side with a slight bend on the elbow and the hands slightly tilted forward as if pouring water in a glass. Continue to go up until you arms are parallel to the floor. Exhale as you execute this movement and pause for a second at the top.",
+        "Lower the dumbbells back down slowly to the starting position as you inhale.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Side_Lateral_Raise/0.jpg",
+        "assets/exercises/Side_Lateral_Raise/1.jpg"
+      ],
+      "id": "Side_Lateral_Raise"
+    },
+    {
+      "name": "Face Pull",
+      "force": "pull",
+      "level": "intermediate",
+      "mechanic": "compound",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "secondaryMuscles": [
+        "middle back"
+      ],
+      "instructions": [
+        "Facing a high pulley with a rope or dual handles attached, pull the weight directly towards your face, separating your hands as you do so. Keep your upper arms parallel to the ground."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Face_Pull/0.jpg",
+        "assets/exercises/Face_Pull/1.jpg"
+      ],
+      "id": "Face_Pull"
+    },
+    {
+      "name": "Dumbbell Bicep Curl",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "instructions": [
+        "Stand up straight with a dumbbell in each hand at arm's length. Keep your elbows close to your torso and rotate the palms of your hands until they are facing forward. This will be your starting position.",
+        "Now, keeping the upper arms stationary, exhale and curl the weights while contracting your biceps. Continue to raise the weights until your biceps are fully contracted and the dumbbells are at shoulder level. Hold the contracted position for a brief pause as you squeeze your biceps.",
+        "Then, inhale and slowly begin to lower the dumbbells back to the starting position.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Dumbbell_Bicep_Curl/0.jpg",
+        "assets/exercises/Dumbbell_Bicep_Curl/1.jpg"
+      ],
+      "id": "Dumbbell_Bicep_Curl"
+    },
+    {
+      "name": "Hammer Curls",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Stand up with your torso upright and a dumbbell on each hand being held at arms length. The elbows should be close to the torso.",
+        "The palms of the hands should be facing your torso. This will be your starting position.",
+        "Now, while holding your upper arm stationary, exhale and curl the weight forward while contracting the biceps. Continue to raise the weight until the biceps are fully contracted and the dumbbell is at shoulder level. Hold the contracted position for a brief moment as you squeeze the biceps. Tip: Focus on keeping the elbow stationary and only moving your forearm.",
+        "After the brief pause, inhale and slowly begin the lower the dumbbells back down to the starting position.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Hammer_Curls/0.jpg",
+        "assets/exercises/Hammer_Curls/1.jpg"
+      ],
+      "id": "Hammer_Curls"
+    },
+    {
+      "name": "Barbell Curl",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "instructions": [
+        "Stand up with your torso upright while holding a barbell at a shoulder-width grip. The palm of your hands should be facing forward and the elbows should be close to the torso. This will be your starting position.",
+        "While holding the upper arms stationary, curl the weights forward while contracting the biceps as you breathe out. Tip: Only the forearms should move.",
+        "Continue the movement until your biceps are fully contracted and the bar is at shoulder level. Hold the contracted position for a second and squeeze the biceps hard.",
+        "Slowly begin to bring the bar back to starting position as your breathe in.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Barbell_Curl/0.jpg",
+        "assets/exercises/Barbell_Curl/1.jpg"
+      ],
+      "id": "Barbell_Curl"
+    },
+    {
+      "name": "Triceps Pushdown",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Attach a straight or angled bar to a high pulley and grab with an overhand grip (palms facing down) at shoulder width.",
+        "Standing upright with the torso straight and a very small inclination forward, bring the upper arms close to your body and perpendicular to the floor. The forearms should be pointing up towards the pulley as they hold the bar. This is your starting position.",
+        "Using the triceps, bring the bar down until it touches the front of your thighs and the arms are fully extended perpendicular to the floor. The upper arms should always remain stationary next to your torso and only the forearms should move. Exhale as you perform this movement.",
+        "After a second hold at the contracted position, bring the bar slowly up to the starting point. Breathe in as you perform this step.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Triceps_Pushdown/0.jpg",
+        "assets/exercises/Triceps_Pushdown/1.jpg"
+      ],
+      "id": "Triceps_Pushdown"
+    },
+    {
+      "name": "Triceps Pushdown - Rope Attachment",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Attach a rope attachment to a high pulley and grab with a neutral grip (palms facing each other).",
+        "Standing upright with the torso straight and a very small inclination forward, bring the upper arms close to your body and perpendicular to the floor. The forearms should be pointing up towards the pulley as they hold the rope with the palms facing each other. This is your starting position.",
+        "Using the triceps, bring the rope down as you bring each side of the rope to the side of your thighs. At the end of the movement the arms are fully extended and perpendicular to the floor. The upper arms should always remain stationary next to your torso and only the forearms should move. Exhale as you perform this movement.",
+        "After holding for a second, at the contracted position, bring the rope slowly up to the starting point. Breathe in as you perform this step.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Triceps_Pushdown_-_Rope_Attachment/0.jpg",
+        "assets/exercises/Triceps_Pushdown_-_Rope_Attachment/1.jpg"
+      ],
+      "id": "Triceps_Pushdown_-_Rope_Attachment"
+    },
+    {
+      "name": "Close-Grip Barbell Bench Press",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [
+        "chest",
+        "shoulders"
+      ],
+      "instructions": [
+        "Lie back on a flat bench. Using a close grip (around shoulder width), lift the bar from the rack and hold it straight over you with your arms locked. This will be your starting position.",
+        "As you breathe in, come down slowly until you feel the bar on your middle chest. Tip: Make sure that - as opposed to a regular bench press - you keep the elbows close to the torso at all times in order to maximize triceps involvement.",
+        "After a second pause, bring the bar back to the starting position as you breathe out and push the bar using your triceps muscles. Lock your arms in the contracted position, hold for a second and then start coming down slowly again. Tip: It should take at least twice as long to go down than to come up.",
+        "Repeat the movement for the prescribed amount of repetitions.",
+        "When you are done, place the bar back in the rack."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Close-Grip_Barbell_Bench_Press/0.jpg",
+        "assets/exercises/Close-Grip_Barbell_Bench_Press/1.jpg"
+      ],
+      "id": "Close-Grip_Barbell_Bench_Press"
+    },
+    {
+      "name": "Barbell Squat",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings",
+        "lower back"
+      ],
+      "instructions": [
+        "This exercise is best performed inside a squat rack for safety purposes. To begin, first set the bar on a rack to just below shoulder level. Once the correct height is chosen and the bar is loaded, step under the bar and place the back of your shoulders (slightly below the neck) across it.",
+        "Hold on to the bar using both arms at each side and lift it off the rack by first pushing with your legs and at the same time straightening your torso.",
+        "Step away from the rack and position your legs using a shoulder width medium stance with the toes slightly pointed out. Keep your head up at all times and also maintain a straight back. This will be your starting position. (Note: For the purposes of this discussion we will use the medium stance described above which targets overall development; however you can choose any of the three stances discussed in the foot stances section).",
+        "Begin to slowly lower the bar by bending the knees and hips as you maintain a straight posture with the head up. Continue down until the angle between the upper leg and the calves becomes slightly less than 90-degrees. Inhale as you perform this portion of the movement. Tip: If you performed the exercise correctly, the front of the knees should make an imaginary straight line with the toes that is perpendicular to the front. If your knees are past that imaginary line (if they are past your toes) then you are placing undue stress on the knee and the exercise has been performed incorrectly.",
+        "Begin to raise the bar as you exhale by pushing the floor with the heel of your foot as you straighten the legs again and go back to the starting position.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Barbell_Squat/0.jpg",
+        "assets/exercises/Barbell_Squat/1.jpg"
+      ],
+      "id": "Barbell_Squat"
+    },
+    {
+      "name": "Leg Press",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "instructions": [
+        "Using a leg press machine, sit down on the machine and place your legs on the platform directly in front of you at a medium (shoulder width) foot stance. (Note: For the purposes of this discussion we will use the medium stance described above which targets overall development; however you can choose any of the three stances described in the foot positioning section).",
+        "Lower the safety bars holding the weighted platform in place and press the platform all the way up until your legs are fully extended in front of you. Tip: Make sure that you do not lock your knees. Your torso and the legs should make a perfect 90-degree angle. This will be your starting position.",
+        "As you inhale, slowly lower the platform until your upper and lower legs make a 90-degree angle.",
+        "Pushing mainly with the heels of your feet and using the quadriceps go back to the starting position as you exhale.",
+        "Repeat for the recommended amount of repetitions and ensure to lock the safety pins properly once you are done. You do not want that platform falling on you fully loaded."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Leg_Press/0.jpg",
+        "assets/exercises/Leg_Press/1.jpg"
+      ],
+      "id": "Leg_Press"
+    },
+    {
+      "name": "Romanian Deadlift",
+      "force": "pull",
+      "level": "intermediate",
+      "mechanic": "compound",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "lower back"
+      ],
+      "instructions": [
+        "Put a barbell in front of you on the ground and grab it using a pronated (palms facing down) grip that a little wider than shoulder width. Tip: Depending on the weight used, you may need wrist wraps to perform the exercise and also a raised platform in order to allow for better range of motion.",
+        "Bend the knees slightly and keep the shins vertical, hips back and back straight. This will be your starting position.",
+        "Keeping your back and arms completely straight at all times, use your hips to lift the bar as you exhale. Tip: The movement should not be fast but steady and under control.",
+        "Once you are standing completely straight up, lower the bar by pushing the hips back, only slightly bending the knees, unlike when squatting. Tip: Take a deep breath at the start of the movement and keep your chest up. Hold your breath as you lower and exhale as you complete the movement.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Romanian_Deadlift/0.jpg",
+        "assets/exercises/Romanian_Deadlift/1.jpg"
+      ],
+      "id": "Romanian_Deadlift"
+    },
+    {
+      "name": "Lying Leg Curls",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Adjust the machine lever to fit your height and lie face down on the leg curl machine with the pad of the lever on the back of your legs (just a few inches under the calves). Tip: Preferably use a leg curl machine that is angled as opposed to flat since an angled position is more favorable for hamstrings recruitment.",
+        "Keeping the torso flat on the bench, ensure your legs are fully stretched and grab the side handles of the machine. Position your toes straight (or you can also use any of the other two stances described on the foot positioning section). This will be your starting position.",
+        "As you exhale, curl your legs up as far as possible without lifting the upper legs from the pad. Once you hit the fully contracted position, hold it for a second.",
+        "As you inhale, bring the legs back to the initial position. Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Lying_Leg_Curls/0.jpg",
+        "assets/exercises/Lying_Leg_Curls/1.jpg"
+      ],
+      "id": "Lying_Leg_Curls"
+    },
+    {
+      "name": "Standing Calf Raises",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Adjust the padded lever of the calf raise machine to fit your height.",
+        "Place your shoulders under the pads provided and position your toes facing forward (or using any of the two other positions described at the beginning of the chapter). The balls of your feet should be secured on top of the calf block with the heels extending off it. Push the lever up by extending your hips and knees until your torso is standing erect. The knees should be kept with a slight bend; never locked. Toes should be facing forward, outwards or inwards as described at the beginning of the chapter. This will be your starting position.",
+        "Raise your heels as you breathe out by extending your ankles as high as possible and flexing your calf. Ensure that the knee is kept stationary at all times. There should be no bending at any time. Hold the contracted position by a second before you start to go back down.",
+        "Go back slowly to the starting position as you breathe in by lowering your heels as you bend the ankles until calves are stretched.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Standing_Calf_Raises/0.jpg",
+        "assets/exercises/Standing_Calf_Raises/1.jpg"
+      ],
+      "id": "Standing_Calf_Raises"
+    },
+    {
+      "name": "Crunches",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Lie flat on your back with your feet flat on the ground, or resting on a bench with your knees bent at a 90 degree angle. If you are resting your feet on a bench, place them three to four inches apart and point your toes inward so they touch.",
+        "Now place your hands lightly on either side of your head keeping your elbows in. Tip: Don't lock your fingers behind your head.",
+        "While pushing the small of your back down in the floor to better isolate your abdominal muscles, begin to roll your shoulders off the floor.",
+        "Continue to push down as hard as you can with your lower back as you contract your abdominals and exhale. Your shoulders should come up off the floor only about four inches, and your lower back should remain on the floor. At the top of the movement, contract your abdominals hard and keep the contraction for a second. Tip: Focus on slow, controlled movement - don't cheat yourself by using momentum.",
+        "After the one second contraction, begin to come down slowly again to the starting position as you inhale.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Crunches/0.jpg",
+        "assets/exercises/Crunches/1.jpg"
+      ],
+      "id": "Crunches",
+      "model3d": {
+        "src": "assets/models/crunch.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "90deg 75deg 3.8m",
+        "cameraTarget": "-0.000m 0.344m -0.104m",
+        "source": "OpenGym3D",
+        "license": "CC0 body · MIT motion"
+      }
+    },
+    {
+      "name": "Hanging Leg Raise",
+      "force": "pull",
+      "level": "expert",
+      "mechanic": "isolation",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Hang from a chin-up bar with both arms extended at arms length in top of you using either a wide grip or a medium grip. The legs should be straight down with the pelvis rolled slightly backwards. This will be your starting position.",
+        "Raise your legs until the torso makes a 90-degree angle with the legs. Exhale as you perform this movement and hold the contraction for a second or so.",
+        "Go back slowly to the starting position as you breathe in.",
+        "Repeat for the recommended amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "assets/exercises/Hanging_Leg_Raise/0.jpg",
+        "assets/exercises/Hanging_Leg_Raise/1.jpg"
+      ],
+      "id": "Hanging_Leg_Raise"
+    },
+    {
+      "id": "OG3D_Jog_In_Place",
+      "name": "Jog in Place",
+      "level": "beginner",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps",
+        "calves"
+      ],
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings",
+        "abdominals"
+      ],
+      "instructions": [
+        "Stand tall, elbows bent at 90°, shoulders relaxed.",
+        "Lift one foot then the other in a light running rhythm.",
+        "Land on the ball of the foot and let the heel kiss the floor.",
+        "Keep the arms swinging opposite to the legs."
+      ],
+      "images": [],
+      "model3d": {
+        "src": "assets/models/jog.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "30deg 75deg 3.94m",
+        "cameraTarget": "0.006m 0.818m -0.074m",
+        "source": "OpenGym3D",
+        "license": "CC0-1.0"
+      }
+    },
+    {
+      "id": "OG3D_Jumping_Jack",
+      "name": "Jumping Jack",
+      "level": "beginner",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "secondaryMuscles": [
+        "calves",
+        "abdominals"
+      ],
+      "instructions": [
+        "Stand tall, arms at the sides.",
+        "Jump the feet wide while sweeping the arms overhead.",
+        "Land softly on the balls of the feet.",
+        "Jump back to the start and repeat rhythmically."
+      ],
+      "images": [],
+      "model3d": {
+        "src": "assets/models/jumping-jack.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "30deg 75deg 5.03m",
+        "cameraTarget": "0.000m 1.089m 0.047m",
+        "source": "OpenGym3D",
+        "license": "CC0-1.0"
+      }
+    },
+    {
+      "id": "OG3D_Run_In_Place",
+      "name": "Run in Place",
+      "level": "intermediate",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings",
+        "calves",
+        "abdominals"
+      ],
+      "instructions": [
+        "Drive the knees forward and up, torso leaning slightly ahead.",
+        "Push off the ball of the foot with a full hip extension.",
+        "Pump the arms from the shoulders, hands relaxed.",
+        "Keep the cadence high and the footfalls quiet."
+      ],
+      "images": [],
+      "model3d": {
+        "src": "assets/models/run.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "30deg 75deg 3.8m",
+        "cameraTarget": "0.008m 0.766m -0.035m",
+        "source": "OpenGym3D",
+        "license": "CC0-1.0"
+      }
+    },
+    {
+      "id": "OG3D_Walk_In_Place",
+      "name": "Walk in Place",
+      "level": "beginner",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "calves",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "quadriceps",
+        "hamstrings"
+      ],
+      "instructions": [
+        "Stand tall, eyes forward, shoulders back.",
+        "Step heel first and roll through to the toes.",
+        "Swing the arms naturally in opposition to the legs.",
+        "Keep the stride comfortable; the hips stay level."
+      ],
+      "images": [],
+      "model3d": {
+        "src": "assets/models/walk.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "30deg 75deg 3.98m",
+        "cameraTarget": "0.003m 0.846m -0.002m",
+        "source": "OpenGym3D",
+        "license": "CC0-1.0"
+      }
+    },
+    {
+      "id": "OG3D_Bodyweight_Calf_Raise",
+      "name": "Bodyweight Calf Raise",
+      "level": "beginner",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "secondaryMuscles": [
+        "abdominals"
+      ],
+      "instructions": [
+        "Stand tall, feet hip-width apart.",
+        "Rise onto the balls of the feet as high as possible.",
+        "Pause at the top, squeezing the calves.",
+        "Lower slowly under control."
+      ],
+      "images": [],
+      "model3d": {
+        "src": "assets/models/calf-raise.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "30deg 75deg 4.2m",
+        "cameraTarget": "-0.001m 0.901m 0.049m",
+        "source": "OpenGym3D",
+        "license": "CC0 body · MIT motion"
+      }
+    },
+    {
+      "id": "OG3D_High_Knees",
+      "name": "High Knees",
+      "level": "beginner",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "secondaryMuscles": [
+        "calves",
+        "abdominals"
+      ],
+      "instructions": [
+        "Stand tall, core braced.",
+        "Drive one knee to hip height, then the other, in a running rhythm.",
+        "Stay on the balls of the feet; pump the arms.",
+        "Keep the torso upright throughout."
+      ],
+      "images": [],
+      "model3d": {
+        "src": "assets/models/high-knees.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "30deg 75deg 3.97m",
+        "cameraTarget": "-0.000m 0.846m 0.174m",
+        "source": "OpenGym3D",
+        "license": "CC0 body · MIT motion"
+      }
+    },
+    {
+      "id": "OG3D_Bodyweight_Squat",
+      "name": "Bodyweight Squat",
+      "level": "beginner",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings",
+        "abdominals"
+      ],
+      "instructions": [
+        "Stand with feet shoulder-width apart, toes slightly out, arms forward for balance.",
+        "Sit the hips back and down, chest up, until thighs reach parallel.",
+        "Keep knees tracking over the toes and heels planted.",
+        "Drive through the heels to stand tall."
+      ],
+      "images": [],
+      "model3d": {
+        "src": "assets/models/squat.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "30deg 75deg 4.28m",
+        "cameraTarget": "-0.000m 0.813m 0.313m",
+        "source": "OpenGym3D",
+        "license": "CC0 body · MIT motion"
+      }
+    },
+    {
+      "id": "OG3D_Superman",
+      "name": "Superman",
+      "level": "beginner",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "lower back"
+      ],
+      "secondaryMuscles": [
+        "glutes"
+      ],
+      "instructions": [
+        "Lie face down, arms extended overhead.",
+        "Lift arms, chest, and legs off the floor together.",
+        "Squeeze the lower back and glutes at the top.",
+        "Lower slowly without dropping."
+      ],
+      "images": [],
+      "model3d": {
+        "src": "assets/models/superman.glb",
+        "animations": [
+          "Human.rig",
+          "Human"
+        ],
+        "cameraOrbit": "90deg 75deg 4.75m",
+        "cameraTarget": "0.001m 0.080m 0.062m",
+        "source": "OpenGym3D",
+        "license": "CC0 body · MIT motion"
+      }
+    }
+  ],
+  "originalSnapshotSha256": "27faf0459d1bbd60b3ebac0ee5f08c516b734c4da7cf33132e920c865f2402bf"
+}

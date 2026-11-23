@@ -1,0 +1,6 @@
+# UP's GitHub edition lives under docs for GitHub Pages.
+# Keep other top-level workspaces and local settings out of Git.
+/*
+!/.gitignore
+!/README.md
+!/docs/
