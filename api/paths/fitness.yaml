@@ -1,44 +1,320 @@
-# TODO(Dũng): thay các placeholder này bằng định nghĩa thật.
-# Dùng lại ../components.yaml. Schema riêng đặt ở ../schemas/fitness.yaml.
 /exercises:
   get:
-    tags: [exercises]
+    tags:
+      - exercises
     operationId: listExercises
-    summary: TODO Danh sách bài tập
-    description: Placeholder do Cảnh tạo để spec chạy được. Dũng thay thế.
+    summary: Danh sách thư viện bài tập
+    description: >-
+      Thư viện dùng chung, chỉ đọc sau xác thực. q tìm trong tên; muscle lọc primaryMuscles; equipment
+      lọc chính xác. sort chỉ nhận name hoặc -name, mặc định name; phân xử trùng tên theo id tăng dần.
+      Kết quả lọc vẫn phân trang.
+    parameters:
+      - $ref: ../components.yaml#/parameters/Page
+      - $ref: ../components.yaml#/parameters/Size
+      - name: sort
+        in: query
+        description: Sắp xếp tên bài.
+        schema:
+          type: string
+          enum:
+            - name
+            - '-name'
+          default: name
+      - name: q
+        in: query
+        description: Từ khóa trong tên, không phân biệt hoa thường.
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 120
+      - name: muscle
+        in: query
+        description: Nhóm cơ chính, ví dụ chest.
+        schema:
+          type: string
+          minLength: 1
+      - name: equipment
+        in: query
+        description: Dụng cụ theo dữ liệu nguồn, ví dụ barbell hoặc body only.
+        schema:
+          type: string
+          minLength: 1
     responses:
       '200':
-        description: TODO
+        description: 'Một trang thư viện; rỗng trả items: [].'
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/fitness.yaml#/ExerciseList
+            examples:
+              default:
+                $ref: ../examples/fitness.yaml#/ExerciseList
+      '401':
+        $ref: ../components.yaml#/responses/Unauthorized
+      '422':
+        $ref: ../components.yaml#/responses/ValidationError
+/exercises/{id}:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: UUID của tài nguyên. Tài nguyên riêng chỉ truy cập được khi thuộc người dùng hiện tại.
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - exercises
+    operationId: getExercise
+    summary: Chi tiết một bài tập
+    description: Tra UUID dùng trong WorkoutSet. Không dùng sourceId của prototype thay path id.
+    responses:
+      '200':
+        description: Thông tin bài tập.
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/fitness.yaml#/Exercise
+            examples:
+              default:
+                $ref: ../examples/fitness.yaml#/Exercise
+      '401':
+        $ref: ../components.yaml#/responses/Unauthorized
+      '404':
+        $ref: ../components.yaml#/responses/NotFound
+      '422':
+        $ref: ../components.yaml#/responses/ValidationError
 /workout-sessions:
   get:
-    tags: [workout-sessions]
+    tags:
+      - workout-sessions
     operationId: listWorkoutSessions
-    summary: TODO Danh sách buổi tập
-    description: Placeholder do Cảnh tạo để spec chạy được. Dũng thay thế.
+    summary: Lịch sử và buổi tập dự kiến của tôi
+    description: >-
+      Chỉ bản ghi thuộc JWT hiện tại. from/to là thời gian startedAt (buổi đã bắt đầu) hoặc scheduledAt
+      (buổi dự kiến), khoảng [from, to), định dạng ISO 8601 có múi giờ. from >= to trả 422. sort chỉ nhận
+      createdAt hoặc -createdAt; trùng giá trị phân xử theo id tăng dần.
+    parameters:
+      - $ref: ../components.yaml#/parameters/Page
+      - $ref: ../components.yaml#/parameters/Size
+      - name: sort
+        in: query
+        description: Thứ tự tạo bản ghi.
+        schema:
+          type: string
+          enum:
+            - createdAt
+            - '-createdAt'
+          default: '-createdAt'
+      - name: from
+        in: query
+        description: Từ thời điểm này, gồm cận.
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: Đến trước thời điểm này, không gồm cận.
+        schema:
+          type: string
+          format: date-time
     responses:
       '200':
-        description: TODO
+        description: Một trang buổi tập của tôi.
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/fitness.yaml#/WorkoutSessionList
+            examples:
+              default:
+                $ref: ../examples/fitness.yaml#/WorkoutSessionList
+      '401':
+        $ref: ../components.yaml#/responses/Unauthorized
+      '422':
+        $ref: ../components.yaml#/responses/ValidationError
   post:
-    tags: [workout-sessions]
+    tags:
+      - workout-sessions
     operationId: createWorkoutSession
-    summary: TODO Tạo buổi tập
-    description: Placeholder do Cảnh tạo để spec chạy được. Dũng thay thế.
+    summary: Ghi buổi tập đã bắt đầu
+    description: >-
+      Server lấy chủ sở hữu từ JWT và đặt source=manual, sets=[], version=1. endedAt phải không trước
+      startedAt. Chưa hỗ trợ Idempotency-Key: không tự retry POST khi không biết lần trước đã thành công
+      hay chưa; kiểm lịch sử trước.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/fitness.yaml#/WorkoutSessionCreate
+          examples:
+            default:
+              $ref: ../examples/fitness.yaml#/WorkoutSessionCreate
     responses:
       '201':
-        description: TODO
+        description: Đã tạo buổi; không tạo hiệp từ mục tiêu dự kiến.
+        headers:
+          Location:
+            description: URI xem buổi vừa tạo.
+            schema:
+              type: string
+              example: /api/v1/workout-sessions/8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21
+          ETag:
+            description: ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.
+            schema:
+              $ref: ../components.yaml#/headers/ETag/schema
+            example: '"1"'
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/fitness.yaml#/WorkoutSession
+            examples:
+              default:
+                $ref: ../examples/fitness.yaml#/WorkoutSessionCreated
+      '401':
+        $ref: ../components.yaml#/responses/Unauthorized
+      '422':
+        $ref: ../components.yaml#/responses/ValidationError
+/workout-sessions/{id}:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: UUID của tài nguyên. Tài nguyên riêng chỉ truy cập được khi thuộc người dùng hiện tại.
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - workout-sessions
+    operationId: getWorkoutSession
+    summary: Xem buổi tập và lấy ETag
+    description: >-
+      Trả hiệp theo setNumber tăng dần. Không có hoặc khác chủ đều trả 404. ETag đổi khi thêm hiệp hay
+      sửa buổi.
+    responses:
+      '200':
+        description: Chi tiết buổi tập của tôi.
+        headers:
+          ETag:
+            description: ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.
+            schema:
+              $ref: ../components.yaml#/headers/ETag/schema
+            example: '"2"'
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/fitness.yaml#/WorkoutSession
+            examples:
+              default:
+                $ref: ../examples/fitness.yaml#/WorkoutSession
+      '401':
+        $ref: ../components.yaml#/responses/Unauthorized
+      '404':
+        $ref: ../components.yaml#/responses/NotFound
+      '422':
+        $ref: ../components.yaml#/responses/ValidationError
+  patch:
+    tags:
+      - workout-sessions
+    operationId: updateWorkoutSession
+    summary: Sửa thông tin buổi tập
+    description: >-
+      PATCH từng trường, bắt buộc If-Match. Có thể đặt startedAt để bắt đầu buổi dự kiến từ UC5. Không
+      ghi sets/userId/version từ body. Kiểm endedAt >= startedAt trên dữ liệu sau cập nhật; còn hiệp đã
+      ghi thì không xóa startedAt. Kiểm phiên bản và ghi phải là một thao tác nguyên tử; thành công tăng
+      version. Retry cùng ETag cũ trả 412.
+    parameters:
+      - $ref: ../components.yaml#/parameters/IfMatch
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/fitness.yaml#/WorkoutSessionPatch
+          examples:
+            default:
+              $ref: ../examples/fitness.yaml#/WorkoutSessionPatch
+    responses:
+      '200':
+        description: Buổi sau cập nhật. Ví dụ minh họa, mock không lưu state.
+        headers:
+          ETag:
+            description: ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.
+            schema:
+              $ref: ../components.yaml#/headers/ETag/schema
+            example: '"3"'
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/fitness.yaml#/WorkoutSession
+            examples:
+              default:
+                $ref: ../examples/fitness.yaml#/WorkoutSessionUpdated
+      '401':
+        $ref: ../components.yaml#/responses/Unauthorized
+      '404':
+        $ref: ../components.yaml#/responses/NotFound
+      '412':
+        $ref: ../components.yaml#/responses/PreconditionFailed
+      '422':
+        $ref: ../components.yaml#/responses/ValidationError
+      '428':
+        $ref: ../components.yaml#/responses/PreconditionRequired
 /workout-sessions/{id}/sets:
   parameters:
     - name: id
       in: path
       required: true
+      description: UUID của tài nguyên. Tài nguyên riêng chỉ truy cập được khi thuộc người dùng hiện tại.
       schema:
         type: string
         format: uuid
   post:
-    tags: [workout-sessions]
+    tags:
+      - workout-sessions
     operationId: addWorkoutSet
-    summary: TODO Thêm hiệp
-    description: Placeholder do Cảnh tạo để spec chạy được. Dũng thay thế.
+    summary: Thêm một hiệp thực hiện thật
+    description: >-
+      If-Match tham chiếu ETag của WorkoutSession. Server kiểm chủ sở hữu của session trước khi ghi;
+      không lấy userId từ body. Buổi chưa có startedAt trả 422, cần PATCH bắt đầu trước. exerciseId phải
+      trỏ bài thư viện hợp lệ. Transaction kiểm version, cấp setNumber duy nhất theo session, thêm hiệp
+      và tăng version/updatedAt của session. Retry cùng ETag cũ trả 412, không tạo trùng. Bodyweight dùng
+      weightKg=0.
+    parameters:
+      - $ref: ../components.yaml#/parameters/IfMatch
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/fitness.yaml#/WorkoutSetCreate
+          examples:
+            default:
+              $ref: ../examples/fitness.yaml#/WorkoutSetCreate
     responses:
       '201':
-        description: TODO
+        description: Hiệp vừa ghi; ETag trả về là phiên bản mới của buổi cha.
+        headers:
+          ETag:
+            description: ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.
+            schema:
+              $ref: ../components.yaml#/headers/ETag/schema
+            example: '"2"'
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/fitness.yaml#/WorkoutSet
+            examples:
+              default:
+                $ref: ../examples/fitness.yaml#/WorkoutSet
+      '401':
+        $ref: ../components.yaml#/responses/Unauthorized
+      '404':
+        $ref: ../components.yaml#/responses/NotFound
+      '412':
+        $ref: ../components.yaml#/responses/PreconditionFailed
+      '422':
+        $ref: ../components.yaml#/responses/ValidationError
+      '428':
+        $ref: ../components.yaml#/responses/PreconditionRequired
