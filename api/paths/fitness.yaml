@@ -1,0 +1,44 @@
+# TODO(Dũng): thay các placeholder này bằng định nghĩa thật.
+# Dùng lại ../components.yaml. Schema riêng đặt ở ../schemas/fitness.yaml.
+/exercises:
+  get:
+    tags: [exercises]
+    operationId: listExercises
+    summary: TODO Danh sách bài tập
+    description: Placeholder do Cảnh tạo để spec chạy được. Dũng thay thế.
+    responses:
+      '200':
+        description: TODO
+/workout-sessions:
+  get:
+    tags: [workout-sessions]
+    operationId: listWorkoutSessions
+    summary: TODO Danh sách buổi tập
+    description: Placeholder do Cảnh tạo để spec chạy được. Dũng thay thế.
+    responses:
+      '200':
+        description: TODO
+  post:
+    tags: [workout-sessions]
+    operationId: createWorkoutSession
+    summary: TODO Tạo buổi tập
+    description: Placeholder do Cảnh tạo để spec chạy được. Dũng thay thế.
+    responses:
+      '201':
+        description: TODO
+/workout-sessions/{id}/sets:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  post:
+    tags: [workout-sessions]
+    operationId: addWorkoutSet
+    summary: TODO Thêm hiệp
+    description: Placeholder do Cảnh tạo để spec chạy được. Dũng thay thế.
+    responses:
+      '201':
+        description: TODO

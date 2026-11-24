@@ -1,0 +1,186 @@
+# Phần dùng chung cho mọi file trong paths/. Tham chiếu bằng:
+#   $ref: '../components.yaml#/schemas/Problem'
+#   $ref: '../components.yaml#/responses/NotFound'
+#   $ref: '../components.yaml#/parameters/Page'
+schemas:
+  Problem:
+    type: object
+    description: Lỗi theo RFC 7807.
+    required: [type, title, status]
+    properties:
+      type:
+        type: string
+        description: URI định danh loại lỗi.
+        example: https://up.example/problems/not-found
+      title:
+        type: string
+        example: Không tìm thấy
+      status:
+        type: integer
+        example: 404
+      detail:
+        type: string
+        example: Không có công việc với id này.
+      instance:
+        type: string
+        example: /api/v1/tasks/3f6c1c0e-8a53-4c5a-9a37-6d2f0b1a7c11
+      errors:
+        type: array
+        description: Chi tiết từng trường sai (chỉ có ở lỗi 422).
+        items:
+          $ref: '#/schemas/FieldError'
+  FieldError:
+    type: object
+    required: [field, message]
+    properties:
+      field:
+        type: string
+        example: title
+      message:
+        type: string
+        example: Không được để trống.
+  PageMeta:
+    type: object
+    required: [page, size, total]
+    properties:
+      page:
+        type: integer
+        minimum: 1
+        example: 1
+      size:
+        type: integer
+        minimum: 1
+        maximum: 100
+        example: 20
+      total:
+        type: integer
+        minimum: 0
+        example: 1
+parameters:
+  Page:
+    name: page
+    in: query
+    description: Số trang, bắt đầu từ 1.
+    schema:
+      type: integer
+      minimum: 1
+      default: 1
+  Size:
+    name: size
+    in: query
+    description: Số phần tử mỗi trang.
+    schema:
+      type: integer
+      minimum: 1
+      maximum: 100
+      default: 20
+  Sort:
+    name: sort
+    in: query
+    description: Trường sắp xếp, thêm dấu `-` phía trước để giảm dần. Ví dụ `-createdAt`.
+    schema:
+      type: string
+      example: -createdAt
+  IfMatch:
+    name: If-Match
+    in: header
+    required: true
+    description: Giá trị `ETag` nhận được từ lần GET trước.
+    schema:
+      type: string
+      example: '"3"'
+headers:
+  ETag:
+    description: Phiên bản của tài nguyên, dùng cho `If-Match`.
+    schema:
+      type: string
+      example: '"3"'
+  RetryAfter:
+    description: Số giây cần chờ trước khi thử lại.
+    schema:
+      type: integer
+      example: 30
+responses:
+  Unauthorized:
+    description: Thiếu hoặc sai token.
+    content:
+      application/problem+json:
+        schema:
+          $ref: '#/schemas/Problem'
+        example:
+          type: https://up.example/problems/unauthorized
+          title: Chưa xác thực
+          status: 401
+          detail: Token thiếu, hết hạn hoặc không hợp lệ.
+  NotFound:
+    description: Không có tài nguyên, hoặc tài nguyên thuộc người khác.
+    content:
+      application/problem+json:
+        schema:
+          $ref: '#/schemas/Problem'
+        example:
+          type: https://up.example/problems/not-found
+          title: Không tìm thấy
+          status: 404
+          detail: Không có tài nguyên với id này.
+  Conflict:
+    description: Xung đột trạng thái, ví dụ email đã đăng ký hoặc kế hoạch đã được nhận.
+    content:
+      application/problem+json:
+        schema:
+          $ref: '#/schemas/Problem'
+        example:
+          type: https://up.example/problems/conflict
+          title: Xung đột
+          status: 409
+          detail: Tài nguyên đã ở trạng thái này.
+  PreconditionFailed:
+    description: '`If-Match` không khớp `ETag` hiện tại. Cần GET lại rồi thử lại.'
+    content:
+      application/problem+json:
+        schema:
+          $ref: '#/schemas/Problem'
+        example:
+          type: https://up.example/problems/precondition-failed
+          title: Phiên bản đã cũ
+          status: 412
+          detail: Tài nguyên đã được sửa ở nơi khác.
+  PreconditionRequired:
+    description: Thiếu header `If-Match`.
+    content:
+      application/problem+json:
+        schema:
+          $ref: '#/schemas/Problem'
+        example:
+          type: https://up.example/problems/precondition-required
+          title: Thiếu If-Match
+          status: 428
+          detail: Cần gửi header If-Match.
+  ValidationError:
+    description: Dữ liệu gửi lên không hợp lệ.
+    content:
+      application/problem+json:
+        schema:
+          $ref: '#/schemas/Problem'
+        example:
+          type: https://up.example/problems/validation-error
+          title: Dữ liệu không hợp lệ
+          status: 422
+          detail: Có 1 trường sai.
+          errors:
+            - field: title
+              message: Không được để trống.
+  TooManyRequests:
+    description: Vượt giới hạn tốc độ.
+    headers:
+      Retry-After:
+        $ref: '#/headers/RetryAfter'
+    content:
+      application/problem+json:
+        schema:
+          $ref: '#/schemas/Problem'
+        example:
+          type: https://up.example/problems/rate-limited
+          title: Quá nhiều yêu cầu
+          status: 429
+          detail: Thử lại sau 30 giây.

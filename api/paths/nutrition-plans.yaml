@@ -1,0 +1,95 @@
+# TODO(Hiếu): thay các placeholder này bằng định nghĩa thật.
+# Dùng lại ../components.yaml. Schema riêng đặt ở ../schemas/nutrition.yaml và ../schemas/plans.yaml.
+/foods:
+  get:
+    tags: [foods]
+    operationId: listFoods
+    summary: TODO Tìm thực phẩm
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '200':
+        description: TODO
+/meal-logs:
+  get:
+    tags: [meal-logs]
+    operationId: listMealLogs
+    summary: TODO Danh sách bữa ăn
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '200':
+        description: TODO
+  post:
+    tags: [meal-logs]
+    operationId: createMealLog
+    summary: TODO Ghi bữa ăn
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '201':
+        description: TODO
+/nutrition-profile:
+  get:
+    tags: [nutrition]
+    operationId: getNutritionProfile
+    summary: TODO Xem hồ sơ dinh dưỡng
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '200':
+        description: TODO
+  put:
+    tags: [nutrition]
+    operationId: putNutritionProfile
+    summary: TODO Cập nhật hồ sơ dinh dưỡng
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '200':
+        description: TODO
+/nutrition-profile/targets:
+  get:
+    tags: [nutrition]
+    operationId: getNutritionTargets
+    summary: TODO Mục tiêu kcal và macro
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '200':
+        description: TODO
+/week-plans:
+  post:
+    tags: [week-plans]
+    operationId: createWeekPlan
+    summary: TODO Yêu cầu bản nháp kịch bản tuần
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '202':
+        description: TODO
+/week-plans/{id}:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags: [week-plans]
+    operationId: getWeekPlan
+    summary: TODO Xem bản nháp
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '200':
+        description: TODO
+/week-plans/{id}:accept:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  post:
+    tags: [week-plans]
+    operationId: acceptWeekPlan
+    summary: TODO Nhận bản nháp
+    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    responses:
+      '200':
+        description: TODO

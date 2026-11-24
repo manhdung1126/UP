@@ -1,0 +1,307 @@
+# Cảnh: identity (auth, users) và planner (tasks, events).
+# Khóa là đường dẫn; openapi.yaml tham chiếu bằng JSON pointer.
+/auth/register:
+  post:
+    tags: [auth]
+    operationId: registerUser
+    summary: Đăng ký tài khoản
+    description: Tạo người dùng mới. Email phải chưa được dùng.
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/identity.yaml#/RegisterRequest'
+    responses:
+      '201':
+        description: Đã tạo tài khoản.
+        headers:
+          Location:
+            description: Đường dẫn tới người dùng vừa tạo.
+            schema:
+              type: string
+              example: /api/v1/users/me
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/identity.yaml#/User'
+      '409':
+        $ref: '../components.yaml#/responses/Conflict'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
+/auth/login:
+  post:
+    tags: [auth]
+    operationId: loginUser
+    summary: Đăng nhập
+    description: Trả cặp access token và refresh token.
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/identity.yaml#/LoginRequest'
+    responses:
+      '200':
+        description: Đăng nhập thành công.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/identity.yaml#/TokenPair'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
+      '429':
+        $ref: '../components.yaml#/responses/TooManyRequests'
+/auth/refresh:
+  post:
+    tags: [auth]
+    operationId: refreshToken
+    summary: Đổi refresh token lấy cặp token mới
+    description: Refresh token cũ bị thu hồi sau khi đổi (xoay vòng).
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/identity.yaml#/RefreshRequest'
+    responses:
+      '200':
+        description: Cặp token mới.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/identity.yaml#/TokenPair'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+/users/me:
+  get:
+    tags: [users]
+    operationId: getCurrentUser
+    summary: Xem người dùng hiện tại
+    description: Hồ sơ của người đang đăng nhập.
+    responses:
+      '200':
+        description: Người dùng hiện tại.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/identity.yaml#/User'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+/tasks:
+  get:
+    tags: [tasks]
+    operationId: listTasks
+    summary: Danh sách công việc
+    description: Chỉ trả công việc của người dùng hiện tại.
+    parameters:
+      - $ref: '../components.yaml#/parameters/Page'
+      - $ref: '../components.yaml#/parameters/Size'
+      - $ref: '../components.yaml#/parameters/Sort'
+      - name: status
+        in: query
+        description: Lọc theo trạng thái.
+        schema:
+          type: string
+          enum: [todo, doing, done]
+      - name: dueFrom
+        in: query
+        description: Hạn từ thời điểm này (gồm).
+        schema:
+          type: string
+          format: date-time
+      - name: dueTo
+        in: query
+        description: Hạn đến thời điểm này (gồm).
+        schema:
+          type: string
+          format: date-time
+    responses:
+      '200':
+        description: Một trang công việc.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/planner.yaml#/TaskList'
+            example:
+              items:
+                - id: 7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10
+                  title: Hoàn thành OpenAPI Tuần 12
+                  description: Viết auth, tasks, events.
+                  status: todo
+                  priority: high
+                  dueAt: '2026-11-25T16:00:00Z'
+                  estimateMinutes: 120
+                  version: 1
+                  createdAt: '2026-11-25T01:00:00Z'
+                  updatedAt: '2026-11-25T01:00:00Z'
+              page: 1
+              size: 20
+              total: 1
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
+  post:
+    tags: [tasks]
+    operationId: createTask
+    summary: Tạo công việc
+    description: Tạo công việc mới cho người dùng hiện tại.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/planner.yaml#/TaskCreate'
+    responses:
+      '201':
+        description: Đã tạo.
+        headers:
+          Location:
+            description: Đường dẫn tới công việc vừa tạo.
+            schema:
+              type: string
+              example: /api/v1/tasks/7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10
+          ETag:
+            $ref: '../components.yaml#/headers/ETag'
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/planner.yaml#/Task'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
+/tasks/{id}:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags: [tasks]
+    operationId: getTask
+    summary: Chi tiết công việc
+    description: Trả kèm `ETag` để dùng cho `PATCH`.
+    responses:
+      '200':
+        description: Công việc.
+        headers:
+          ETag:
+            $ref: '../components.yaml#/headers/ETag'
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/planner.yaml#/Task'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '404':
+        $ref: '../components.yaml#/responses/NotFound'
+  patch:
+    tags: [tasks]
+    operationId: updateTask
+    summary: Sửa công việc
+    description: Cập nhật một phần. Bắt buộc `If-Match` để tránh ghi đè khi sửa trên hai thiết bị.
+    parameters:
+      - $ref: '../components.yaml#/parameters/IfMatch'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/planner.yaml#/TaskUpdate'
+    responses:
+      '200':
+        description: Công việc sau khi sửa.
+        headers:
+          ETag:
+            $ref: '../components.yaml#/headers/ETag'
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/planner.yaml#/Task'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '404':
+        $ref: '../components.yaml#/responses/NotFound'
+      '412':
+        $ref: '../components.yaml#/responses/PreconditionFailed'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
+      '428':
+        $ref: '../components.yaml#/responses/PreconditionRequired'
+  delete:
+    tags: [tasks]
+    operationId: deleteTask
+    summary: Xóa công việc
+    description: Xóa mềm. Trả 204 và không có nội dung.
+    responses:
+      '204':
+        description: Đã xóa.
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '404':
+        $ref: '../components.yaml#/responses/NotFound'
+/events:
+  get:
+    tags: [events]
+    operationId: listEvents
+    summary: Danh sách sự kiện
+    description: Sự kiện của người dùng hiện tại, lọc theo ngày hoặc khoảng ngày.
+    parameters:
+      - $ref: '../components.yaml#/parameters/Page'
+      - $ref: '../components.yaml#/parameters/Size'
+      - $ref: '../components.yaml#/parameters/Sort'
+      - name: date
+        in: query
+        description: Chỉ lấy sự kiện trong ngày này (theo múi giờ người dùng).
+        schema:
+          type: string
+          format: date
+          example: '2026-11-26'
+    responses:
+      '200':
+        description: Một trang sự kiện.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/planner.yaml#/EventList'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
+  post:
+    tags: [events]
+    operationId: createEvent
+    summary: Tạo sự kiện
+    description: Tạo sự kiện mới. `endAt` phải sau `startAt`, nếu không trả 422.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/planner.yaml#/EventCreate'
+    responses:
+      '201':
+        description: Đã tạo.
+        headers:
+          Location:
+            description: Đường dẫn tới sự kiện vừa tạo.
+            schema:
+              type: string
+              example: /api/v1/events/9d2e7a14-5b8c-4e21-b3f0-1c4a8e7d5f33
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/planner.yaml#/Event'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
