@@ -1,95 +1,468 @@
-# TODO(Hiếu): thay các placeholder này bằng định nghĩa thật.
-# Dùng lại ../components.yaml. Schema riêng đặt ở ../schemas/nutrition.yaml và ../schemas/plans.yaml.
+# Hiếu: nutrition (foods, meal-logs, nutrition-profile, targets) và week-plans (luồng demo trọng tâm UC5 theo hướng BYOAI).
+# Khóa là đường dẫn; openapi.yaml tham chiếu bằng JSON pointer.
 /foods:
   get:
     tags: [foods]
     operationId: listFoods
-    summary: TODO Tìm thực phẩm
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Tìm kiếm thư viện thực phẩm
+    description: Tra cứu thực phẩm theo tên (chỉ đọc, tách khỏi dữ liệu cá nhân). Dùng để ghi nhật ký ăn và kiểm tra thực đơn.
+    parameters:
+      - $ref: '../components.yaml#/parameters/Page'
+      - $ref: '../components.yaml#/parameters/Size'
+      - $ref: '../components.yaml#/parameters/Sort'
+      - name: q
+        in: query
+        description: Từ khóa tìm theo tên thực phẩm.
+        schema:
+          type: string
+          maxLength: 100
+          example: ức gà
+      - name: excludeAllergen
+        in: query
+        description: Loại trừ thực phẩm chứa chất gây dị ứng này.
+        schema:
+          type: string
+          example: peanut
     responses:
       '200':
-        description: TODO
+        description: Một trang danh sách thực phẩm.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/nutrition.yaml#/FoodList'
+            example:
+              items:
+                - id: 1a2b3c4d-1111-4a2b-8c3d-000000000101
+                  name: Ức gà áp chảo
+                  servingSize: 100
+                  servingUnit: g
+                  caloriesKcal: 165
+                  proteinG: 31
+                  carbsG: 0
+                  fatG: 3.6
+                  allergens: []
+                  source: USDA FoodData Central
+                - id: 1a2b3c4d-1111-4a2b-8c3d-000000000102
+                  name: Cơm trắng
+                  servingSize: 150
+                  servingUnit: g
+                  caloriesKcal: 195
+                  proteinG: 4
+                  carbsG: 42
+                  fatG: 0.4
+                  allergens: []
+                  source: UP Vietnam Food Table
+              page: 1
+              size: 20
+              total: 2
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
 /meal-logs:
   get:
     tags: [meal-logs]
     operationId: listMealLogs
-    summary: TODO Danh sách bữa ăn
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Danh sách bữa ăn đã ghi
+    description: Trả nhật ký ăn uống của người dùng hiện tại, lọc theo ngày hoặc bữa.
+    parameters:
+      - $ref: '../components.yaml#/parameters/Page'
+      - $ref: '../components.yaml#/parameters/Size'
+      - $ref: '../components.yaml#/parameters/Sort'
+      - name: date
+        in: query
+        description: Lọc theo ngày ăn (YYYY-MM-DD).
+        schema:
+          type: string
+          format: date
+          example: '2026-11-25'
+      - name: mealType
+        in: query
+        description: Lọc theo loại bữa ăn.
+        schema:
+          type: string
+          enum: [breakfast, lunch, dinner, snack]
     responses:
       '200':
-        description: TODO
+        description: Một trang nhật ký bữa ăn.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/nutrition.yaml#/MealLogList'
+            example:
+              items:
+                - id: 5e6f7a8b-3333-4c5d-8e6f-000000000301
+                  mealType: lunch
+                  loggedAt: '2026-11-25T05:30:00Z'
+                  note: Bữa trưa sau buổi tập ngực
+                  items:
+                    - id: 2b3c4d5e-2222-4b3c-9d4e-000000000201
+                      foodId: 1a2b3c4d-1111-4a2b-8c3d-000000000101
+                      foodName: Ức gà áp chảo
+                      servings: 1.5
+                      caloriesKcal: 248
+                      proteinG: 46.5
+                      carbsG: 0
+                      fatG: 5.4
+                  totalCaloriesKcal: 248
+                  totalProteinG: 46.5
+                  totalCarbsG: 0
+                  totalFatG: 5.4
+                  createdAt: '2026-11-25T05:35:00Z'
+                  updatedAt: '2026-11-25T05:35:00Z'
+              page: 1
+              size: 20
+              total: 1
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
   post:
     tags: [meal-logs]
     operationId: createMealLog
-    summary: TODO Ghi bữa ăn
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Ghi bữa ăn mới
+    description: Ghi nhật ký bữa ăn kèm danh sách món và số khẩu phần. Tổng kcal và macro do code trên backend tự tính.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/nutrition.yaml#/MealLogCreate'
     responses:
       '201':
-        description: TODO
+        description: Đã tạo nhật ký bữa ăn.
+        headers:
+          Location:
+            description: Đường dẫn tới bản ghi bữa ăn vừa tạo.
+            schema:
+              type: string
+              example: /api/v1/meal-logs/5e6f7a8b-3333-4c5d-8e6f-000000000301
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/nutrition.yaml#/MealLog'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
 /nutrition-profile:
   get:
     tags: [nutrition]
     operationId: getNutritionProfile
-    summary: TODO Xem hồ sơ dinh dưỡng
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Xem hồ sơ dinh dưỡng
+    description: Lấy hồ sơ sinh học và mục tiêu dinh dưỡng của người dùng hiện tại, kèm `ETag`.
     responses:
       '200':
-        description: TODO
+        description: Hồ sơ dinh dưỡng hiện tại.
+        headers:
+          ETag:
+            $ref: '../components.yaml#/headers/ETag'
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/nutrition.yaml#/NutritionProfile'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '404':
+        $ref: '../components.yaml#/responses/NotFound'
   put:
     tags: [nutrition]
     operationId: putNutritionProfile
-    summary: TODO Cập nhật hồ sơ dinh dưỡng
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Tạo hoặc cập nhật hồ sơ dinh dưỡng
+    description: |
+      Mỗi người dùng có duy nhất một hồ sơ dinh dưỡng. Khi cập nhật hồ sơ đã có,
+      gửi kèm header `If-Match` để tránh ghi đè ngoài ý muốn (sai phiên bản trả 412).
+    parameters:
+      - name: If-Match
+        in: header
+        required: false
+        description: Giá trị `ETag` từ lần GET trước (bắt buộc khi cập nhật hồ sơ đã tồn tại).
+        schema:
+          type: string
+          example: '"1"'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/nutrition.yaml#/NutritionProfileInput'
     responses:
       '200':
-        description: TODO
+        description: Hồ sơ dinh dưỡng sau khi lưu.
+        headers:
+          ETag:
+            $ref: '../components.yaml#/headers/ETag'
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/nutrition.yaml#/NutritionProfile'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '412':
+        $ref: '../components.yaml#/responses/PreconditionFailed'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
 /nutrition-profile/targets:
   get:
     tags: [nutrition]
     operationId: getNutritionTargets
-    summary: TODO Mục tiêu kcal và macro
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Xem mục tiêu kcal và macro hằng ngày
+    description: |
+      Resource tính toán (không có bảng riêng trong DB). Backend dùng công thức
+      Mifflin-St Jeor trên `NutritionProfile` hiện tại để trả BMR, TDEE, kcal và macro mục tiêu.
     responses:
       '200':
-        description: TODO
+        description: Mục tiêu kcal và macro tính từ hồ sơ hiện tại.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/nutrition.yaml#/NutritionTarget'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '404':
+        $ref: '../components.yaml#/responses/NotFound'
 /week-plans:
   post:
     tags: [week-plans]
     operationId: createWeekPlan
-    summary: TODO Yêu cầu bản nháp kịch bản tuần
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Yêu cầu tạo bản nháp kịch bản tuần (BYOAI / Mock)
+    description: |
+      Luồng demo trọng tâm (UC5). Backend gom ngữ cảnh việc, tập, ăn qua hợp đồng nghiệp vụ
+      rồi khởi tạo yêu cầu bản nháp kịch bản tuần theo hướng BYOAI (Mock Provider cho demo/test
+      không cần API key, hoặc chế độ xuất prompt / nhập JSON từ trợ lý AI của người dùng).
+      Trả `202 Accepted` kèm ID theo dõi trạng thái (`pending` khi đang xử lý bất đồng bộ;
+      chưa thể `:accept` khi đang `pending`). Áp dụng giới hạn tốc độ `429` + `Retry-After`
+      để bảo vệ tài nguyên kể cả khi không dùng API trả phí.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/plans.yaml#/WeekPlanCreate'
+          example:
+            weekStart: '2026-12-07'
+            mode: mock
+            goals:
+              focus: Hoàn thành bài tập lớn SOA và duy trì 3 buổi tập sức mạnh
+              workoutDaysPerWeek: 3
+              dailyCalorieTargetKcal: 2500
+              maxStudyHoursPerDay: 4
+              notes: Tối thứ Tư và thứ Sáu rảnh sau 18:00
     responses:
       '202':
-        description: TODO
+        description: Đã tiếp nhận yêu cầu tạo kịch bản tuần, trả về ID theo dõi trạng thái.
+        headers:
+          Location:
+            description: Đường dẫn để tra cứu trạng thái, nội dung bản nháp hoặc prompt xuất BYOAI.
+            schema:
+              type: string
+              example: /api/v1/week-plans/c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00
+          ETag:
+            $ref: '../components.yaml#/headers/ETag'
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/plans.yaml#/WeekPlan'
+            example:
+              id: c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00
+              weekStart: '2026-12-07'
+              status: pending
+              source: mock
+              goals:
+                focus: Hoàn thành bài tập lớn SOA và duy trì 3 buổi tập sức mạnh
+                workoutDaysPerWeek: 3
+                dailyCalorieTargetKcal: 2500
+                maxStudyHoursPerDay: 4
+                notes: Tối thứ Tư và thứ Sáu rảnh sau 18:00
+              exportPrompt: null
+              rationale: '[MOCK] Yêu cầu đang được xử lý. Gọi GET /week-plans/{id} để lấy bản nháp draft.'
+              failureReason: null
+              items: []
+              version: 1
+              createdAt: '2026-11-25T07:00:00Z'
+              updatedAt: '2026-11-25T07:00:00Z'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '422':
+        $ref: '../components.yaml#/responses/ValidationError'
+      '429':
+        $ref: '../components.yaml#/responses/TooManyRequests'
 /week-plans/{id}:
   parameters:
     - name: id
       in: path
       required: true
+      description: Định danh UUID của kịch bản tuần.
       schema:
         type: string
         format: uuid
   get:
     tags: [week-plans]
     operationId: getWeekPlan
-    summary: TODO Xem bản nháp
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Xem trạng thái, bản nháp hoặc nội dung xuất prompt BYOAI
+    description: |
+      Trả chi tiết kịch bản tuần kèm `ETag`. Ở chế độ Mock Provider, trả bản nháp cố định
+      `status: "draft"` gắn nhãn `source: "mock"`. Ở chế độ BYOAI xuất/nhập, trả `status: "awaiting-input"`
+      kèm `exportPrompt` đã giảm dữ liệu cá nhân để người dùng đưa sang trợ lý AI của mình.
+      Nếu xử lý lỗi sẽ trả `status: "failed"` kèm `failureReason`.
     responses:
       '200':
-        description: TODO
+        description: Trạng thái và nội dung bản nháp kịch bản tuần.
+        headers:
+          ETag:
+            $ref: '../components.yaml#/headers/ETag'
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/plans.yaml#/WeekPlan'
+            example:
+              id: c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00
+              weekStart: '2026-12-07'
+              status: draft
+              source: mock
+              goals:
+                focus: Hoàn thành bài tập lớn SOA và duy trì 3 buổi tập sức mạnh
+                workoutDaysPerWeek: 3
+                dailyCalorieTargetKcal: 2500
+                maxStudyHoursPerDay: 4
+                notes: Tối thứ Tư và thứ Sáu rảnh sau 18:00
+              exportPrompt: null
+              rationale: '[MOCK] Xếp khối việc khó vào buổi sáng, 3 buổi tập vào chiều T2-T4-T6 và tăng đạm vào ngày tập.'
+              failureReason: null
+              items:
+                - id: 91a0b2c3-1111-4e5f-8a9b-111111110001
+                  dayDate: '2026-12-07'
+                  startAt: '2026-12-07T02:00:00Z'
+                  endAt: '2026-12-07T04:00:00Z'
+                  kind: task
+                  title: Hoàn thành kiểm thử hợp đồng OpenAPI
+                  summary: Ưu tiên cao · 120 phút tập trung buổi sáng
+                  accepted: false
+                  payload:
+                    priority: high
+                    estimateMinutes: 120
+                - id: 91a0b2c3-1111-4e5f-8a9b-111111110002
+                  dayDate: '2026-12-07'
+                  startAt: '2026-12-07T11:00:00Z'
+                  endAt: '2026-12-07T12:00:00Z'
+                  kind: workout
+                  title: Buổi tập thân trên (Bench Press & Lat Pulldown)
+                  summary: 2 bài tập chính · 6 hiệp tổng cộng
+                  accepted: false
+                  payload:
+                    exercises:
+                      - exerciseId: Barbell_Bench_Press_-_Medium_Grip
+                        sets: 3
+                        targetReps: 10
+                      - exerciseId: Wide-Grip_Lat_Pulldown
+                        sets: 3
+                        targetReps: 12
+                - id: 91a0b2c3-1111-4e5f-8a9b-111111110003
+                  dayDate: '2026-12-07'
+                  startAt: '2026-12-07T05:30:00Z'
+                  endAt: '2026-12-07T06:00:00Z'
+                  kind: meal
+                  title: Bữa trưa giàu đạm cho ngày tập nặng
+                  summary: Ức gà áp chảo (150g) + Cơm trắng (300g) · ~638 kcal
+                  accepted: false
+                  payload:
+                    mealType: lunch
+                    items:
+                      - foodId: 1a2b3c4d-1111-4a2b-8c3d-000000000101
+                        servings: 1.5
+                      - foodId: 1a2b3c4d-1111-4a2b-8c3d-000000000102
+                        servings: 2.0
+              version: 1
+              createdAt: '2026-11-25T07:00:00Z'
+              updatedAt: '2026-11-25T07:00:05Z'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '404':
+        $ref: '../components.yaml#/responses/NotFound'
 /week-plans/{id}:accept:
   parameters:
     - name: id
       in: path
       required: true
+      description: Định danh UUID của bản nháp kịch bản tuần cần nhận.
       schema:
         type: string
         format: uuid
   post:
     tags: [week-plans]
     operationId: acceptWeekPlan
-    summary: TODO Nhận bản nháp
-    description: Placeholder do Cảnh tạo để spec chạy được. Hiếu thay thế.
+    summary: Nhận bản nháp kịch bản tuần đã kiểm tra
+    description: |
+      Xác nhận toàn bộ hoặc một phần các mục (`itemIds`) trong bản nháp ở trạng thái `draft`.
+      Backend kiểm lại quyền sở hữu, phiên bản (`If-Match` -> `412`), trạng thái (`409` nếu đang `pending`,
+      `awaiting-input`, `failed` hoặc đã nhận), và ràng buộc theo dữ liệu hiện tại (`422` nếu trùng giờ).
+      Sau đó gọi hàm dịch vụ của `planner`, `fitness`, `nutrition` trong một transaction PostgreSQL.
+      Mỗi mục chỉ nhận một lần; gọi lại (retry) không tạo bản ghi trùng lặp.
+    parameters:
+      - name: If-Match
+        in: header
+        required: false
+        description: Giá trị `ETag` của bản nháp để đảm bảo người dùng xác nhận đúng phiên bản đã xem.
+        schema:
+          type: string
+          example: '"1"'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/plans.yaml#/WeekPlanAcceptRequest'
+          example:
+            acceptAll: true
+            itemIds:
+              - 91a0b2c3-1111-4e5f-8a9b-111111110001
+              - 91a0b2c3-1111-4e5f-8a9b-111111110002
+              - 91a0b2c3-1111-4e5f-8a9b-111111110003
     responses:
       '200':
-        description: TODO
+        description: Đã nhận bản nháp và tạo các bản ghi nghiệp vụ tương ứng trong transaction.
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/plans.yaml#/WeekPlanAcceptResponse'
+            example:
+              planId: c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00
+              status: accepted
+              acceptedCount: 3
+              createdResources:
+                - itemId: 91a0b2c3-1111-4e5f-8a9b-111111110001
+                  kind: task
+                  resourceId: 7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10
+                  resourceUri: /api/v1/tasks/7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10
+                - itemId: 91a0b2c3-1111-4e5f-8a9b-111111110002
+                  kind: workout
+                  resourceId: 8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21
+                  resourceUri: /api/v1/workout-sessions/8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21
+                - itemId: 91a0b2c3-1111-4e5f-8a9b-111111110003
+                  kind: meal
+                  resourceId: 5e6f7a8b-3333-4c5d-8e6f-000000000301
+                  resourceUri: /api/v1/meal-logs/5e6f7a8b-3333-4c5d-8e6f-000000000301
+              updatedAt: '2026-11-25T07:05:00Z'
+      '401':
+        $ref: '../components.yaml#/responses/Unauthorized'
+      '404':
+        $ref: '../components.yaml#/responses/NotFound'
+      '409':
+        $ref: '../components.yaml#/responses/Conflict'
+      '412':
+        $ref: '../components.yaml#/responses/PreconditionFailed'
+      '422':
+        description: Dữ liệu không hợp lệ hoặc mục được chọn vi phạm ràng buộc (ví dụ trùng giờ với lịch hiện tại).
+        content:
+          application/problem+json:
+            schema:
+              $ref: '../components.yaml#/schemas/Problem'
+            example:
+              type: https://up.example/problems/schedule-conflict
+              title: Trùng khung giờ trong lịch
+              status: 422
+              detail: Mục 91a0b2c3-1111-4e5f-8a9b-111111110002 (11:00–12:00) trùng với sự kiện đã có.
+              instance: /api/v1/week-plans/c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00:accept
+              errors:
+                - field: itemIds[1]
+                  message: Khung giờ 2026-12-07T11:00:00Z–12:00:00Z đã có sự kiện khác.
