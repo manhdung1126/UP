@@ -100,7 +100,10 @@ WeekPlanItem:
       example: false
     payload:
       type: object
-      description: Dữ liệu chi tiết theo schema Pydantic của từng `kind` để tạo bản ghi thật khi `:accept`.
+      description: |
+        Dữ liệu chi tiết theo schema Pydantic của từng `kind` để tạo bản ghi thật khi `:accept`.
+        Với `kind: workout`, `exercises[].exerciseId` là UUID của Exercise (`GET /exercises`), không phải
+        `sourceId` dạng slug của prototype. Backend kiểm UUID tồn tại trước khi `:accept`.
       additionalProperties: true
       example:
         priority: high
