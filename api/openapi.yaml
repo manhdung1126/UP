@@ -3,7 +3,7 @@ info:
   title: UP API
   version: 1.0.0
   description: |
-    API của UP: công việc, tập luyện, dinh dưỡng và kịch bản tuần do LLM đề xuất.
+    API của UP: công việc, tập luyện, dinh dưỡng và kịch bản tuần do BYOAI (hoặc Mock Provider) đề xuất.
 
     Quy ước chung (xem `docs` của dự án):
     - Lỗi dùng RFC 7807 (`application/problem+json`).
@@ -12,13 +12,16 @@ info:
     - Xác thực bằng JWT Bearer. Tài nguyên của người khác trả 404.
     - Phiên bản nằm trong đường dẫn (`/api/v1`).
 
+    Hợp đồng viết tay là nguồn sự thật; OpenAPI do FastAPI sinh phải được đối chiếu
+    (lỗi RFC 7807, alias camelCase, mã HTTP, ETag, security).
+
     Cấu trúc file: mỗi người giữ một file trong `paths/`, schema riêng trong `schemas/`,
     phần dùng chung trong `components.yaml`.
 servers:
   - url: http://127.0.0.1:4010
     description: Mock server (Prism, không có tiền tố /api/v1)
-  - url: http://localhost:5000/api/v1
-    description: Backend chạy local
+  - url: http://localhost:8000/api/v1
+    description: Backend FastAPI chạy local (Uvicorn)
 tags:
   - name: auth
     description: Đăng ký, đăng nhập, đổi token
@@ -39,7 +42,7 @@ tags:
   - name: nutrition
     description: Hồ sơ và mục tiêu dinh dưỡng
   - name: week-plans
-    description: Kịch bản tuần do LLM đề xuất
+    description: Kịch bản tuần do BYOAI hoặc Mock Provider đề xuất, người dùng xác nhận
 security:
   - bearerAuth: []
 paths:
