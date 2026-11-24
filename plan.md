@@ -1,11 +1,11 @@
 # Kế hoạch dự án UP (bám yêu cầu Tuần 12–15, môn SOA)
 
 Nhóm: Dũng, Hiếu, Cảnh.
-Trạng thái: bản cập nhật đề xuất ngày **25/11/2026**, để nhóm đọc và góp ý qua PR; chưa phải xác nhận đã triển khai hoặc cả nhóm đã duyệt. Chỉ merge vào `main` sau khi nhóm review.
+Trạng thái: bản cập nhật ngày **25/11/2026**, đưa trực tiếp vào `main` theo yêu cầu để nhóm đọc và góp ý; chưa phải xác nhận đã triển khai hoặc cả nhóm đã duyệt.
 
 Hướng cập nhật: **FastAPI + BYOAI (Bring Your Own AI) + Virtual Trainer**. Giữ nguyên quyền sở hữu nghiệp vụ Dũng–Hiếu–Cảnh. Các quyết định chưa thống nhất được đánh dấu **[CHỜ NHÓM GÓP Ý]** ở mục 14.
 
-Phạm vi nộp Tuần 12–15 lấy tài liệu này làm chuẩn. [plan-roadmap.md](plan-roadmap.md) là định hướng Super App dài hạn; Finance, học tập mở rộng và camera trainer không tự trở thành yêu cầu MVP.
+Phạm vi nộp Tuần 12–15 lấy tài liệu này làm chuẩn. [plan-roadmap.md](plan-roadmap.md) là định hướng Super App dài hạn; bản đồng bộ FastAPI/BYOAI/Virtual Trainer đang ở [PR #2](https://github.com/manhdung1126/UP/pull/2). Finance, học tập mở rộng và camera trainer không tự trở thành yêu cầu MVP.
 
 Mục tiêu chính của bài tập lớn: **áp dụng kiến thức các bài giảng SOA vào một API thật**. Vì vậy phạm vi MVP được giữ nhỏ, và mỗi quyết định thiết kế đều gắn với một bài học.
 
@@ -162,7 +162,7 @@ Nguồn khảo sát: [Tri_Tue_Nhan_Tao](https://github.com/24021368-DucAnh/Tri_T
 
 Trước khi tích hợp: kiểm Python/dependency trên máy đích, timestamp camera, confidence/mất pose, quy ước đếm hai tay và clip độc lập. Audit rồi tách lõi khỏi UI; repo nguồn chưa phải thư viện có thể import nguyên trạng. README ghi MIT nhưng chưa thấy file LICENSE trong cây đã khảo sát: làm rõ quyền mã/model/video trước sao chép/phân phối, ghi credit và commit nguồn. Chỉ nạp model pickle từ nguồn kiểm soát.
 
-Đường đầu tiên có thể là xuất/nhập tóm tắt hiệp vào Fitness API hiện có; metadata mới cần PR hợp đồng riêng. Port MediaPipe sang browser hoặc nối runtime cục bộ là quyết định sau PoC, không cam kết Python/OpenCV chạy trực tiếp trên web. Xem [roadmap mục 6.2](plan-roadmap.md#62-virtual-trainer).
+Đường đầu tiên có thể là xuất/nhập tóm tắt hiệp vào Fitness API hiện có; metadata mới cần PR hợp đồng riêng. Port MediaPipe sang browser hoặc nối runtime cục bộ là quyết định sau PoC, không cam kết Python/OpenCV chạy trực tiếp trên web. Xem [roadmap mục 6.2 trên nhánh đề xuất](https://github.com/manhdung1126/UP/blob/codex/plan-fastapi-byoai-trainer/plan-roadmap.md#62-virtual-trainer).
 
 ## 7. API contract (tóm tắt, đích triển khai là `api/openapi.yaml`)
 
@@ -350,7 +350,7 @@ Hướng FastAPI/BYOAI/Virtual Trainer đã được đề nghị cập nhật v
 | Q3 | BYOAI tối thiểu xuất/nhập; trạng thái và `:import` ở mục 3/7 | Hiếu | Duyệt schema và ca lỗi trước code; không yêu cầu API key trả phí |
 | Q4 | Connector subscription chính thức, MCP hay local; kiểu local/self-hosted/web | Hiếu | PoC có tài liệu hiện hành và kết quả theo gói/khu vực; chưa hứa tận dụng mọi subscription |
 | Q5 | PoC trainer 1–2 bài, Python cục bộ trước; browser/runtime bridge làm sau | Dũng; Hiếu nhận xét sau hiệp | Quyền tái sử dụng, audit dependency, clip độc lập, quy ước rep và hiệu năng đạt |
-| Q6 | Giữ `docs/` làm prototype; đề xuất `frontend/` mới và cách publish | Dũng | Chốt thư mục/hosting; không đổi GitHub Pages trong PR plan này |
+| Q6 | Giữ `docs/` làm prototype; đề xuất `frontend/` mới và cách publish | Dũng | Chốt thư mục/hosting; không đổi GitHub Pages trong bản cập nhật này |
 | Q7 | Repo nộp dùng `manhdung1126/UP`, lịch review và giờ họp | Cả nhóm | Giữ hạn Tuần 12 là 25/11/2026; mỗi người review phần của người khác |
 
-Góp ý trực tiếp theo Q1–Q7 trên PR. PR này chỉ đổi hai plan, không tự tạo nhiệm vụ mới, triển khai connector/trainer hoặc merge `main`.
+Nhóm góp ý theo Q1–Q7 bằng comment/issue hoặc PR chỉnh tài liệu. Bản cập nhật này chỉ thay `plan.md`, chưa tạo nhiệm vụ mới hoặc triển khai connector/trainer. `plan-roadmap.md` tiếp tục được review riêng ở PR #2.
