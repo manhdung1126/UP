@@ -1,0 +1,386 @@
+# Schema của nutrition (food, meal-log, nutrition-profile, targets).
+# Tham chiếu: $ref: '../schemas/nutrition.yaml#/Food'
+Food:
+  type: object
+  description: Thực phẩm trong thư viện dinh dưỡng (chỉ đọc).
+  required: [id, name, servingSize, servingUnit, caloriesKcal, proteinG, carbsG, fatG, allergens, source]
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+      example: 1a2b3c4d-1111-4a2b-8c3d-000000000101
+    name:
+      type: string
+      example: Ức gà áp chảo
+    servingSize:
+      type: number
+      minimum: 1
+      description: Khối lượng hoặc dung tích của 1 khẩu phần chuẩn.
+      example: 100
+    servingUnit:
+      type: string
+      example: g
+    caloriesKcal:
+      type: integer
+      minimum: 0
+      description: Năng lượng (kcal) trên 1 khẩu phần chuẩn.
+      example: 165
+    proteinG:
+      type: number
+      minimum: 0
+      example: 31
+    carbsG:
+      type: number
+      minimum: 0
+      example: 0
+    fatG:
+      type: number
+      minimum: 0
+      example: 3.6
+    allergens:
+      type: array
+      description: Các chất gây dị ứng có trong thực phẩm.
+      items:
+        type: string
+      example: []
+    source:
+      type: string
+      description: Nguồn dữ liệu thực phẩm.
+      example: USDA FoodData Central
+FoodList:
+  allOf:
+    - $ref: '../components.yaml#/schemas/PageMeta'
+    - type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/Food'
+MealLogItem:
+  type: object
+  description: Một món ăn kèm số khẩu phần trong bữa ăn. Số kcal và macro do server tính từ `Food`.
+  required: [id, foodId, foodName, servings, caloriesKcal, proteinG, carbsG, fatG]
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+      example: 2b3c4d5e-2222-4b3c-9d4e-000000000201
+    foodId:
+      type: string
+      format: uuid
+      example: 1a2b3c4d-1111-4a2b-8c3d-000000000101
+    foodName:
+      type: string
+      readOnly: true
+      example: Ức gà áp chảo
+    servings:
+      type: number
+      minimum: 0.1
+      maximum: 50
+      example: 1.5
+    caloriesKcal:
+      type: integer
+      minimum: 0
+      readOnly: true
+      example: 248
+    proteinG:
+      type: number
+      minimum: 0
+      readOnly: true
+      example: 46.5
+    carbsG:
+      type: number
+      minimum: 0
+      readOnly: true
+      example: 0
+    fatG:
+      type: number
+      minimum: 0
+      readOnly: true
+      example: 5.4
+MealLogItemInput:
+  type: object
+  required: [foodId, servings]
+  properties:
+    foodId:
+      type: string
+      format: uuid
+      example: 1a2b3c4d-1111-4a2b-8c3d-000000000101
+    servings:
+      type: number
+      minimum: 0.1
+      maximum: 50
+      description: Số khẩu phần đã ăn.
+      example: 1.5
+MealLog:
+  type: object
+  description: Nhật ký một bữa ăn của người dùng. Tổng kcal và macro được tính tự động bằng code.
+  required:
+    - id
+    - mealType
+    - loggedAt
+    - items
+    - totalCaloriesKcal
+    - totalProteinG
+    - totalCarbsG
+    - totalFatG
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+      example: 5e6f7a8b-3333-4c5d-8e6f-000000000301
+    mealType:
+      type: string
+      enum: [breakfast, lunch, dinner, snack]
+      example: lunch
+    loggedAt:
+      type: string
+      format: date-time
+      example: '2026-11-25T05:30:00Z'
+    note:
+      type: string
+      nullable: true
+      maxLength: 500
+      example: Bữa trưa sau buổi tập ngực
+    items:
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/MealLogItem'
+    totalCaloriesKcal:
+      type: integer
+      minimum: 0
+      readOnly: true
+      description: Trường tính ra từ tổng các món trong bữa, không lưu cố định.
+      example: 568
+    totalProteinG:
+      type: number
+      minimum: 0
+      readOnly: true
+      example: 53.2
+    totalCarbsG:
+      type: number
+      minimum: 0
+      readOnly: true
+      example: 62.0
+    totalFatG:
+      type: number
+      minimum: 0
+      readOnly: true
+      example: 8.1
+    createdAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T05:35:00Z'
+    updatedAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T05:35:00Z'
+MealLogCreate:
+  type: object
+  required: [mealType, loggedAt, items]
+  properties:
+    mealType:
+      type: string
+      enum: [breakfast, lunch, dinner, snack]
+      example: lunch
+    loggedAt:
+      type: string
+      format: date-time
+      example: '2026-11-25T05:30:00Z'
+    note:
+      type: string
+      nullable: true
+      maxLength: 500
+      example: Bữa trưa sau buổi tập ngực
+    items:
+      type: array
+      minItems: 1
+      maxItems: 30
+      items:
+        $ref: '#/MealLogItemInput'
+MealLogList:
+  allOf:
+    - $ref: '../components.yaml#/schemas/PageMeta'
+    - type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/MealLog'
+NutritionProfile:
+  type: object
+  description: Hồ sơ sinh học và mục tiêu dinh dưỡng (mỗi người dùng có duy nhất một bản ghi).
+  required:
+    - age
+    - sex
+    - heightCm
+    - weightKg
+    - activityLevel
+    - goal
+    - allergies
+    - dietaryRestrictions
+    - version
+    - updatedAt
+  properties:
+    age:
+      type: integer
+      minimum: 18
+      maximum: 100
+      description: Tuổi người dùng (chỉ phục vụ người trưởng thành từ 18 tuổi).
+      example: 21
+    sex:
+      type: string
+      enum: [male, female]
+      description: Giới tính sinh học dùng cho công thức Mifflin-St Jeor.
+      example: male
+    heightCm:
+      type: number
+      minimum: 100
+      maximum: 250
+      example: 172
+    weightKg:
+      type: number
+      minimum: 30
+      maximum: 300
+      example: 68
+    activityLevel:
+      type: string
+      enum: [sedentary, light, moderate, active, very_active]
+      description: Mức độ vận động trong tuần để nhân hệ số TDEE.
+      example: moderate
+    goal:
+      type: string
+      enum: [lose, maintain, gain]
+      description: Mục tiêu cân nặng (giảm, giữ, tăng).
+      example: maintain
+    allergies:
+      type: array
+      description: Danh sách dị ứng thực phẩm để lọc món và kiểm tra thực đơn.
+      items:
+        type: string
+      example: [peanut, shellfish]
+    dietaryRestrictions:
+      type: array
+      description: Món kiêng hoặc chế độ ăn đặc biệt.
+      items:
+        type: string
+      example: [no_pork]
+    version:
+      type: integer
+      readOnly: true
+      description: Phiên bản hồ sơ, tương ứng với header `ETag`.
+      example: 1
+    updatedAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T02:00:00Z'
+NutritionProfileInput:
+  type: object
+  required: [age, sex, heightCm, weightKg, activityLevel, goal]
+  properties:
+    age:
+      type: integer
+      minimum: 18
+      maximum: 100
+      example: 21
+    sex:
+      type: string
+      enum: [male, female]
+      example: male
+    heightCm:
+      type: number
+      minimum: 100
+      maximum: 250
+      example: 172
+    weightKg:
+      type: number
+      minimum: 30
+      maximum: 300
+      example: 68
+    activityLevel:
+      type: string
+      enum: [sedentary, light, moderate, active, very_active]
+      example: moderate
+    goal:
+      type: string
+      enum: [lose, maintain, gain]
+      example: maintain
+    allergies:
+      type: array
+      items:
+        type: string
+      default: []
+      example: [peanut, shellfish]
+    dietaryRestrictions:
+      type: array
+      items:
+        type: string
+      default: []
+      example: [no_pork]
+NutritionTarget:
+  type: object
+  description: |
+    Resource ảo (không có bảng riêng trong DB). Được tính trực tiếp bằng code
+    từ `NutritionProfile` theo công thức Mifflin-St Jeor mỗi lần gọi.
+  required:
+    - bmrKcal
+    - tdeeKcal
+    - targetCaloriesKcal
+    - proteinG
+    - carbsG
+    - fatG
+    - formula
+    - disclaimer
+    - calculatedAt
+  properties:
+    bmrKcal:
+      type: integer
+      minimum: 800
+      description: Năng lượng chuyển hóa cơ bản (BMR) tính theo Mifflin-St Jeor.
+      example: 1659
+    tdeeKcal:
+      type: integer
+      minimum: 1000
+      description: Tổng năng lượng tiêu hao mỗi ngày (TDEE = BMR * hệ số vận động).
+      example: 2571
+    targetCaloriesKcal:
+      type: integer
+      minimum: 1200
+      description: Mục tiêu kcal hằng ngày theo `goal` (không bao giờ dưới ngưỡng an toàn).
+      example: 2571
+    proteinG:
+      type: integer
+      minimum: 40
+      description: Lượng đạm mục tiêu mỗi ngày (g).
+      example: 136
+    carbsG:
+      type: integer
+      minimum: 50
+      description: Lượng tinh bột mục tiêu mỗi ngày (g).
+      example: 330
+    fatG:
+      type: integer
+      minimum: 30
+      description: Lượng chất béo mục tiêu mỗi ngày (g).
+      example: 78
+    formula:
+      type: string
+      example: Mifflin-St Jeor (1990)
+    disclaimer:
+      type: string
+      example: Số liệu chỉ mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng.
+    calculatedAt:
+      type: string
+      format: date-time
+      example: '2026-11-25T06:00:00Z'

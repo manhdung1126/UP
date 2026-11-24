@@ -1,0 +1,255 @@
+# Schema của week-plans (UC5 — luồng demo trọng tâm theo hướng BYOAI + Mock Provider).
+# Tham chiếu: $ref: '../schemas/plans.yaml#/WeekPlan'
+WeekPlanGoals:
+  type: object
+  description: Mục tiêu và ràng buộc người dùng truyền vào để tạo kịch bản tuần.
+  required: [focus, workoutDaysPerWeek]
+  properties:
+    focus:
+      type: string
+      minLength: 1
+      maxLength: 300
+      description: Mục tiêu ưu tiên nhất trong tuần.
+      example: Hoàn thành bài tập lớn SOA và duy trì 3 buổi tập sức mạnh
+    workoutDaysPerWeek:
+      type: integer
+      minimum: 0
+      maximum: 7
+      default: 3
+      example: 3
+    dailyCalorieTargetKcal:
+      type: integer
+      minimum: 1200
+      maximum: 6000
+      nullable: true
+      description: Nếu bỏ trống, backend tự lấy `targetCaloriesKcal` từ `/nutrition-profile/targets` (do code tính).
+      example: 2500
+    maxStudyHoursPerDay:
+      type: number
+      minimum: 0
+      maximum: 14
+      default: 4
+      example: 4
+    notes:
+      type: string
+      nullable: true
+      maxLength: 500
+      example: Tối thứ Tư và thứ Sáu rảnh sau 18:00
+WeekPlanCreate:
+  type: object
+  required: [weekStart, goals]
+  properties:
+    weekStart:
+      type: string
+      format: date
+      description: Ngày Thứ Hai đầu tuần (ISO 8601, YYYY-MM-DD).
+      example: '2026-12-07'
+    mode:
+      type: string
+      enum: [mock, byoai-export]
+      default: mock
+      description: |
+        Chế độ tạo bản nháp BYOAI:
+        - `mock`: dùng Mock Provider trả bản nháp mẫu cố định (bắt buộc cho demo/test, không cần API key).
+        - `byoai-export`: tạo bản ghi ở trạng thái `awaiting-input` kèm prompt/ngữ cảnh đã tối giản dữ liệu cá nhân để người dùng đưa sang trợ lý AI của mình rồi nhập JSON lại.
+      example: mock
+    goals:
+      $ref: '#/WeekPlanGoals'
+WeekPlanItem:
+  type: object
+  description: |
+    Một mục đề xuất trong kịch bản tuần. Trong DB lưu tại `WEEK_PLAN_ITEM`
+    với cột `kind` và `payload` JSON; chỉ khi `:accept` (trong transaction) mới tách ra bảng thật
+    (`TASK`, `WORKOUT_SESSION`, `MEAL_LOG`). Mỗi mục chỉ được nhận một lần (idempotent).
+  required: [id, dayDate, kind, title, accepted, payload]
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+      example: 91a0b2c3-1111-4e5f-8a9b-111111110001
+    dayDate:
+      type: string
+      format: date
+      example: '2026-12-07'
+    startAt:
+      type: string
+      format: date-time
+      nullable: true
+      example: '2026-12-07T02:00:00Z'
+    endAt:
+      type: string
+      format: date-time
+      nullable: true
+      example: '2026-12-07T04:00:00Z'
+    kind:
+      type: string
+      enum: [task, workout, meal]
+      description: Loại mục đề xuất.
+      example: task
+    title:
+      type: string
+      example: Hoàn thành kiểm thử hợp đồng OpenAPI
+    summary:
+      type: string
+      nullable: true
+      example: Ưu tiên cao · 120 phút tập trung buổi sáng
+    accepted:
+      type: boolean
+      description: Đã được người dùng xác nhận chuyển thành bản ghi thật hay chưa (mỗi mục chỉ nhận 1 lần).
+      example: false
+    payload:
+      type: object
+      description: Dữ liệu chi tiết theo schema Pydantic của từng `kind` để tạo bản ghi thật khi `:accept`.
+      additionalProperties: true
+      example:
+        priority: high
+        estimateMinutes: 120
+WeekPlan:
+  type: object
+  description: |
+    Bản nháp kịch bản tuần hợp nhất công việc, buổi tập và bữa ăn.
+    Hỗ trợ vòng đời bất đồng bộ và BYOAI: `pending` -> `awaiting-input` / `draft` -> `accepted` / `partially_accepted` / `rejected` (hoặc `failed` nếu xử lý lỗi).
+  required:
+    - id
+    - weekStart
+    - status
+    - source
+    - goals
+    - items
+    - version
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+      example: c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00
+    weekStart:
+      type: string
+      format: date
+      example: '2026-12-07'
+    status:
+      type: string
+      enum: [pending, awaiting-input, draft, accepted, partially_accepted, rejected, failed]
+      description: |
+        Trạng thái bản nháp:
+        - `pending`: đã tiếp nhận yêu cầu (202), đang xử lý, chưa thể nhận (`:accept` trả 409).
+        - `awaiting-input`: chế độ BYOAI xuất/nhập đang chờ người dùng nhập JSON từ trợ lý AI cá nhân.
+        - `draft`: bản nháp đã qua kiểm tra Pydantic và ràng buộc, sẵn sàng để người dùng duyệt và `:accept`.
+        - `accepted` / `partially_accepted`: đã nhận toàn bộ hoặc một phần bản nháp vào bảng nghiệp vụ thật.
+        - `rejected`: người dùng từ chối bản nháp.
+        - `failed`: xử lý thất bại (kèm `failureReason`), cho phép người dùng thử lại, không treo ở `pending`.
+      example: draft
+    source:
+      type: string
+      enum: [mock, byoai-import, official-connector, local-llm]
+      readOnly: true
+      description: Nguồn sinh bản nháp (bắt buộc gắn nhãn rõ khi dùng `mock`).
+      example: mock
+    goals:
+      $ref: '#/WeekPlanGoals'
+    exportPrompt:
+      type: string
+      nullable: true
+      readOnly: true
+      description: |
+        Prompt và ngữ cảnh đã tối giản dữ liệu cá nhân (không chứa tên thật, email)
+        dùng ở chế độ BYOAI xuất/nhập (`awaiting-input`) để người dùng dán sang trợ lý AI của mình.
+      example: null
+    rationale:
+      type: string
+      nullable: true
+      description: Giải thích ngắn gọn về cách phân bổ lịch làm việc, tập luyện và dinh dưỡng.
+      example: '[MOCK] Xếp khối việc khó vào buổi sáng, 3 buổi tập vào chiều T2-T4-T6 và tăng đạm vào ngày tập.'
+    failureReason:
+      type: string
+      nullable: true
+      readOnly: true
+      description: Lý do lỗi khi `status` là `failed` để người dùng hoặc hệ thống xử lý/thử lại.
+      example: null
+    items:
+      type: array
+      items:
+        $ref: '#/WeekPlanItem'
+    version:
+      type: integer
+      readOnly: true
+      description: Phiên bản bản nháp, tương ứng header `ETag`.
+      example: 1
+    createdAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T07:00:00Z'
+    updatedAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T07:00:00Z'
+WeekPlanAcceptRequest:
+  type: object
+  description: |
+    Yêu cầu xác nhận bản nháp kịch bản tuần. Nếu `acceptAll: true` (mặc định),
+    hệ thống nhận toàn bộ `items` chưa được nhận. Nếu `acceptAll: false`, chỉ nhận các mục trong `itemIds`.
+  properties:
+    acceptAll:
+      type: boolean
+      default: true
+      example: true
+    itemIds:
+      type: array
+      description: Danh sách ID các mục trong `items` muốn nhận (khi `acceptAll` là `false`).
+      items:
+        type: string
+        format: uuid
+      example:
+        - 91a0b2c3-1111-4e5f-8a9b-111111110001
+        - 91a0b2c3-1111-4e5f-8a9b-111111110002
+        - 91a0b2c3-1111-4e5f-8a9b-111111110003
+CreatedResourceRef:
+  type: object
+  description: Liên kết giữa mục trong bản nháp và bản ghi thật vừa được tạo trong transaction sau khi `:accept`.
+  required: [itemId, kind, resourceId, resourceUri]
+  properties:
+    itemId:
+      type: string
+      format: uuid
+      example: 91a0b2c3-1111-4e5f-8a9b-111111110001
+    kind:
+      type: string
+      enum: [task, workout, meal]
+      example: task
+    resourceId:
+      type: string
+      format: uuid
+      example: 7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10
+    resourceUri:
+      type: string
+      example: /api/v1/tasks/7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10
+WeekPlanAcceptResponse:
+  type: object
+  description: Kết quả sau khi nhận bản nháp và sinh các bản ghi thật ở planner, fitness, nutrition (chống trùng lặp khi retry).
+  required: [planId, status, acceptedCount, createdResources, updatedAt]
+  properties:
+    planId:
+      type: string
+      format: uuid
+      example: c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00
+    status:
+      type: string
+      enum: [accepted, partially_accepted]
+      example: accepted
+    acceptedCount:
+      type: integer
+      minimum: 1
+      example: 3
+    createdResources:
+      type: array
+      items:
+        $ref: '#/CreatedResourceRef'
+    updatedAt:
+      type: string
+      format: date-time
+      example: '2026-11-25T07:05:00Z'
