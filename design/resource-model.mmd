@@ -1,0 +1,47 @@
+flowchart TB
+  U["User<br/>/users/me"]
+
+  subgraph P["Planner"]
+    T["Task<br/>/tasks"]
+    E["Event<br/>/events"]
+  end
+
+  subgraph F["Fitness"]
+    WS["WorkoutSession<br/>/workout-sessions"]
+    WSET["WorkoutSet<br/>/workout-sessions/{id}/sets"]
+    EX["Exercise<br/>/exercises"]
+    WS -->|"chứa 0..n hiệp thực hiện"| WSET
+    WSET -->|"tham chiếu exerciseId"| EX
+  end
+
+  subgraph N["Nutrition"]
+    ML["MealLog<br/>/meal-logs"]
+    MLI["MealLogItem<br/>items[] trong MealLog"]
+    FOOD["Food<br/>/foods"]
+    NP["NutritionProfile<br/>/nutrition-profile"]
+    NT["NutritionTarget<br/>/nutrition-profile/targets"]
+    ML -->|"chứa 1..n món"| MLI
+    MLI -->|"tham chiếu foodId"| FOOD
+    NP -->|"code tính mục tiêu"| NT
+  end
+
+  subgraph A["Weekly Planner / BYOAI"]
+    WP["WeekPlan<br/>/week-plans"]
+    WPI["WeekPlanItem<br/>items[] trong WeekPlan"]
+    WP -->|"chứa 0..n mục"| WPI
+  end
+
+  U -->|"sở hữu"| T
+  U -->|"sở hữu"| E
+  U -->|"sở hữu"| WS
+  U -->|"sở hữu"| ML
+  U -->|"0..1 hồ sơ"| NP
+  U -->|"yêu cầu"| WP
+  WPI -.->|"chỉ sau xác nhận"| T
+  WPI -.->|"chỉ sau xác nhận"| WS
+  WPI -.->|"chỉ sau xác nhận"| ML
+
+  classDef common fill:#f1f5f9,stroke:#475569,color:#0f172a
+  classDef calculated fill:#fef3c7,stroke:#b45309,color:#78350f
+  class EX,FOOD common
+  class NT calculated
