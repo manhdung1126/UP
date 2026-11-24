@@ -1,14 +1,7 @@
 Exercise:
   type: object
-  description: Bài trong thư viện dùng chung, chỉ đọc. UUID API khác sourceId dạng slug trong prototype.
-  required:
-    - id
-    - sourceId
-    - name
-    - primaryMuscles
-    - equipment
-    - instructions
-    - source
+  description: Bài tập trong thư viện dùng chung
+  required: [id, sourceId, name, primaryMuscles, equipment, instructions, source]
   properties:
     id:
       type: string
@@ -16,7 +9,7 @@ Exercise:
       readOnly: true
     sourceId:
       type: string
-      description: ID nguyên gốc để map thư viện hiện có; không dùng thay UUID trong API.
+      description: ID gốc của bài tập trong thư viện nguồn.
     name:
       type: string
     primaryMuscles:
@@ -32,46 +25,42 @@ Exercise:
         type: string
     source:
       type: string
-      description: Nguồn dữ liệu. Giữ credit/giấy phép theo docs/DATA-SOURCES.md khi nạp dữ liệu.
+      description: Nguồn dữ liệu, ghi nguồn và quản lý giấy phép.
+ExerciseList:
+  allOf:
+    - $ref: '../components.yaml#/schemas/PageMeta'
+    - type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/Exercise'
 WorkoutSetCreate:
   type: object
+  description: Ghi dữ liệu một hiệp đã thực hiện. Exercise không tồn tại trả 422.
   additionalProperties: false
-  description: >-
-    Chỉ nhận số liệu đã thực hiện. Không nhận userId/sessionId/setNumber từ client. Bài không tồn tại trả
-    422.
-  required:
-    - exerciseId
-    - reps
-    - weightKg
+  required: [exerciseId, reps, weightKg]
   properties:
     exerciseId:
       type: string
       format: uuid
-      description: UUID Exercise, không phải slug của prototype hoặc nhãn SVM.
+      description: UUID của Exercise.
     reps:
       type: integer
       minimum: 1
-      description: Số lần thực hiện, đơn vị rep.
     weightKg:
       type: number
       minimum: 0
-      description: Khối lượng tạ bên ngoài (kg). Bài bodyweight ghi 0, không tự cộng cân nặng cơ thể.
+      description: Khối lượng tạ bên ngoài, không tính bodyweight. Nếu bài tập không dùng tạ, ghi 0.
     rpe:
       type: number
       minimum: 1
       maximum: 10
       nullable: true
-      description: Mức gắng sức tự đánh giá, 1–10; có thể bỏ trống.
 WorkoutSet:
   type: object
-  required:
-    - id
-    - sessionId
-    - exerciseId
-    - setNumber
-    - reps
-    - weightKg
-    - createdAt
+  required: [id, sessionId, exerciseId, setNumber, reps, weightKg, createdAt]
   properties:
     id:
       type: string
@@ -88,7 +77,7 @@ WorkoutSet:
       type: integer
       minimum: 1
       readOnly: true
-      description: Thứ tự hiệp trong buổi tập, server cấp duy nhất theo session.
+      description: Thứ tự hiệp trong buổi tập, server tự cấp.
     reps:
       type: integer
       minimum: 1
@@ -210,7 +199,7 @@ WorkoutSession:
       type: integer
       minimum: 1
       readOnly: true
-      description: ETag mạnh dạng chuỗi có dấu nháy, ví dụ "2". Đổi khi sửa buổi hoặc thêm hiệp.
+      description: Phiên bản buổi tập, tăng khi sửa buổi hoặc thêm hiệp. Dùng để tạo ETag.
     createdAt:
       type: string
       format: date-time
@@ -219,17 +208,6 @@ WorkoutSession:
       type: string
       format: date-time
       readOnly: true
-ExerciseList:
-  allOf:
-    - $ref: ../components.yaml#/schemas/PageMeta
-    - type: object
-      required:
-        - items
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/Exercise'
 WorkoutSessionList:
   allOf:
     - $ref: ../components.yaml#/schemas/PageMeta
