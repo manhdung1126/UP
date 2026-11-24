@@ -1,0 +1,105 @@
+erDiagram
+  USER ||--o{ TASK : owns
+  USER ||--o{ EVENT : owns
+  USER ||--o{ WORKOUT_SESSION : owns
+  USER ||--o{ MEAL_LOG : owns
+  USER ||--o| NUTRITION_PROFILE : has
+  USER ||--o{ WEEK_PLAN : requests
+  WORKOUT_SESSION ||--o{ WORKOUT_SET : contains
+  EXERCISE ||--o{ WORKOUT_SET : references
+  MEAL_LOG ||--|{ MEAL_LOG_ITEM : contains
+  FOOD ||--o{ MEAL_LOG_ITEM : references
+  WEEK_PLAN ||--o{ WEEK_PLAN_ITEM : contains
+
+  USER {
+    uuid id PK
+    string email UK
+    string password_hash
+  }
+  TASK {
+    uuid id PK
+    uuid user_id FK
+    string title
+    string status
+    timestamp due_at
+    int version
+  }
+  EVENT {
+    uuid id PK
+    uuid user_id FK
+    string title
+    timestamp start_at
+    timestamp end_at
+    int version
+  }
+  EXERCISE {
+    uuid id PK
+    string source_id UK
+    string name
+    string equipment
+    json primary_muscles
+  }
+  WORKOUT_SESSION {
+    uuid id PK
+    uuid user_id FK
+    string title
+    timestamp scheduled_at
+    timestamp started_at
+    timestamp ended_at
+    string source
+    int version
+  }
+  WORKOUT_SET {
+    uuid id PK
+    uuid session_id FK
+    uuid exercise_id FK
+    int set_number
+    int reps
+    decimal weight_kg
+    decimal rpe
+  }
+  FOOD {
+    uuid id PK
+    string name
+    decimal serving_size
+    string serving_unit
+    decimal calories_kcal
+    decimal protein_g
+    decimal carbs_g
+    decimal fat_g
+  }
+  MEAL_LOG {
+    uuid id PK
+    uuid user_id FK
+    string meal_type
+    timestamp logged_at
+    int version
+  }
+  MEAL_LOG_ITEM {
+    uuid id PK
+    uuid meal_log_id FK
+    uuid food_id FK
+    decimal servings
+  }
+  NUTRITION_PROFILE {
+    uuid id PK
+    uuid user_id FK,UK
+    decimal weight_kg
+    decimal height_cm
+    int version
+  }
+  WEEK_PLAN {
+    uuid id PK
+    uuid user_id FK
+    date week_start
+    string status
+    string source
+    int version
+  }
+  WEEK_PLAN_ITEM {
+    uuid id PK
+    uuid week_plan_id FK
+    string kind
+    json payload
+    boolean accepted
+  }

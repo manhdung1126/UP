@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UP API — Swagger UI Tuần 12</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./vendor/swagger-ui/swagger-ui.css">
+  <style>
+    body { margin: 0; background: #fafafa; }
+    .intro { padding: 20px max(20px, calc((100% - 1460px) / 2)); background: #0f172a; color: #f8fafc; font: 16px/1.6 system-ui, sans-serif; }
+    .intro h1 { font-size: 24px; margin: 0 0 8px; }
+    .intro p { margin: 4px 0; }
+    .intro a { color: #bae6fd; }
+    .intro code { color: #fde68a; }
+    .load-error { margin: 24px; color: #9f1239; font: 16px/1.6 system-ui, sans-serif; }
+  </style>
+</head>
+<body>
+  <header class="intro">
+    <h1>UP API — Hợp đồng Tuần 12</h1>
+    <p>Đây là tài liệu và mock. Prism không lưu dữ liệu hoặc kiểm quyền sở hữu thật.</p>
+    <p>Chạy mock tại <code>http://127.0.0.1:4010</code>. Authorize bằng chuỗi thử <code>mock-token</code>; không nhập token tài khoản thật.</p>
+    <p><a href="./README.md">Hướng dẫn chạy và kiểm tra</a> · <a href="./openapi.yaml">Spec nguồn</a> · <a href="../design/design.md">Thiết kế</a></p>
+  </header>
+  <main id="swagger-ui" aria-label="Tài liệu OpenAPI tương tác"></main>
+  <p id="load-error" class="load-error" role="alert" hidden>Không tải được Swagger UI hoặc hợp đồng. Hãy chạy HTTP server từ thư mục gốc UP và kiểm tra api/openapi.bundle.json đã được tạo.</p>
+  <script src="./vendor/swagger-ui/swagger-ui-bundle.js"></script>
+  <script src="./swagger-init.js"></script>
+</body>
+</html>

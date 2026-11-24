@@ -1,0 +1,243 @@
+Exercise:
+  type: object
+  description: Bài trong thư viện dùng chung, chỉ đọc. UUID API khác sourceId dạng slug trong prototype.
+  required:
+    - id
+    - sourceId
+    - name
+    - primaryMuscles
+    - equipment
+    - instructions
+    - source
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+    sourceId:
+      type: string
+      description: ID nguyên gốc để map thư viện hiện có; không dùng thay UUID trong API.
+    name:
+      type: string
+    primaryMuscles:
+      type: array
+      items:
+        type: string
+    equipment:
+      type: string
+      nullable: true
+    instructions:
+      type: array
+      items:
+        type: string
+    source:
+      type: string
+      description: Nguồn dữ liệu. Giữ credit/giấy phép theo docs/DATA-SOURCES.md khi nạp dữ liệu.
+WorkoutSetCreate:
+  type: object
+  additionalProperties: false
+  description: >-
+    Chỉ nhận số liệu đã thực hiện. Không nhận userId/sessionId/setNumber từ client. Bài không tồn tại trả
+    422.
+  required:
+    - exerciseId
+    - reps
+    - weightKg
+  properties:
+    exerciseId:
+      type: string
+      format: uuid
+      description: UUID Exercise, không phải slug của prototype hoặc nhãn SVM.
+    reps:
+      type: integer
+      minimum: 1
+      description: Số lần thực hiện, đơn vị rep.
+    weightKg:
+      type: number
+      minimum: 0
+      description: Khối lượng tạ bên ngoài (kg). Bài bodyweight ghi 0, không tự cộng cân nặng cơ thể.
+    rpe:
+      type: number
+      minimum: 1
+      maximum: 10
+      nullable: true
+      description: Mức gắng sức tự đánh giá, 1–10; có thể bỏ trống.
+WorkoutSet:
+  type: object
+  required:
+    - id
+    - sessionId
+    - exerciseId
+    - setNumber
+    - reps
+    - weightKg
+    - createdAt
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+    sessionId:
+      type: string
+      format: uuid
+      readOnly: true
+    exerciseId:
+      type: string
+      format: uuid
+    setNumber:
+      type: integer
+      minimum: 1
+      readOnly: true
+      description: Thứ tự hiệp trong buổi tập, server cấp duy nhất theo session.
+    reps:
+      type: integer
+      minimum: 1
+    weightKg:
+      type: number
+      minimum: 0
+    rpe:
+      type: number
+      minimum: 1
+      maximum: 10
+      nullable: true
+    createdAt:
+      type: string
+      format: date-time
+      readOnly: true
+WorkoutSessionCreate:
+  type: object
+  additionalProperties: false
+  required:
+    - title
+    - startedAt
+  description: Ghi một buổi đã bắt đầu. UC5 tạo buổi dự kiến qua nghiệp vụ nội bộ, không tạo hiệp thực hiện giả.
+  properties:
+    title:
+      type: string
+      minLength: 1
+      maxLength: 120
+    startedAt:
+      type: string
+      format: date-time
+    endedAt:
+      type: string
+      format: date-time
+      nullable: true
+      description: Nếu có, phải >= startedAt. Backend kiểm điều kiện này.
+    note:
+      type: string
+      nullable: true
+      maxLength: 1000
+WorkoutSessionPatch:
+  type: object
+  additionalProperties: false
+  minProperties: 1
+  description: Chỉ trường gửi lên được đổi. Không ghi đè sets hoặc quyền sở hữu. Backend kiểm endedAt >= startedAt.
+  properties:
+    title:
+      type: string
+      minLength: 1
+      maxLength: 120
+    startedAt:
+      type: string
+      format: date-time
+      description: Ghi thời điểm bắt đầu thực tế cho buổi dự kiến, hoặc sửa thời gian ghi nhận.
+    endedAt:
+      type: string
+      format: date-time
+      nullable: true
+    note:
+      type: string
+      nullable: true
+      maxLength: 1000
+WorkoutSession:
+  type: object
+  description: >-
+    Một buổi thuộc người dùng hiện tại. Buổi dự kiến từ UC5 có scheduledAt, startedAt=null và sets rỗng.
+    PATCH startedAt khi bắt đầu thực tế.
+  required:
+    - id
+    - title
+    - startedAt
+    - scheduledAt
+    - endedAt
+    - source
+    - sets
+    - totalVolumeKg
+    - version
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+    title:
+      type: string
+    startedAt:
+      type: string
+      format: date-time
+      nullable: true
+    scheduledAt:
+      type: string
+      format: date-time
+      nullable: true
+      readOnly: true
+    endedAt:
+      type: string
+      format: date-time
+      nullable: true
+    note:
+      type: string
+      nullable: true
+    source:
+      type: string
+      enum:
+        - manual
+        - week-plan
+      readOnly: true
+    sets:
+      type: array
+      items:
+        $ref: '#/WorkoutSet'
+      description: Hiệp thực hiện thật; rỗng khi mới tạo hoặc mới nhận kế hoạch.
+    totalVolumeKg:
+      type: number
+      minimum: 0
+      readOnly: true
+      description: Tổng reps × weightKg của hiệp đã ghi, đơn vị kg. Code tính, không lưu cột tổng và không dùng LLM.
+    version:
+      type: integer
+      minimum: 1
+      readOnly: true
+      description: ETag mạnh dạng chuỗi có dấu nháy, ví dụ "2". Đổi khi sửa buổi hoặc thêm hiệp.
+    createdAt:
+      type: string
+      format: date-time
+      readOnly: true
+    updatedAt:
+      type: string
+      format: date-time
+      readOnly: true
+ExerciseList:
+  allOf:
+    - $ref: ../components.yaml#/schemas/PageMeta
+    - type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/Exercise'
+WorkoutSessionList:
+  allOf:
+    - $ref: ../components.yaml#/schemas/PageMeta
+    - type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/WorkoutSession'

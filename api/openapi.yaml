@@ -64,8 +64,12 @@ paths:
   # --- Dũng: fitness ---
   /exercises:
     $ref: './paths/fitness.yaml#/~1exercises'
+  /exercises/{id}:
+    $ref: './paths/fitness.yaml#/~1exercises~1%7Bid%7D'
   /workout-sessions:
     $ref: './paths/fitness.yaml#/~1workout-sessions'
+  /workout-sessions/{id}:
+    $ref: './paths/fitness.yaml#/~1workout-sessions~1%7Bid%7D'
   /workout-sessions/{id}/sets:
     $ref: './paths/fitness.yaml#/~1workout-sessions~1%7Bid%7D~1sets'
   # --- Hiếu: nutrition, week-plans ---
