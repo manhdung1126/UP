@@ -14,6 +14,7 @@ Nhóm: Dũng, Hiếu, Cảnh. Ngày: 25/11/2026. Repo: https://github.com/manhdu
 | Swagger UI | UI cục bộ, bundle, 27 operation toàn nhóm | Dũng | `api/index.html`, [ảnh Swagger](swagger-ui-desktop.png) |
 | Mock server | Prism: `POST /auth/login` 200, `POST /week-plans` 202, `POST /week-plans/{id}:accept` 200; ca lỗi 409 và 422 | Cảnh | [prism-mock-run.md](evidence/prism-mock-run.md) |
 | Repo, README, phân công | Nhánh theo người, PR có người duyệt, bảng phân công | Cả nhóm | [README.md](../README.md) |
+| Slide | 8 trang: bài toán, MVP, tiêu chuẩn API, resource model, ERD, kiến trúc và đánh đổi, UC5, kế hoạch | Cả nhóm | [slides/UP-slide-T12.pdf](slides/UP-slide-T12.pdf) |
 | Backlog, kế hoạch Tuần 13–15 | Backlog 28 việc, kế hoạch và rủi ro | Cả nhóm | [design/backlog.md](../design/backlog.md), plan.md mục 9, 12 |
 
 Demo (không cần database): mở Swagger UI hoặc Prism, gọi 3 operation, chạy luồng UC5 từ góc nhìn consumer: login, tạo kế hoạch (202, `pending`), xem bản nháp, nhận (`:accept`). Đầu ra là **mock cố định** (`source: "mock"`).
@@ -21,7 +22,7 @@ Demo (không cần database): mở Swagger UI hoặc Prism, gọi 3 operation, c
 ## 2. Chưa xong
 
 - Chưa tạo GitHub Issues và Project từ `design/backlog.md` (backlog mới ở dạng file).
-- Slide 6–8 trang chưa được nhóm chốt.
+- Slide (8 trang) đã soạn, chờ cả nhóm duyệt lần cuối trước khi trình bày.
 - Chưa có backend, database, JWT thật, phân quyền A/B, chuyển trạng thái thật: Tuần 12 chỉ yêu cầu thiết kế và mock. Prism chỉ chứng minh hợp đồng.
 - `POST /week-plans/{id}:import` và vòng đời trạng thái (`awaiting-input`, `failed`) mới là đề xuất, chưa được nhóm duyệt.
 - Cần schema payload theo từng `kind` (hiện `additionalProperties: true`) và cách liên kết mục đã nhận với bản ghi tạo ra, trước khi code `:accept`.

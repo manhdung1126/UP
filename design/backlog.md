@@ -16,7 +16,7 @@ Nguồn: mục 10 của [plan.md](../plan.md). Mỗi dòng nên là một GitHub
 | 8 | Spectral lint trong CI | Cảnh | Xong | `.github/workflows/lint-api.yml` |
 | 9 | Prism mock và Swagger UI | Cảnh, Dũng | Xong | `reports/evidence/`, `api/index.html` |
 | 10 | README: mục tiêu, cách chạy, cấu trúc repo, phân công | Cảnh | Xong | `README.md` |
-| 11 | Slide 6–8 và báo cáo tiến độ | Cả nhóm | Chờ nhóm chốt | `reports/report-T12.md` |
+| 11 | Slide 6–8 và báo cáo tiến độ | Cả nhóm | Đã soạn, chờ nhóm duyệt | `reports/slides/UP-slide-T12.pdf`, `reports/report-T12.md` |
 
 ## Tuần 13 (nền tảng)
 
