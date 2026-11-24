@@ -19,3 +19,6 @@ npx @stoplight/prism-cli@5.16.0 mock api/openapi.yaml -p 4010
 ```
 
 Thử mock: `curl -X POST http://127.0.0.1:4010/auth/login -H 'Content-Type: application/json' -d '{"email":"canh@example.com","password":"mat-khau-dai-12-ky-tu"}'`. Thêm `-H 'Prefer: code=422'` để ép Prism trả ca lỗi.
+
+Bằng chứng mock chạy: [Prism khởi động, liệt kê toàn bộ operation gồm `POST /auth/login`, `POST /week-plans`, `POST /week-plans/{id}:accept`](reports/evidence/prism-mock-start.png).
+Kết quả chạy 3 operation demo và ca lỗi 409/422 trên spec của Hiếu: [prism-mock-run.md](reports/evidence/prism-mock-run.md).
