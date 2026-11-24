@@ -18,4 +18,14 @@ npx @stoplight/spectral-cli@6.17.1 lint api/openapi.yaml
 npx @stoplight/prism-cli@5.16.0 mock api/openapi.yaml -p 4010
 ```
 
-Thử mock: `curl -X POST http://127.0.0.1:4010/auth/login -H 'Content-Type: application/json' -d '{"email":"canh@example.com","password":"mat-khau-dai-12-ky-tu"}'`. Thêm `-H 'Prefer: code=422'` để ép Prism trả ca lỗi.
+Thử mock: `curl -X POST http://127.0.0.1:4010/auth/login -H 'Content-Type: application/json' -d '{"email":"canh@example.com","password":"mat-khau-dai-12-ky-tu"}'`. Thêm `-H 'Prefer: code=422' -H 'Accept: application/problem+json'` để ép Prism trả ví dụ response lỗi; đây không phải test nghiệp vụ thật.
+
+
+## Phần Dũng Tuần 12
+
+- [Fitness OpenAPI](api/paths/fitness.yaml): 5 path, 7 operation; schema và ví dụ riêng, dùng lại components chung.
+- [Hướng dẫn Swagger UI và mock](api/README.md): chạy local, lint, bundle và 21 ca smoke test.
+- [Resource Model](design/resource-model.svg), [ERD](design/erd.svg), nguồn Mermaid và [giải thích thiết kế](design/design.md).
+- [Hai slide và lời trình bày](design/slides.md).
+
+Tuần 12 mới kiểm hợp đồng/mock; backend FastAPI/PostgreSQL và Virtual Trainer chưa triển khai. Các điểm cần đồng bộ Exercise UUID với payload Weekly Planner được ghi trong tài liệu thiết kế.

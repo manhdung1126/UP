@@ -1,0 +1,3859 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "UP API",
+    "version": "1.0.0",
+    "description": "API của UP: công việc, tập luyện, dinh dưỡng và kịch bản tuần do LLM đề xuất.\n\nQuy ước chung (xem `docs` của dự án):\n- Lỗi dùng RFC 7807 (`application/problem+json`).\n- Danh sách dùng `page`, `size`, `sort`; trả `items`, `page`, `size`, `total`.\n- Cập nhật dùng `ETag` ở GET và `If-Match` ở PATCH/PUT.\n- Xác thực bằng JWT Bearer. Tài nguyên của người khác trả 404.\n- Phiên bản nằm trong đường dẫn (`/api/v1`).\n\nCấu trúc file: mỗi người giữ một file trong `paths/`, schema riêng trong `schemas/`,\nphần dùng chung trong `components.yaml`.\n"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:4010",
+      "description": "Mock server (Prism, không có tiền tố /api/v1)"
+    },
+    {
+      "url": "http://localhost:5000/api/v1",
+      "description": "Backend chạy local"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Đăng ký, đăng nhập, đổi token"
+    },
+    {
+      "name": "users",
+      "description": "Người dùng hiện tại"
+    },
+    {
+      "name": "tasks",
+      "description": "Công việc"
+    },
+    {
+      "name": "events",
+      "description": "Sự kiện trong lịch"
+    },
+    {
+      "name": "exercises",
+      "description": "Thư viện bài tập (chỉ đọc)"
+    },
+    {
+      "name": "workout-sessions",
+      "description": "Buổi tập và các hiệp"
+    },
+    {
+      "name": "foods",
+      "description": "Thực phẩm (chỉ đọc)"
+    },
+    {
+      "name": "meal-logs",
+      "description": "Nhật ký ăn"
+    },
+    {
+      "name": "nutrition",
+      "description": "Hồ sơ và mục tiêu dinh dưỡng"
+    },
+    {
+      "name": "week-plans",
+      "description": "Kịch bản tuần do LLM đề xuất"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "registerUser",
+        "summary": "Đăng ký tài khoản",
+        "description": "Tạo người dùng mới. Email phải chưa được dùng.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Đã tạo tài khoản.",
+            "headers": {
+              "Location": {
+                "description": "Đường dẫn tới người dùng vừa tạo.",
+                "schema": {
+                  "type": "string",
+                  "example": "/api/v1/users/me"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "loginUser",
+        "summary": "Đăng nhập",
+        "description": "Trả cặp access token và refresh token.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Đăng nhập thành công.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "refreshToken",
+        "summary": "Đổi refresh token lấy cặp token mới",
+        "description": "Refresh token cũ bị thu hồi sau khi đổi (xoay vòng).",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cặp token mới.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "operationId": "getCurrentUser",
+        "summary": "Xem người dùng hiện tại",
+        "description": "Hồ sơ của người đang đăng nhập.",
+        "responses": {
+          "200": {
+            "description": "Người dùng hiện tại.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "operationId": "listTasks",
+        "summary": "Danh sách công việc",
+        "description": "Chỉ trả công việc của người dùng hiện tại.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Size"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Lọc theo trạng thái.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "todo",
+                "doing",
+                "done"
+              ]
+            }
+          },
+          {
+            "name": "dueFrom",
+            "in": "query",
+            "description": "Hạn từ thời điểm này (gồm).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "dueTo",
+            "in": "query",
+            "description": "Hạn đến thời điểm này (gồm).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Một trang công việc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskList"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "id": "7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10",
+                      "title": "Hoàn thành OpenAPI Tuần 12",
+                      "description": "Viết auth, tasks, events.",
+                      "status": "todo",
+                      "priority": "high",
+                      "dueAt": "2026-11-25T16:00:00Z",
+                      "estimateMinutes": 120,
+                      "version": 1,
+                      "createdAt": "2026-11-25T01:00:00Z",
+                      "updatedAt": "2026-11-25T01:00:00Z"
+                    }
+                  ],
+                  "page": 1,
+                  "size": 20,
+                  "total": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "operationId": "createTask",
+        "summary": "Tạo công việc",
+        "description": "Tạo công việc mới cho người dùng hiện tại.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Đã tạo.",
+            "headers": {
+              "Location": {
+                "description": "Đường dẫn tới công việc vừa tạo.",
+                "schema": {
+                  "type": "string",
+                  "example": "/api/v1/tasks/7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10"
+                }
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "operationId": "getTask",
+        "summary": "Chi tiết công việc",
+        "description": "Trả kèm `ETag` để dùng cho `PATCH`.",
+        "responses": {
+          "200": {
+            "description": "Công việc.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "tasks"
+        ],
+        "operationId": "updateTask",
+        "summary": "Sửa công việc",
+        "description": "Cập nhật một phần. Bắt buộc `If-Match` để tránh ghi đè khi sửa trên hai thiết bị.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Công việc sau khi sửa.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tasks"
+        ],
+        "operationId": "deleteTask",
+        "summary": "Xóa công việc",
+        "description": "Xóa mềm. Trả 204 và không có nội dung.",
+        "responses": {
+          "204": {
+            "description": "Đã xóa."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "tags": [
+          "events"
+        ],
+        "operationId": "listEvents",
+        "summary": "Danh sách sự kiện",
+        "description": "Sự kiện của người dùng hiện tại, lọc theo ngày hoặc khoảng ngày.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Size"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Chỉ lấy sự kiện trong ngày này (theo múi giờ người dùng).",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2026-11-26"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Một trang sự kiện.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "events"
+        ],
+        "operationId": "createEvent",
+        "summary": "Tạo sự kiện",
+        "description": "Tạo sự kiện mới. `endAt` phải sau `startAt`, nếu không trả 422.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Đã tạo.",
+            "headers": {
+              "Location": {
+                "description": "Đường dẫn tới sự kiện vừa tạo.",
+                "schema": {
+                  "type": "string",
+                  "example": "/api/v1/events/9d2e7a14-5b8c-4e21-b3f0-1c4a8e7d5f33"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/exercises": {
+      "get": {
+        "tags": [
+          "exercises"
+        ],
+        "operationId": "listExercises",
+        "summary": "Danh sách thư viện bài tập",
+        "description": "Thư viện dùng chung, chỉ đọc sau xác thực. q tìm trong tên; muscle lọc primaryMuscles; equipment lọc chính xác. sort chỉ nhận name hoặc -name, mặc định name; phân xử trùng tên theo id tăng dần. Kết quả lọc vẫn phân trang.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Size"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sắp xếp tên bài.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "-name"
+              ],
+              "default": "name"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Từ khóa trong tên, không phân biệt hoa thường.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          },
+          {
+            "name": "muscle",
+            "in": "query",
+            "description": "Nhóm cơ chính, ví dụ chest.",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "equipment",
+            "in": "query",
+            "description": "Dụng cụ theo dữ liệu nguồn, ví dụ barbell hoặc body only.",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Một trang thư viện; rỗng trả items: [].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseList"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/ExerciseList"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/exercises/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "UUID của tài nguyên. Tài nguyên riêng chỉ truy cập được khi thuộc người dùng hiện tại.",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "exercises"
+        ],
+        "operationId": "getExercise",
+        "summary": "Chi tiết một bài tập",
+        "description": "Tra UUID dùng trong WorkoutSet. Không dùng sourceId của prototype thay path id.",
+        "responses": {
+          "200": {
+            "description": "Thông tin bài tập.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exercise"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/Exercise"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/workout-sessions": {
+      "get": {
+        "tags": [
+          "workout-sessions"
+        ],
+        "operationId": "listWorkoutSessions",
+        "summary": "Lịch sử và buổi tập dự kiến của tôi",
+        "description": "Chỉ bản ghi thuộc JWT hiện tại. from/to là thời gian startedAt (buổi đã bắt đầu) hoặc scheduledAt (buổi dự kiến), khoảng [from, to), định dạng ISO 8601 có múi giờ. from >= to trả 422. sort chỉ nhận createdAt hoặc -createdAt; trùng giá trị phân xử theo id tăng dần.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Size"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Thứ tự tạo bản ghi.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt"
+              ],
+              "default": "-createdAt"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Từ thời điểm này, gồm cận.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Đến trước thời điểm này, không gồm cận.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Một trang buổi tập của tôi.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkoutSessionList"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/WorkoutSessionList"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "workout-sessions"
+        ],
+        "operationId": "createWorkoutSession",
+        "summary": "Ghi buổi tập đã bắt đầu",
+        "description": "Server lấy chủ sở hữu từ JWT và đặt source=manual, sets=[], version=1. endedAt phải không trước startedAt. Chưa hỗ trợ Idempotency-Key: không tự retry POST khi không biết lần trước đã thành công hay chưa; kiểm lịch sử trước.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkoutSessionCreate"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/WorkoutSessionCreate"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Đã tạo buổi; không tạo hiệp từ mục tiêu dự kiến.",
+            "headers": {
+              "Location": {
+                "description": "URI xem buổi vừa tạo.",
+                "schema": {
+                  "type": "string",
+                  "example": "/api/v1/workout-sessions/8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21"
+                }
+              },
+              "ETag": {
+                "description": "ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.",
+                "schema": {
+                  "$ref": "#/components/schemas/schema"
+                },
+                "example": "\"1\""
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkoutSession"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/WorkoutSessionCreated"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/workout-sessions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "UUID của tài nguyên. Tài nguyên riêng chỉ truy cập được khi thuộc người dùng hiện tại.",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "workout-sessions"
+        ],
+        "operationId": "getWorkoutSession",
+        "summary": "Xem buổi tập và lấy ETag",
+        "description": "Trả hiệp theo setNumber tăng dần. Không có hoặc khác chủ đều trả 404. ETag đổi khi thêm hiệp hay sửa buổi.",
+        "responses": {
+          "200": {
+            "description": "Chi tiết buổi tập của tôi.",
+            "headers": {
+              "ETag": {
+                "description": "ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.",
+                "schema": {
+                  "$ref": "#/components/schemas/schema"
+                },
+                "example": "\"2\""
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkoutSession"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/WorkoutSession"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "workout-sessions"
+        ],
+        "operationId": "updateWorkoutSession",
+        "summary": "Sửa thông tin buổi tập",
+        "description": "PATCH từng trường, bắt buộc If-Match. Có thể đặt startedAt để bắt đầu buổi dự kiến từ UC5. Không ghi sets/userId/version từ body. Kiểm endedAt >= startedAt trên dữ liệu sau cập nhật; còn hiệp đã ghi thì không xóa startedAt. Kiểm phiên bản và ghi phải là một thao tác nguyên tử; thành công tăng version. Retry cùng ETag cũ trả 412.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkoutSessionPatch"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/WorkoutSessionPatch"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Buổi sau cập nhật. Ví dụ minh họa, mock không lưu state.",
+            "headers": {
+              "ETag": {
+                "description": "ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.",
+                "schema": {
+                  "$ref": "#/components/schemas/schema"
+                },
+                "example": "\"3\""
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkoutSession"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/WorkoutSessionUpdated"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      }
+    },
+    "/workout-sessions/{id}/sets": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "UUID của tài nguyên. Tài nguyên riêng chỉ truy cập được khi thuộc người dùng hiện tại.",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "workout-sessions"
+        ],
+        "operationId": "addWorkoutSet",
+        "summary": "Thêm một hiệp thực hiện thật",
+        "description": "If-Match tham chiếu ETag của WorkoutSession. Server kiểm chủ sở hữu của session trước khi ghi; không lấy userId từ body. Buổi chưa có startedAt trả 422, cần PATCH bắt đầu trước. exerciseId phải trỏ bài thư viện hợp lệ. Transaction kiểm version, cấp setNumber duy nhất theo session, thêm hiệp và tăng version/updatedAt của session. Retry cùng ETag cũ trả 412, không tạo trùng. Bodyweight dùng weightKg=0.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkoutSetCreate"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/WorkoutSetCreate"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Hiệp vừa ghi; ETag trả về là phiên bản mới của buổi cha.",
+            "headers": {
+              "ETag": {
+                "description": "ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.",
+                "schema": {
+                  "$ref": "#/components/schemas/schema"
+                },
+                "example": "\"2\""
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkoutSet"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/WorkoutSet"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      }
+    },
+    "/foods": {
+      "get": {
+        "tags": [
+          "foods"
+        ],
+        "operationId": "listFoods",
+        "summary": "Tìm kiếm thư viện thực phẩm",
+        "description": "Tra cứu thực phẩm theo tên (chỉ đọc, tách khỏi dữ liệu cá nhân). Dùng để ghi nhật ký ăn và kiểm tra thực đơn.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Size"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Từ khóa tìm theo tên thực phẩm.",
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "example": "ức gà"
+            }
+          },
+          {
+            "name": "excludeAllergen",
+            "in": "query",
+            "description": "Loại trừ thực phẩm chứa chất gây dị ứng này.",
+            "schema": {
+              "type": "string",
+              "example": "peanut"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Một trang danh sách thực phẩm.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FoodList"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "id": "1a2b3c4d-1111-4a2b-8c3d-000000000101",
+                      "name": "Ức gà áp chảo",
+                      "servingSize": 100,
+                      "servingUnit": "g",
+                      "caloriesKcal": 165,
+                      "proteinG": 31,
+                      "carbsG": 0,
+                      "fatG": 3.6,
+                      "allergens": [],
+                      "source": "USDA FoodData Central"
+                    },
+                    {
+                      "id": "1a2b3c4d-1111-4a2b-8c3d-000000000102",
+                      "name": "Cơm trắng",
+                      "servingSize": 150,
+                      "servingUnit": "g",
+                      "caloriesKcal": 195,
+                      "proteinG": 4,
+                      "carbsG": 42,
+                      "fatG": 0.4,
+                      "allergens": [],
+                      "source": "UP Vietnam Food Table"
+                    }
+                  ],
+                  "page": 1,
+                  "size": 20,
+                  "total": 2
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/meal-logs": {
+      "get": {
+        "tags": [
+          "meal-logs"
+        ],
+        "operationId": "listMealLogs",
+        "summary": "Danh sách bữa ăn đã ghi",
+        "description": "Trả nhật ký ăn uống của người dùng hiện tại, lọc theo ngày hoặc bữa.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Size"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Lọc theo ngày ăn (YYYY-MM-DD).",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2026-11-25"
+            }
+          },
+          {
+            "name": "mealType",
+            "in": "query",
+            "description": "Lọc theo loại bữa ăn.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "breakfast",
+                "lunch",
+                "dinner",
+                "snack"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Một trang nhật ký bữa ăn.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealLogList"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "id": "5e6f7a8b-3333-4c5d-8e6f-000000000301",
+                      "mealType": "lunch",
+                      "loggedAt": "2026-11-25T05:30:00Z",
+                      "note": "Bữa trưa sau buổi tập ngực",
+                      "items": [
+                        {
+                          "id": "2b3c4d5e-2222-4b3c-9d4e-000000000201",
+                          "foodId": "1a2b3c4d-1111-4a2b-8c3d-000000000101",
+                          "foodName": "Ức gà áp chảo",
+                          "servings": 1.5,
+                          "caloriesKcal": 248,
+                          "proteinG": 46.5,
+                          "carbsG": 0,
+                          "fatG": 5.4
+                        }
+                      ],
+                      "totalCaloriesKcal": 248,
+                      "totalProteinG": 46.5,
+                      "totalCarbsG": 0,
+                      "totalFatG": 5.4,
+                      "createdAt": "2026-11-25T05:35:00Z",
+                      "updatedAt": "2026-11-25T05:35:00Z"
+                    }
+                  ],
+                  "page": 1,
+                  "size": 20,
+                  "total": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "meal-logs"
+        ],
+        "operationId": "createMealLog",
+        "summary": "Ghi bữa ăn mới",
+        "description": "Ghi nhật ký bữa ăn kèm danh sách món và số khẩu phần. Tổng kcal và macro do code trên backend tự tính.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MealLogCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Đã tạo nhật ký bữa ăn.",
+            "headers": {
+              "Location": {
+                "description": "Đường dẫn tới bản ghi bữa ăn vừa tạo.",
+                "schema": {
+                  "type": "string",
+                  "example": "/api/v1/meal-logs/5e6f7a8b-3333-4c5d-8e6f-000000000301"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealLog"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/nutrition-profile": {
+      "get": {
+        "tags": [
+          "nutrition"
+        ],
+        "operationId": "getNutritionProfile",
+        "summary": "Xem hồ sơ dinh dưỡng",
+        "description": "Lấy hồ sơ sinh học và mục tiêu dinh dưỡng của người dùng hiện tại, kèm `ETag`.",
+        "responses": {
+          "200": {
+            "description": "Hồ sơ dinh dưỡng hiện tại.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionProfile"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "nutrition"
+        ],
+        "operationId": "putNutritionProfile",
+        "summary": "Tạo hoặc cập nhật hồ sơ dinh dưỡng",
+        "description": "Mỗi người dùng có duy nhất một hồ sơ dinh dưỡng. Khi cập nhật hồ sơ đã có,\ngửi kèm header `If-Match` để tránh ghi đè ngoài ý muốn (sai phiên bản trả 412).\n",
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "description": "Giá trị `ETag` từ lần GET trước (bắt buộc khi cập nhật hồ sơ đã tồn tại).",
+            "schema": {
+              "type": "string",
+              "example": "\"1\""
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NutritionProfileInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hồ sơ dinh dưỡng sau khi lưu.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionProfile"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/nutrition-profile/targets": {
+      "get": {
+        "tags": [
+          "nutrition"
+        ],
+        "operationId": "getNutritionTargets",
+        "summary": "Xem mục tiêu kcal và macro hằng ngày",
+        "description": "Resource tính toán (không có bảng riêng trong DB). Backend dùng công thức\nMifflin-St Jeor trên `NutritionProfile` hiện tại để trả BMR, TDEE, kcal và macro mục tiêu.\n",
+        "responses": {
+          "200": {
+            "description": "Mục tiêu kcal và macro tính từ hồ sơ hiện tại.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionTarget"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/week-plans": {
+      "post": {
+        "tags": [
+          "week-plans"
+        ],
+        "operationId": "createWeekPlan",
+        "summary": "Yêu cầu tạo bản nháp kịch bản tuần (BYOAI / Mock)",
+        "description": "Luồng demo trọng tâm (UC5). Backend gom ngữ cảnh việc, tập, ăn qua hợp đồng nghiệp vụ\nrồi khởi tạo yêu cầu bản nháp kịch bản tuần theo hướng BYOAI (Mock Provider cho demo/test\nkhông cần API key, hoặc chế độ xuất prompt / nhập JSON từ trợ lý AI của người dùng).\nTrả `202 Accepted` kèm ID theo dõi trạng thái (`pending` khi đang xử lý bất đồng bộ;\nchưa thể `:accept` khi đang `pending`). Áp dụng giới hạn tốc độ `429` + `Retry-After`\nđể bảo vệ tài nguyên kể cả khi không dùng API trả phí.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeekPlanCreate"
+              },
+              "example": {
+                "weekStart": "2026-12-07",
+                "mode": "mock",
+                "goals": {
+                  "focus": "Hoàn thành bài tập lớn SOA và duy trì 3 buổi tập sức mạnh",
+                  "workoutDaysPerWeek": 3,
+                  "dailyCalorieTargetKcal": 2500,
+                  "maxStudyHoursPerDay": 4,
+                  "notes": "Tối thứ Tư và thứ Sáu rảnh sau 18:00"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Đã tiếp nhận yêu cầu tạo kịch bản tuần, trả về ID theo dõi trạng thái.",
+            "headers": {
+              "Location": {
+                "description": "Đường dẫn để tra cứu trạng thái, nội dung bản nháp hoặc prompt xuất BYOAI.",
+                "schema": {
+                  "type": "string",
+                  "example": "/api/v1/week-plans/c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00"
+                }
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeekPlan"
+                },
+                "example": {
+                  "id": "c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00",
+                  "weekStart": "2026-12-07",
+                  "status": "pending",
+                  "source": "mock",
+                  "goals": {
+                    "focus": "Hoàn thành bài tập lớn SOA và duy trì 3 buổi tập sức mạnh",
+                    "workoutDaysPerWeek": 3,
+                    "dailyCalorieTargetKcal": 2500,
+                    "maxStudyHoursPerDay": 4,
+                    "notes": "Tối thứ Tư và thứ Sáu rảnh sau 18:00"
+                  },
+                  "exportPrompt": null,
+                  "rationale": "[MOCK] Yêu cầu đang được xử lý. Gọi GET /week-plans/{id} để lấy bản nháp draft.",
+                  "failureReason": null,
+                  "items": [],
+                  "version": 1,
+                  "createdAt": "2026-11-25T07:00:00Z",
+                  "updatedAt": "2026-11-25T07:00:00Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/week-plans/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "Định danh UUID của kịch bản tuần.",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "week-plans"
+        ],
+        "operationId": "getWeekPlan",
+        "summary": "Xem trạng thái, bản nháp hoặc nội dung xuất prompt BYOAI",
+        "description": "Trả chi tiết kịch bản tuần kèm `ETag`. Ở chế độ Mock Provider, trả bản nháp cố định\n`status: \"draft\"` gắn nhãn `source: \"mock\"`. Ở chế độ BYOAI xuất/nhập, trả `status: \"awaiting-input\"`\nkèm `exportPrompt` đã giảm dữ liệu cá nhân để người dùng đưa sang trợ lý AI của mình.\nNếu xử lý lỗi sẽ trả `status: \"failed\"` kèm `failureReason`.\n",
+        "responses": {
+          "200": {
+            "description": "Trạng thái và nội dung bản nháp kịch bản tuần.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeekPlan"
+                },
+                "example": {
+                  "id": "c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00",
+                  "weekStart": "2026-12-07",
+                  "status": "draft",
+                  "source": "mock",
+                  "goals": {
+                    "focus": "Hoàn thành bài tập lớn SOA và duy trì 3 buổi tập sức mạnh",
+                    "workoutDaysPerWeek": 3,
+                    "dailyCalorieTargetKcal": 2500,
+                    "maxStudyHoursPerDay": 4,
+                    "notes": "Tối thứ Tư và thứ Sáu rảnh sau 18:00"
+                  },
+                  "exportPrompt": null,
+                  "rationale": "[MOCK] Xếp khối việc khó vào buổi sáng, 3 buổi tập vào chiều T2-T4-T6 và tăng đạm vào ngày tập.",
+                  "failureReason": null,
+                  "items": [
+                    {
+                      "id": "91a0b2c3-1111-4e5f-8a9b-111111110001",
+                      "dayDate": "2026-12-07",
+                      "startAt": "2026-12-07T02:00:00Z",
+                      "endAt": "2026-12-07T04:00:00Z",
+                      "kind": "task",
+                      "title": "Hoàn thành kiểm thử hợp đồng OpenAPI",
+                      "summary": "Ưu tiên cao · 120 phút tập trung buổi sáng",
+                      "accepted": false,
+                      "payload": {
+                        "priority": "high",
+                        "estimateMinutes": 120
+                      }
+                    },
+                    {
+                      "id": "91a0b2c3-1111-4e5f-8a9b-111111110002",
+                      "dayDate": "2026-12-07",
+                      "startAt": "2026-12-07T11:00:00Z",
+                      "endAt": "2026-12-07T12:00:00Z",
+                      "kind": "workout",
+                      "title": "Buổi tập thân trên (Bench Press & Lat Pulldown)",
+                      "summary": "2 bài tập chính · 6 hiệp tổng cộng",
+                      "accepted": false,
+                      "payload": {
+                        "exercises": [
+                          {
+                            "exerciseId": "Barbell_Bench_Press_-_Medium_Grip",
+                            "sets": 3,
+                            "targetReps": 10
+                          },
+                          {
+                            "exerciseId": "Wide-Grip_Lat_Pulldown",
+                            "sets": 3,
+                            "targetReps": 12
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "91a0b2c3-1111-4e5f-8a9b-111111110003",
+                      "dayDate": "2026-12-07",
+                      "startAt": "2026-12-07T05:30:00Z",
+                      "endAt": "2026-12-07T06:00:00Z",
+                      "kind": "meal",
+                      "title": "Bữa trưa giàu đạm cho ngày tập nặng",
+                      "summary": "Ức gà áp chảo (150g) + Cơm trắng (300g) · ~638 kcal",
+                      "accepted": false,
+                      "payload": {
+                        "mealType": "lunch",
+                        "items": [
+                          {
+                            "foodId": "1a2b3c4d-1111-4a2b-8c3d-000000000101",
+                            "servings": 1.5
+                          },
+                          {
+                            "foodId": "1a2b3c4d-1111-4a2b-8c3d-000000000102",
+                            "servings": 2
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "version": 1,
+                  "createdAt": "2026-11-25T07:00:00Z",
+                  "updatedAt": "2026-11-25T07:00:05Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/week-plans/{id}:accept": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "Định danh UUID của bản nháp kịch bản tuần cần nhận.",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "week-plans"
+        ],
+        "operationId": "acceptWeekPlan",
+        "summary": "Nhận bản nháp kịch bản tuần đã kiểm tra",
+        "description": "Xác nhận toàn bộ hoặc một phần các mục (`itemIds`) trong bản nháp ở trạng thái `draft`.\nBackend kiểm lại quyền sở hữu, phiên bản (`If-Match` -> `412`), trạng thái (`409` nếu đang `pending`,\n`awaiting-input`, `failed` hoặc đã nhận), và ràng buộc theo dữ liệu hiện tại (`422` nếu trùng giờ).\nSau đó gọi hàm dịch vụ của `planner`, `fitness`, `nutrition` trong một transaction PostgreSQL.\nMỗi mục chỉ nhận một lần; gọi lại (retry) không tạo bản ghi trùng lặp.\n",
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "description": "Giá trị `ETag` của bản nháp để đảm bảo người dùng xác nhận đúng phiên bản đã xem.",
+            "schema": {
+              "type": "string",
+              "example": "\"1\""
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeekPlanAcceptRequest"
+              },
+              "example": {
+                "acceptAll": true,
+                "itemIds": [
+                  "91a0b2c3-1111-4e5f-8a9b-111111110001",
+                  "91a0b2c3-1111-4e5f-8a9b-111111110002",
+                  "91a0b2c3-1111-4e5f-8a9b-111111110003"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Đã nhận bản nháp và tạo các bản ghi nghiệp vụ tương ứng trong transaction.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeekPlanAcceptResponse"
+                },
+                "example": {
+                  "planId": "c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00",
+                  "status": "accepted",
+                  "acceptedCount": 3,
+                  "createdResources": [
+                    {
+                      "itemId": "91a0b2c3-1111-4e5f-8a9b-111111110001",
+                      "kind": "task",
+                      "resourceId": "7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10",
+                      "resourceUri": "/api/v1/tasks/7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10"
+                    },
+                    {
+                      "itemId": "91a0b2c3-1111-4e5f-8a9b-111111110002",
+                      "kind": "workout",
+                      "resourceId": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+                      "resourceUri": "/api/v1/workout-sessions/8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21"
+                    },
+                    {
+                      "itemId": "91a0b2c3-1111-4e5f-8a9b-111111110003",
+                      "kind": "meal",
+                      "resourceId": "5e6f7a8b-3333-4c5d-8e6f-000000000301",
+                      "resourceUri": "/api/v1/meal-logs/5e6f7a8b-3333-4c5d-8e6f-000000000301"
+                    }
+                  ],
+                  "updatedAt": "2026-11-25T07:05:00Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "422": {
+            "description": "Dữ liệu không hợp lệ hoặc mục được chọn vi phạm ràng buộc (ví dụ trùng giờ với lịch hiện tại).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "https://up.example/problems/schedule-conflict",
+                  "title": "Trùng khung giờ trong lịch",
+                  "status": 422,
+                  "detail": "Mục 91a0b2c3-1111-4e5f-8a9b-111111110002 (11:00–12:00) trùng với sự kiện đã có.",
+                  "instance": "/api/v1/week-plans/c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00:accept",
+                  "errors": [
+                    {
+                      "field": "itemIds[1]",
+                      "message": "Khung giờ 2026-12-07T11:00:00Z–12:00:00Z đã có sự kiện khác."
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Access token lấy từ `POST /auth/login`."
+      }
+    },
+    "schemas": {
+      "RegisterRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password",
+          "displayName"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "canh@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 12,
+            "maxLength": 72,
+            "writeOnly": true,
+            "example": "mat-khau-dai-12-ky-tu"
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "example": "Cảnh"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "description": "Người dùng hiện tại. Không bao giờ chứa mật khẩu.",
+        "required": [
+          "id",
+          "email",
+          "displayName",
+          "timezone",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "3f6c1c0e-8a53-4c5a-9a37-6d2f0b1a7c11"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "canh@example.com"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "Cảnh"
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Tên múi giờ IANA.",
+            "example": "Asia/Ho_Chi_Minh"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T01:00:00Z"
+          }
+        }
+      },
+      "FieldError": {
+        "type": "object",
+        "required": [
+          "field",
+          "message"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "example": "title"
+          },
+          "message": {
+            "type": "string",
+            "example": "Không được để trống."
+          }
+        }
+      },
+      "Problem": {
+        "type": "object",
+        "description": "Lỗi theo RFC 7807.",
+        "required": [
+          "type",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "URI định danh loại lỗi.",
+            "example": "https://up.example/problems/not-found"
+          },
+          "title": {
+            "type": "string",
+            "example": "Không tìm thấy"
+          },
+          "status": {
+            "type": "integer",
+            "example": 404
+          },
+          "detail": {
+            "type": "string",
+            "example": "Không có công việc với id này."
+          },
+          "instance": {
+            "type": "string",
+            "example": "/api/v1/tasks/3f6c1c0e-8a53-4c5a-9a37-6d2f0b1a7c11"
+          },
+          "errors": {
+            "type": "array",
+            "description": "Chi tiết từng trường sai (chỉ có ở lỗi 422).",
+            "items": {
+              "$ref": "#/components/schemas/FieldError"
+            }
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "canh@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "writeOnly": true,
+            "example": "mat-khau-dai-12-ky-tu"
+          }
+        }
+      },
+      "TokenPair": {
+        "type": "object",
+        "required": [
+          "accessToken",
+          "refreshToken",
+          "tokenType",
+          "expiresIn"
+        ],
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.access"
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh"
+          },
+          "tokenType": {
+            "type": "string",
+            "enum": [
+              "Bearer"
+            ]
+          },
+          "expiresIn": {
+            "type": "integer",
+            "description": "Số giây access token còn hiệu lực.",
+            "example": 900
+          }
+        }
+      },
+      "RefreshRequest": {
+        "type": "object",
+        "required": [
+          "refreshToken"
+        ],
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh"
+          }
+        }
+      },
+      "PageMeta": {
+        "type": "object",
+        "required": [
+          "page",
+          "size",
+          "total"
+        ],
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 1
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "example": 20
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "example": 1
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "priority",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "example": "Hoàn thành OpenAPI Tuần 12"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "Viết auth, tasks, events."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "todo",
+              "doing",
+              "done"
+            ],
+            "example": "todo"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "example": "high"
+          },
+          "dueAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-11-25T16:00:00Z"
+          },
+          "estimateMinutes": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "example": 120
+          },
+          "version": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Tăng sau mỗi lần sửa, tương ứng `ETag`.",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T01:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T01:00:00Z"
+          }
+        }
+      },
+      "TaskList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PageMeta"
+          },
+          {
+            "type": "object",
+            "required": [
+              "items"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "TaskCreate": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "example": "Hoàn thành OpenAPI Tuần 12"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "todo",
+              "doing",
+              "done"
+            ],
+            "default": "todo"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "default": "medium"
+          },
+          "dueAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "estimateMinutes": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true
+          }
+        }
+      },
+      "TaskUpdate": {
+        "type": "object",
+        "description": "Chỉ gửi trường cần đổi (PATCH).",
+        "minProperties": 1,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "todo",
+              "doing",
+              "done"
+            ],
+            "example": "done"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "dueAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "estimateMinutes": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true
+          }
+        }
+      },
+      "Event": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "startAt",
+          "endAt",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "9d2e7a14-5b8c-4e21-b3f0-1c4a8e7d5f33"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "example": "Buổi tập ngực"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "example": "Tập luyện"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-26T11:00:00Z"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Phải sau `startAt`.",
+            "example": "2026-11-26T12:00:00Z"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Công việc liên quan, nếu có."
+          },
+          "version": {
+            "type": "integer",
+            "readOnly": true,
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T01:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T01:00:00Z"
+          }
+        }
+      },
+      "EventList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PageMeta"
+          },
+          {
+            "type": "object",
+            "required": [
+              "items"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "EventCreate": {
+        "type": "object",
+        "required": [
+          "title",
+          "startAt",
+          "endAt"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "example": "Buổi tập ngực"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-26T11:00:00Z"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-26T12:00:00Z"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "Exercise": {
+        "type": "object",
+        "description": "Bài trong thư viện dùng chung, chỉ đọc. UUID API khác sourceId dạng slug trong prototype.",
+        "required": [
+          "id",
+          "sourceId",
+          "name",
+          "primaryMuscles",
+          "equipment",
+          "instructions",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "ID nguyên gốc để map thư viện hiện có; không dùng thay UUID trong API."
+          },
+          "name": {
+            "type": "string"
+          },
+          "primaryMuscles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "equipment": {
+            "type": "string",
+            "nullable": true
+          },
+          "instructions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": "string",
+            "description": "Nguồn dữ liệu. Giữ credit/giấy phép theo docs/DATA-SOURCES.md khi nạp dữ liệu."
+          }
+        }
+      },
+      "ExerciseList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PageMeta"
+          },
+          {
+            "type": "object",
+            "required": [
+              "items"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Exercise"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "WorkoutSet": {
+        "type": "object",
+        "required": [
+          "id",
+          "sessionId",
+          "exerciseId",
+          "setNumber",
+          "reps",
+          "weightKg",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "exerciseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "setNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "readOnly": true,
+            "description": "Thứ tự hiệp trong buổi tập, server cấp duy nhất theo session."
+          },
+          "reps": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "weightKg": {
+            "type": "number",
+            "minimum": 0
+          },
+          "rpe": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "WorkoutSession": {
+        "type": "object",
+        "description": "Một buổi thuộc người dùng hiện tại. Buổi dự kiến từ UC5 có scheduledAt, startedAt=null và sets rỗng. PATCH startedAt khi bắt đầu thực tế.",
+        "required": [
+          "id",
+          "title",
+          "startedAt",
+          "scheduledAt",
+          "endedAt",
+          "source",
+          "sets",
+          "totalVolumeKg",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "scheduledAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "readOnly": true
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "week-plan"
+            ],
+            "readOnly": true
+          },
+          "sets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkoutSet"
+            },
+            "description": "Hiệp thực hiện thật; rỗng khi mới tạo hoặc mới nhận kế hoạch."
+          },
+          "totalVolumeKg": {
+            "type": "number",
+            "minimum": 0,
+            "readOnly": true,
+            "description": "Tổng reps × weightKg của hiệp đã ghi, đơn vị kg. Code tính, không lưu cột tổng và không dùng LLM."
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "readOnly": true,
+            "description": "ETag mạnh dạng chuỗi có dấu nháy, ví dụ \"2\". Đổi khi sửa buổi hoặc thêm hiệp."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "WorkoutSessionList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PageMeta"
+          },
+          {
+            "type": "object",
+            "required": [
+              "items"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WorkoutSession"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "WorkoutSessionCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "startedAt"
+        ],
+        "description": "Ghi một buổi đã bắt đầu. UC5 tạo buổi dự kiến qua nghiệp vụ nội bộ, không tạo hiệp thực hiện giả.",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Nếu có, phải >= startedAt. Backend kiểm điều kiện này."
+          },
+          "note": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 1000
+          }
+        }
+      },
+      "schema": {
+        "type": "string",
+        "example": "\"3\""
+      },
+      "WorkoutSessionPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "description": "Chỉ trường gửi lên được đổi. Không ghi đè sets hoặc quyền sở hữu. Backend kiểm endedAt >= startedAt.",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Ghi thời điểm bắt đầu thực tế cho buổi dự kiến, hoặc sửa thời gian ghi nhận."
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "note": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 1000
+          }
+        }
+      },
+      "WorkoutSetCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Chỉ nhận số liệu đã thực hiện. Không nhận userId/sessionId/setNumber từ client. Bài không tồn tại trả 422.",
+        "required": [
+          "exerciseId",
+          "reps",
+          "weightKg"
+        ],
+        "properties": {
+          "exerciseId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID Exercise, không phải slug của prototype hoặc nhãn SVM."
+          },
+          "reps": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Số lần thực hiện, đơn vị rep."
+          },
+          "weightKg": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Khối lượng tạ bên ngoài (kg). Bài bodyweight ghi 0, không tự cộng cân nặng cơ thể."
+          },
+          "rpe": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "nullable": true,
+            "description": "Mức gắng sức tự đánh giá, 1–10; có thể bỏ trống."
+          }
+        }
+      },
+      "Food": {
+        "type": "object",
+        "description": "Thực phẩm trong thư viện dinh dưỡng (chỉ đọc).",
+        "required": [
+          "id",
+          "name",
+          "servingSize",
+          "servingUnit",
+          "caloriesKcal",
+          "proteinG",
+          "carbsG",
+          "fatG",
+          "allergens",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "1a2b3c4d-1111-4a2b-8c3d-000000000101"
+          },
+          "name": {
+            "type": "string",
+            "example": "Ức gà áp chảo"
+          },
+          "servingSize": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Khối lượng hoặc dung tích của 1 khẩu phần chuẩn.",
+            "example": 100
+          },
+          "servingUnit": {
+            "type": "string",
+            "example": "g"
+          },
+          "caloriesKcal": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Năng lượng (kcal) trên 1 khẩu phần chuẩn.",
+            "example": 165
+          },
+          "proteinG": {
+            "type": "number",
+            "minimum": 0,
+            "example": 31
+          },
+          "carbsG": {
+            "type": "number",
+            "minimum": 0,
+            "example": 0
+          },
+          "fatG": {
+            "type": "number",
+            "minimum": 0,
+            "example": 3.6
+          },
+          "allergens": {
+            "type": "array",
+            "description": "Các chất gây dị ứng có trong thực phẩm.",
+            "items": {
+              "type": "string"
+            },
+            "example": []
+          },
+          "source": {
+            "type": "string",
+            "description": "Nguồn dữ liệu thực phẩm.",
+            "example": "USDA FoodData Central"
+          }
+        }
+      },
+      "FoodList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PageMeta"
+          },
+          {
+            "type": "object",
+            "required": [
+              "items"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Food"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "MealLogItem": {
+        "type": "object",
+        "description": "Một món ăn kèm số khẩu phần trong bữa ăn. Số kcal và macro do server tính từ `Food`.",
+        "required": [
+          "id",
+          "foodId",
+          "foodName",
+          "servings",
+          "caloriesKcal",
+          "proteinG",
+          "carbsG",
+          "fatG"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "2b3c4d5e-2222-4b3c-9d4e-000000000201"
+          },
+          "foodId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "1a2b3c4d-1111-4a2b-8c3d-000000000101"
+          },
+          "foodName": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Ức gà áp chảo"
+          },
+          "servings": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 50,
+            "example": 1.5
+          },
+          "caloriesKcal": {
+            "type": "integer",
+            "minimum": 0,
+            "readOnly": true,
+            "example": 248
+          },
+          "proteinG": {
+            "type": "number",
+            "minimum": 0,
+            "readOnly": true,
+            "example": 46.5
+          },
+          "carbsG": {
+            "type": "number",
+            "minimum": 0,
+            "readOnly": true,
+            "example": 0
+          },
+          "fatG": {
+            "type": "number",
+            "minimum": 0,
+            "readOnly": true,
+            "example": 5.4
+          }
+        }
+      },
+      "MealLog": {
+        "type": "object",
+        "description": "Nhật ký một bữa ăn của người dùng. Tổng kcal và macro được tính tự động bằng code.",
+        "required": [
+          "id",
+          "mealType",
+          "loggedAt",
+          "items",
+          "totalCaloriesKcal",
+          "totalProteinG",
+          "totalCarbsG",
+          "totalFatG",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "5e6f7a8b-3333-4c5d-8e6f-000000000301"
+          },
+          "mealType": {
+            "type": "string",
+            "enum": [
+              "breakfast",
+              "lunch",
+              "dinner",
+              "snack"
+            ],
+            "example": "lunch"
+          },
+          "loggedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-25T05:30:00Z"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500,
+            "example": "Bữa trưa sau buổi tập ngực"
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/MealLogItem"
+            }
+          },
+          "totalCaloriesKcal": {
+            "type": "integer",
+            "minimum": 0,
+            "readOnly": true,
+            "description": "Trường tính ra từ tổng các món trong bữa, không lưu cố định.",
+            "example": 568
+          },
+          "totalProteinG": {
+            "type": "number",
+            "minimum": 0,
+            "readOnly": true,
+            "example": 53.2
+          },
+          "totalCarbsG": {
+            "type": "number",
+            "minimum": 0,
+            "readOnly": true,
+            "example": 62
+          },
+          "totalFatG": {
+            "type": "number",
+            "minimum": 0,
+            "readOnly": true,
+            "example": 8.1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T05:35:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T05:35:00Z"
+          }
+        }
+      },
+      "MealLogList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PageMeta"
+          },
+          {
+            "type": "object",
+            "required": [
+              "items"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MealLog"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "MealLogItemInput": {
+        "type": "object",
+        "required": [
+          "foodId",
+          "servings"
+        ],
+        "properties": {
+          "foodId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "1a2b3c4d-1111-4a2b-8c3d-000000000101"
+          },
+          "servings": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 50,
+            "description": "Số khẩu phần đã ăn.",
+            "example": 1.5
+          }
+        }
+      },
+      "MealLogCreate": {
+        "type": "object",
+        "required": [
+          "mealType",
+          "loggedAt",
+          "items"
+        ],
+        "properties": {
+          "mealType": {
+            "type": "string",
+            "enum": [
+              "breakfast",
+              "lunch",
+              "dinner",
+              "snack"
+            ],
+            "example": "lunch"
+          },
+          "loggedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-25T05:30:00Z"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500,
+            "example": "Bữa trưa sau buổi tập ngực"
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/components/schemas/MealLogItemInput"
+            }
+          }
+        }
+      },
+      "NutritionProfile": {
+        "type": "object",
+        "description": "Hồ sơ sinh học và mục tiêu dinh dưỡng (mỗi người dùng có duy nhất một bản ghi).",
+        "required": [
+          "age",
+          "sex",
+          "heightCm",
+          "weightKg",
+          "activityLevel",
+          "goal",
+          "allergies",
+          "dietaryRestrictions",
+          "version",
+          "updatedAt"
+        ],
+        "properties": {
+          "age": {
+            "type": "integer",
+            "minimum": 18,
+            "maximum": 100,
+            "description": "Tuổi người dùng (chỉ phục vụ người trưởng thành từ 18 tuổi).",
+            "example": 21
+          },
+          "sex": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ],
+            "description": "Giới tính sinh học dùng cho công thức Mifflin-St Jeor.",
+            "example": "male"
+          },
+          "heightCm": {
+            "type": "number",
+            "minimum": 100,
+            "maximum": 250,
+            "example": 172
+          },
+          "weightKg": {
+            "type": "number",
+            "minimum": 30,
+            "maximum": 300,
+            "example": 68
+          },
+          "activityLevel": {
+            "type": "string",
+            "enum": [
+              "sedentary",
+              "light",
+              "moderate",
+              "active",
+              "very_active"
+            ],
+            "description": "Mức độ vận động trong tuần để nhân hệ số TDEE.",
+            "example": "moderate"
+          },
+          "goal": {
+            "type": "string",
+            "enum": [
+              "lose",
+              "maintain",
+              "gain"
+            ],
+            "description": "Mục tiêu cân nặng (giảm, giữ, tăng).",
+            "example": "maintain"
+          },
+          "allergies": {
+            "type": "array",
+            "description": "Danh sách dị ứng thực phẩm để lọc món và kiểm tra thực đơn.",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "peanut",
+              "shellfish"
+            ]
+          },
+          "dietaryRestrictions": {
+            "type": "array",
+            "description": "Món kiêng hoặc chế độ ăn đặc biệt.",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "no_pork"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Phiên bản hồ sơ, tương ứng với header `ETag`.",
+            "example": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T02:00:00Z"
+          }
+        }
+      },
+      "NutritionProfileInput": {
+        "type": "object",
+        "required": [
+          "age",
+          "sex",
+          "heightCm",
+          "weightKg",
+          "activityLevel",
+          "goal"
+        ],
+        "properties": {
+          "age": {
+            "type": "integer",
+            "minimum": 18,
+            "maximum": 100,
+            "example": 21
+          },
+          "sex": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ],
+            "example": "male"
+          },
+          "heightCm": {
+            "type": "number",
+            "minimum": 100,
+            "maximum": 250,
+            "example": 172
+          },
+          "weightKg": {
+            "type": "number",
+            "minimum": 30,
+            "maximum": 300,
+            "example": 68
+          },
+          "activityLevel": {
+            "type": "string",
+            "enum": [
+              "sedentary",
+              "light",
+              "moderate",
+              "active",
+              "very_active"
+            ],
+            "example": "moderate"
+          },
+          "goal": {
+            "type": "string",
+            "enum": [
+              "lose",
+              "maintain",
+              "gain"
+            ],
+            "example": "maintain"
+          },
+          "allergies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "example": [
+              "peanut",
+              "shellfish"
+            ]
+          },
+          "dietaryRestrictions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "example": [
+              "no_pork"
+            ]
+          }
+        }
+      },
+      "NutritionTarget": {
+        "type": "object",
+        "description": "Resource ảo (không có bảng riêng trong DB). Được tính trực tiếp bằng code\ntừ `NutritionProfile` theo công thức Mifflin-St Jeor mỗi lần gọi.\n",
+        "required": [
+          "bmrKcal",
+          "tdeeKcal",
+          "targetCaloriesKcal",
+          "proteinG",
+          "carbsG",
+          "fatG",
+          "formula",
+          "disclaimer",
+          "calculatedAt"
+        ],
+        "properties": {
+          "bmrKcal": {
+            "type": "integer",
+            "minimum": 800,
+            "description": "Năng lượng chuyển hóa cơ bản (BMR) tính theo Mifflin-St Jeor.",
+            "example": 1659
+          },
+          "tdeeKcal": {
+            "type": "integer",
+            "minimum": 1000,
+            "description": "Tổng năng lượng tiêu hao mỗi ngày (TDEE = BMR * hệ số vận động).",
+            "example": 2571
+          },
+          "targetCaloriesKcal": {
+            "type": "integer",
+            "minimum": 1200,
+            "description": "Mục tiêu kcal hằng ngày theo `goal` (không bao giờ dưới ngưỡng an toàn).",
+            "example": 2571
+          },
+          "proteinG": {
+            "type": "integer",
+            "minimum": 40,
+            "description": "Lượng đạm mục tiêu mỗi ngày (g).",
+            "example": 136
+          },
+          "carbsG": {
+            "type": "integer",
+            "minimum": 50,
+            "description": "Lượng tinh bột mục tiêu mỗi ngày (g).",
+            "example": 330
+          },
+          "fatG": {
+            "type": "integer",
+            "minimum": 30,
+            "description": "Lượng chất béo mục tiêu mỗi ngày (g).",
+            "example": 78
+          },
+          "formula": {
+            "type": "string",
+            "example": "Mifflin-St Jeor (1990)"
+          },
+          "disclaimer": {
+            "type": "string",
+            "example": "Số liệu chỉ mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng."
+          },
+          "calculatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-25T06:00:00Z"
+          }
+        }
+      },
+      "WeekPlanGoals": {
+        "type": "object",
+        "description": "Mục tiêu và ràng buộc người dùng truyền vào để tạo kịch bản tuần.",
+        "required": [
+          "focus",
+          "workoutDaysPerWeek"
+        ],
+        "properties": {
+          "focus": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "description": "Mục tiêu ưu tiên nhất trong tuần.",
+            "example": "Hoàn thành bài tập lớn SOA và duy trì 3 buổi tập sức mạnh"
+          },
+          "workoutDaysPerWeek": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7,
+            "default": 3,
+            "example": 3
+          },
+          "dailyCalorieTargetKcal": {
+            "type": "integer",
+            "minimum": 1200,
+            "maximum": 6000,
+            "nullable": true,
+            "description": "Nếu bỏ trống, backend tự lấy `targetCaloriesKcal` từ `/nutrition-profile/targets` (do code tính).",
+            "example": 2500
+          },
+          "maxStudyHoursPerDay": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 14,
+            "default": 4,
+            "example": 4
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500,
+            "example": "Tối thứ Tư và thứ Sáu rảnh sau 18:00"
+          }
+        }
+      },
+      "WeekPlanCreate": {
+        "type": "object",
+        "required": [
+          "weekStart",
+          "goals"
+        ],
+        "properties": {
+          "weekStart": {
+            "type": "string",
+            "format": "date",
+            "description": "Ngày Thứ Hai đầu tuần (ISO 8601, YYYY-MM-DD).",
+            "example": "2026-12-07"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "mock",
+              "byoai-export"
+            ],
+            "default": "mock",
+            "description": "Chế độ tạo bản nháp BYOAI:\n- `mock`: dùng Mock Provider trả bản nháp mẫu cố định (bắt buộc cho demo/test, không cần API key).\n- `byoai-export`: tạo bản ghi ở trạng thái `awaiting-input` kèm prompt/ngữ cảnh đã tối giản dữ liệu cá nhân để người dùng đưa sang trợ lý AI của mình rồi nhập JSON lại.\n",
+            "example": "mock"
+          },
+          "goals": {
+            "$ref": "#/components/schemas/WeekPlanGoals"
+          }
+        }
+      },
+      "WeekPlanItem": {
+        "type": "object",
+        "description": "Một mục đề xuất trong kịch bản tuần. Trong DB lưu tại `WEEK_PLAN_ITEM`\nvới cột `kind` và `payload` JSON; chỉ khi `:accept` (trong transaction) mới tách ra bảng thật\n(`TASK`, `WORKOUT_SESSION`, `MEAL_LOG`). Mỗi mục chỉ được nhận một lần (idempotent).\n",
+        "required": [
+          "id",
+          "dayDate",
+          "kind",
+          "title",
+          "accepted",
+          "payload"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "91a0b2c3-1111-4e5f-8a9b-111111110001"
+          },
+          "dayDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-12-07"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-12-07T02:00:00Z"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-12-07T04:00:00Z"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "task",
+              "workout",
+              "meal"
+            ],
+            "description": "Loại mục đề xuất.",
+            "example": "task"
+          },
+          "title": {
+            "type": "string",
+            "example": "Hoàn thành kiểm thử hợp đồng OpenAPI"
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true,
+            "example": "Ưu tiên cao · 120 phút tập trung buổi sáng"
+          },
+          "accepted": {
+            "type": "boolean",
+            "description": "Đã được người dùng xác nhận chuyển thành bản ghi thật hay chưa (mỗi mục chỉ nhận 1 lần).",
+            "example": false
+          },
+          "payload": {
+            "type": "object",
+            "description": "Dữ liệu chi tiết theo schema Pydantic của từng `kind` để tạo bản ghi thật khi `:accept`.",
+            "additionalProperties": true,
+            "example": {
+              "priority": "high",
+              "estimateMinutes": 120
+            }
+          }
+        }
+      },
+      "WeekPlan": {
+        "type": "object",
+        "description": "Bản nháp kịch bản tuần hợp nhất công việc, buổi tập và bữa ăn.\nHỗ trợ vòng đời bất đồng bộ và BYOAI: `pending` -> `awaiting-input` / `draft` -> `accepted` / `partially_accepted` / `rejected` (hoặc `failed` nếu xử lý lỗi).\n",
+        "required": [
+          "id",
+          "weekStart",
+          "status",
+          "source",
+          "goals",
+          "items",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00"
+          },
+          "weekStart": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-12-07"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "awaiting-input",
+              "draft",
+              "accepted",
+              "partially_accepted",
+              "rejected",
+              "failed"
+            ],
+            "description": "Trạng thái bản nháp:\n- `pending`: đã tiếp nhận yêu cầu (202), đang xử lý, chưa thể nhận (`:accept` trả 409).\n- `awaiting-input`: chế độ BYOAI xuất/nhập đang chờ người dùng nhập JSON từ trợ lý AI cá nhân.\n- `draft`: bản nháp đã qua kiểm tra Pydantic và ràng buộc, sẵn sàng để người dùng duyệt và `:accept`.\n- `accepted` / `partially_accepted`: đã nhận toàn bộ hoặc một phần bản nháp vào bảng nghiệp vụ thật.\n- `rejected`: người dùng từ chối bản nháp.\n- `failed`: xử lý thất bại (kèm `failureReason`), cho phép người dùng thử lại, không treo ở `pending`.\n",
+            "example": "draft"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "mock",
+              "byoai-import",
+              "official-connector",
+              "local-llm"
+            ],
+            "readOnly": true,
+            "description": "Nguồn sinh bản nháp (bắt buộc gắn nhãn rõ khi dùng `mock`).",
+            "example": "mock"
+          },
+          "goals": {
+            "$ref": "#/components/schemas/WeekPlanGoals"
+          },
+          "exportPrompt": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true,
+            "description": "Prompt và ngữ cảnh đã tối giản dữ liệu cá nhân (không chứa tên thật, email)\ndùng ở chế độ BYOAI xuất/nhập (`awaiting-input`) để người dùng dán sang trợ lý AI của mình.\n",
+            "example": null
+          },
+          "rationale": {
+            "type": "string",
+            "nullable": true,
+            "description": "Giải thích ngắn gọn về cách phân bổ lịch làm việc, tập luyện và dinh dưỡng.",
+            "example": "[MOCK] Xếp khối việc khó vào buổi sáng, 3 buổi tập vào chiều T2-T4-T6 và tăng đạm vào ngày tập."
+          },
+          "failureReason": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true,
+            "description": "Lý do lỗi khi `status` là `failed` để người dùng hoặc hệ thống xử lý/thử lại.",
+            "example": null
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WeekPlanItem"
+            }
+          },
+          "version": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Phiên bản bản nháp, tương ứng header `ETag`.",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T07:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2026-11-25T07:00:00Z"
+          }
+        }
+      },
+      "WeekPlanAcceptRequest": {
+        "type": "object",
+        "description": "Yêu cầu xác nhận bản nháp kịch bản tuần. Nếu `acceptAll: true` (mặc định),\nhệ thống nhận toàn bộ `items` chưa được nhận. Nếu `acceptAll: false`, chỉ nhận các mục trong `itemIds`.\n",
+        "properties": {
+          "acceptAll": {
+            "type": "boolean",
+            "default": true,
+            "example": true
+          },
+          "itemIds": {
+            "type": "array",
+            "description": "Danh sách ID các mục trong `items` muốn nhận (khi `acceptAll` là `false`).",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": [
+              "91a0b2c3-1111-4e5f-8a9b-111111110001",
+              "91a0b2c3-1111-4e5f-8a9b-111111110002",
+              "91a0b2c3-1111-4e5f-8a9b-111111110003"
+            ]
+          }
+        }
+      },
+      "CreatedResourceRef": {
+        "type": "object",
+        "description": "Liên kết giữa mục trong bản nháp và bản ghi thật vừa được tạo trong transaction sau khi `:accept`.",
+        "required": [
+          "itemId",
+          "kind",
+          "resourceId",
+          "resourceUri"
+        ],
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "91a0b2c3-1111-4e5f-8a9b-111111110001"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "task",
+              "workout",
+              "meal"
+            ],
+            "example": "task"
+          },
+          "resourceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10"
+          },
+          "resourceUri": {
+            "type": "string",
+            "example": "/api/v1/tasks/7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10"
+          }
+        }
+      },
+      "WeekPlanAcceptResponse": {
+        "type": "object",
+        "description": "Kết quả sau khi nhận bản nháp và sinh các bản ghi thật ở planner, fitness, nutrition (chống trùng lặp khi retry).",
+        "required": [
+          "planId",
+          "status",
+          "acceptedCount",
+          "createdResources",
+          "updatedAt"
+        ],
+        "properties": {
+          "planId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "c4b0e8a2-6f1d-4d9c-9a12-8e7b5c3d1f00"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "accepted",
+              "partially_accepted"
+            ],
+            "example": "accepted"
+          },
+          "acceptedCount": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 3
+          },
+          "createdResources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatedResourceRef"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-25T07:05:00Z"
+          }
+        }
+      }
+    },
+    "responses": {
+      "Conflict": {
+        "description": "Xung đột trạng thái, ví dụ email đã đăng ký hoặc kế hoạch đã được nhận.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "type": "https://up.example/problems/conflict",
+              "title": "Xung đột",
+              "status": 409,
+              "detail": "Tài nguyên đã ở trạng thái này."
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Dữ liệu gửi lên không hợp lệ.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "type": "https://up.example/problems/validation-error",
+              "title": "Dữ liệu không hợp lệ",
+              "status": 422,
+              "detail": "Có 1 trường sai.",
+              "errors": [
+                {
+                  "field": "title",
+                  "message": "Không được để trống."
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Thiếu hoặc sai token.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "type": "https://up.example/problems/unauthorized",
+              "title": "Chưa xác thực",
+              "status": 401,
+              "detail": "Token thiếu, hết hạn hoặc không hợp lệ."
+            }
+          }
+        }
+      },
+      "TooManyRequests": {
+        "description": "Vượt giới hạn tốc độ.",
+        "headers": {
+          "Retry-After": {
+            "$ref": "#/components/headers/RetryAfter"
+          }
+        },
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "type": "https://up.example/problems/rate-limited",
+              "title": "Quá nhiều yêu cầu",
+              "status": 429,
+              "detail": "Thử lại sau 30 giây."
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Không có tài nguyên, hoặc tài nguyên thuộc người khác.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "type": "https://up.example/problems/not-found",
+              "title": "Không tìm thấy",
+              "status": 404,
+              "detail": "Không có tài nguyên với id này."
+            }
+          }
+        }
+      },
+      "PreconditionFailed": {
+        "description": "`If-Match` không khớp `ETag` hiện tại. Cần GET lại rồi thử lại.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "type": "https://up.example/problems/precondition-failed",
+              "title": "Phiên bản đã cũ",
+              "status": 412,
+              "detail": "Tài nguyên đã được sửa ở nơi khác."
+            }
+          }
+        }
+      },
+      "PreconditionRequired": {
+        "description": "Thiếu header `If-Match`.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "type": "https://up.example/problems/precondition-required",
+              "title": "Thiếu If-Match",
+              "status": 428,
+              "detail": "Cần gửi header If-Match."
+            }
+          }
+        }
+      }
+    },
+    "headers": {
+      "RetryAfter": {
+        "description": "Số giây cần chờ trước khi thử lại.",
+        "schema": {
+          "type": "integer",
+          "example": 30
+        }
+      },
+      "ETag": {
+        "description": "Phiên bản của tài nguyên, dùng cho `If-Match`.",
+        "schema": {
+          "type": "string",
+          "example": "\"3\""
+        }
+      }
+    },
+    "parameters": {
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "description": "Số trang, bắt đầu từ 1.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      "Size": {
+        "name": "size",
+        "in": "query",
+        "description": "Số phần tử mỗi trang.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
+      },
+      "Sort": {
+        "name": "sort",
+        "in": "query",
+        "description": "Trường sắp xếp, thêm dấu `-` phía trước để giảm dần. Ví dụ `-createdAt`.",
+        "schema": {
+          "type": "string",
+          "example": "-createdAt"
+        }
+      },
+      "IfMatch": {
+        "name": "If-Match",
+        "in": "header",
+        "required": true,
+        "description": "Giá trị `ETag` nhận được từ lần GET trước.",
+        "schema": {
+          "type": "string",
+          "example": "\"3\""
+        }
+      }
+    },
+    "examples": {
+      "ExerciseList": {
+        "summary": "Một trang minh họa",
+        "value": {
+          "items": [
+            {
+              "id": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
+              "sourceId": "Barbell_Bench_Press_-_Medium_Grip",
+              "name": "Barbell Bench Press - Medium Grip",
+              "primaryMuscles": [
+                "chest"
+              ],
+              "equipment": "barbell",
+              "instructions": [
+                "Nằm trên ghế, giữ chân ổn định và hạ tạ có kiểm soát."
+              ],
+              "source": "free-exercise-db"
+            }
+          ],
+          "page": 1,
+          "size": 20,
+          "total": 1
+        }
+      },
+      "Exercise": {
+        "summary": "Bài minh họa; UUID và hướng dẫn là dữ liệu fixture, không phải bản seed.",
+        "value": {
+          "id": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
+          "sourceId": "Barbell_Bench_Press_-_Medium_Grip",
+          "name": "Barbell Bench Press - Medium Grip",
+          "primaryMuscles": [
+            "chest"
+          ],
+          "equipment": "barbell",
+          "instructions": [
+            "Nằm trên ghế, giữ chân ổn định và hạ tạ có kiểm soát."
+          ],
+          "source": "free-exercise-db"
+        }
+      },
+      "WorkoutSessionList": {
+        "summary": "Lịch sử minh họa, không có dữ liệu người khác",
+        "value": {
+          "items": [
+            {
+              "id": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+              "title": "Buổi tập thân trên",
+              "startedAt": "2026-11-25T11:00:00Z",
+              "scheduledAt": null,
+              "endedAt": null,
+              "note": null,
+              "source": "manual",
+              "sets": [
+                {
+                  "id": "76edfd54-4df6-4a4b-8a5c-6b03ccf65d01",
+                  "sessionId": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+                  "exerciseId": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
+                  "setNumber": 1,
+                  "reps": 10,
+                  "weightKg": 50,
+                  "rpe": 7,
+                  "createdAt": "2026-11-25T11:05:00Z"
+                }
+              ],
+              "totalVolumeKg": 500,
+              "version": 2,
+              "createdAt": "2026-11-25T11:00:00Z",
+              "updatedAt": "2026-11-25T11:05:00Z"
+            }
+          ],
+          "page": 1,
+          "size": 20,
+          "total": 1
+        }
+      },
+      "WorkoutSessionCreate": {
+        "value": {
+          "title": "Buổi tập thân trên",
+          "startedAt": "2026-11-25T11:00:00Z",
+          "note": null
+        }
+      },
+      "WorkoutSessionCreated": {
+        "summary": "Buổi mới, chưa có hiệp",
+        "value": {
+          "id": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+          "title": "Buổi tập thân trên",
+          "startedAt": "2026-11-25T11:00:00Z",
+          "scheduledAt": null,
+          "endedAt": null,
+          "note": null,
+          "source": "manual",
+          "sets": [],
+          "totalVolumeKg": 0,
+          "version": 1,
+          "createdAt": "2026-11-25T11:00:00Z",
+          "updatedAt": "2026-11-25T11:00:00Z"
+        }
+      },
+      "WorkoutSession": {
+        "summary": "Buổi có một hiệp thực hiện thật",
+        "value": {
+          "id": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+          "title": "Buổi tập thân trên",
+          "startedAt": "2026-11-25T11:00:00Z",
+          "scheduledAt": null,
+          "endedAt": null,
+          "note": null,
+          "source": "manual",
+          "sets": [
+            {
+              "id": "76edfd54-4df6-4a4b-8a5c-6b03ccf65d01",
+              "sessionId": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+              "exerciseId": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
+              "setNumber": 1,
+              "reps": 10,
+              "weightKg": 50,
+              "rpe": 7,
+              "createdAt": "2026-11-25T11:05:00Z"
+            }
+          ],
+          "totalVolumeKg": 500,
+          "version": 2,
+          "createdAt": "2026-11-25T11:00:00Z",
+          "updatedAt": "2026-11-25T11:05:00Z"
+        }
+      },
+      "WorkoutSessionPatch": {
+        "value": {
+          "note": "Đã kiểm tra thời gian và kỹ thuật với người hướng dẫn."
+        }
+      },
+      "WorkoutSessionUpdated": {
+        "summary": "Sau PATCH thành công",
+        "value": {
+          "id": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+          "title": "Buổi tập thân trên",
+          "startedAt": "2026-11-25T11:00:00Z",
+          "scheduledAt": null,
+          "endedAt": null,
+          "note": "Đã kiểm tra thời gian và kỹ thuật với người hướng dẫn.",
+          "source": "manual",
+          "sets": [
+            {
+              "id": "76edfd54-4df6-4a4b-8a5c-6b03ccf65d01",
+              "sessionId": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+              "exerciseId": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
+              "setNumber": 1,
+              "reps": 10,
+              "weightKg": 50,
+              "rpe": 7,
+              "createdAt": "2026-11-25T11:05:00Z"
+            }
+          ],
+          "totalVolumeKg": 500,
+          "version": 3,
+          "createdAt": "2026-11-25T11:00:00Z",
+          "updatedAt": "2026-11-25T11:10:00Z"
+        }
+      },
+      "WorkoutSetCreate": {
+        "value": {
+          "exerciseId": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
+          "reps": 10,
+          "weightKg": 50,
+          "rpe": 7
+        }
+      },
+      "WorkoutSet": {
+        "value": {
+          "id": "76edfd54-4df6-4a4b-8a5c-6b03ccf65d01",
+          "sessionId": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
+          "exerciseId": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
+          "setNumber": 1,
+          "reps": 10,
+          "weightKg": 50,
+          "rpe": 7,
+          "createdAt": "2026-11-25T11:05:00Z"
+        }
+      }
+    }
+  }
+}
