@@ -1,0 +1,15 @@
+name: Lint OpenAPI
+on:
+  push:
+    paths: ['api/**', '.spectral.yaml', '.github/workflows/lint-api.yml']
+  pull_request:
+    paths: ['api/**', '.spectral.yaml', '.github/workflows/lint-api.yml']
+jobs:
+  spectral:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npx --yes @stoplight/spectral-cli@6.17.1 lint api/openapi.yaml --fail-severity=error

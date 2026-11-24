@@ -6,3 +6,8 @@
 !/docs/
 !/plan.md
 !/plan-roadmap.md
+!/api/
+!/design/
+!/reports/
+!/.spectral.yaml
+!/.github/

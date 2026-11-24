@@ -1,0 +1,84 @@
+# Schema của identity. Tham chiếu: $ref: '../schemas/identity.yaml#/User'
+User:
+  type: object
+  description: Người dùng hiện tại. Không bao giờ chứa mật khẩu.
+  required: [id, email, displayName, timezone, createdAt]
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+      example: 3f6c1c0e-8a53-4c5a-9a37-6d2f0b1a7c11
+    email:
+      type: string
+      format: email
+      example: canh@example.com
+    displayName:
+      type: string
+      example: Cảnh
+    timezone:
+      type: string
+      description: Tên múi giờ IANA.
+      example: Asia/Ho_Chi_Minh
+    createdAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T01:00:00Z'
+RegisterRequest:
+  type: object
+  required: [email, password, displayName]
+  properties:
+    email:
+      type: string
+      format: email
+      example: canh@example.com
+    password:
+      type: string
+      format: password
+      minLength: 12
+      maxLength: 72
+      writeOnly: true
+      example: mat-khau-dai-12-ky-tu
+    displayName:
+      type: string
+      minLength: 1
+      maxLength: 100
+      example: Cảnh
+LoginRequest:
+  type: object
+  required: [email, password]
+  properties:
+    email:
+      type: string
+      format: email
+      example: canh@example.com
+    password:
+      type: string
+      format: password
+      writeOnly: true
+      example: mat-khau-dai-12-ky-tu
+RefreshRequest:
+  type: object
+  required: [refreshToken]
+  properties:
+    refreshToken:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh
+TokenPair:
+  type: object
+  required: [accessToken, refreshToken, tokenType, expiresIn]
+  properties:
+    accessToken:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.access
+    refreshToken:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh
+    tokenType:
+      type: string
+      enum: [Bearer]
+    expiresIn:
+      type: integer
+      description: Số giây access token còn hiệu lực.
+      example: 900

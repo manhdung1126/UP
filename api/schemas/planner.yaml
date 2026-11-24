@@ -1,0 +1,197 @@
+# Schema của planner (task, event). Tham chiếu: $ref: '../schemas/planner.yaml#/Task'
+Task:
+  type: object
+  required: [id, title, status, priority, version, createdAt, updatedAt]
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+      example: 7b1f4c52-0c3e-4f3b-8a56-2f5d9a3e6b10
+    title:
+      type: string
+      minLength: 1
+      maxLength: 200
+      example: Hoàn thành OpenAPI Tuần 12
+    description:
+      type: string
+      nullable: true
+      example: Viết auth, tasks, events.
+    status:
+      type: string
+      enum: [todo, doing, done]
+      example: todo
+    priority:
+      type: string
+      enum: [low, medium, high]
+      example: high
+    dueAt:
+      type: string
+      format: date-time
+      nullable: true
+      example: '2026-11-25T16:00:00Z'
+    estimateMinutes:
+      type: integer
+      minimum: 1
+      nullable: true
+      example: 120
+    version:
+      type: integer
+      readOnly: true
+      description: Tăng sau mỗi lần sửa, tương ứng `ETag`.
+      example: 1
+    createdAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T01:00:00Z'
+    updatedAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T01:00:00Z'
+TaskCreate:
+  type: object
+  required: [title]
+  properties:
+    title:
+      type: string
+      minLength: 1
+      maxLength: 200
+      example: Hoàn thành OpenAPI Tuần 12
+    description:
+      type: string
+      nullable: true
+    status:
+      type: string
+      enum: [todo, doing, done]
+      default: todo
+    priority:
+      type: string
+      enum: [low, medium, high]
+      default: medium
+    dueAt:
+      type: string
+      format: date-time
+      nullable: true
+    estimateMinutes:
+      type: integer
+      minimum: 1
+      nullable: true
+TaskUpdate:
+  type: object
+  description: Chỉ gửi trường cần đổi (PATCH).
+  minProperties: 1
+  properties:
+    title:
+      type: string
+      minLength: 1
+      maxLength: 200
+    description:
+      type: string
+      nullable: true
+    status:
+      type: string
+      enum: [todo, doing, done]
+      example: done
+    priority:
+      type: string
+      enum: [low, medium, high]
+    dueAt:
+      type: string
+      format: date-time
+      nullable: true
+    estimateMinutes:
+      type: integer
+      minimum: 1
+      nullable: true
+TaskList:
+  allOf:
+    - $ref: '../components.yaml#/schemas/PageMeta'
+    - type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/Task'
+Event:
+  type: object
+  required: [id, title, startAt, endAt, version, createdAt, updatedAt]
+  properties:
+    id:
+      type: string
+      format: uuid
+      readOnly: true
+      example: 9d2e7a14-5b8c-4e21-b3f0-1c4a8e7d5f33
+    title:
+      type: string
+      minLength: 1
+      maxLength: 200
+      example: Buổi tập ngực
+    category:
+      type: string
+      nullable: true
+      example: Tập luyện
+    startAt:
+      type: string
+      format: date-time
+      example: '2026-11-26T11:00:00Z'
+    endAt:
+      type: string
+      format: date-time
+      description: Phải sau `startAt`.
+      example: '2026-11-26T12:00:00Z'
+    taskId:
+      type: string
+      format: uuid
+      nullable: true
+      description: Công việc liên quan, nếu có.
+    version:
+      type: integer
+      readOnly: true
+      example: 1
+    createdAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T01:00:00Z'
+    updatedAt:
+      type: string
+      format: date-time
+      readOnly: true
+      example: '2026-11-25T01:00:00Z'
+EventCreate:
+  type: object
+  required: [title, startAt, endAt]
+  properties:
+    title:
+      type: string
+      minLength: 1
+      maxLength: 200
+      example: Buổi tập ngực
+    category:
+      type: string
+      nullable: true
+    startAt:
+      type: string
+      format: date-time
+      example: '2026-11-26T11:00:00Z'
+    endAt:
+      type: string
+      format: date-time
+      example: '2026-11-26T12:00:00Z'
+    taskId:
+      type: string
+      format: uuid
+      nullable: true
+EventList:
+  allOf:
+    - $ref: '../components.yaml#/schemas/PageMeta'
+    - type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/Event'

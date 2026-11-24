@@ -1,0 +1,5 @@
+extends: ["spectral:oas"]
+rules:
+  # Placeholder do Dũng và Hiếu thay thế dần, chưa coi là lỗi chặn.
+  info-contact: off
+  oas3-unused-component: warn
