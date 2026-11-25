@@ -1,11 +1,11 @@
 # Kế hoạch dự án UP (bám yêu cầu Tuần 12–15, môn SOA)
 
 Nhóm: Dũng, Hiếu, Cảnh.
-Trạng thái: bản cập nhật ngày **25/11/2026**, đưa trực tiếp vào `main` theo yêu cầu để nhóm đọc và góp ý; chưa phải xác nhận đã triển khai hoặc cả nhóm đã duyệt.
+Ngày cập nhật: 25/11/2026.
 
-Hướng cập nhật: **FastAPI + BYOAI (Bring Your Own AI) + Virtual Trainer**. Giữ nguyên quyền sở hữu nghiệp vụ Dũng–Hiếu–Cảnh. Các quyết định chưa thống nhất được đánh dấu **[CHỜ NHÓM GÓP Ý]** ở mục 14.
+Công nghệ và định hướng phát triển: FastAPI, BYOAI và Virtual Trainer.
 
-Phạm vi nộp Tuần 12–15 lấy tài liệu này làm chuẩn. [plan-roadmap.md](plan-roadmap.md) là định hướng Super App dài hạn; bản đồng bộ FastAPI/BYOAI/Virtual Trainer đang ở [PR #2](https://github.com/manhdung1126/UP/pull/2). Finance, học tập mở rộng và camera trainer không tự trở thành yêu cầu MVP.
+Tài liệu này xác định phạm vi đồ án từ Tuần 12 đến Tuần 15. [plan-roadmap.md](plan-roadmap.md) mô tả định hướng phát triển dài hạn.
 
 Mục tiêu chính của bài tập lớn: **áp dụng kiến thức các bài giảng SOA vào một API thật**. Vì vậy phạm vi MVP được giữ nhỏ, và mỗi quyết định thiết kế đều gắn với một bài học.
 
@@ -341,7 +341,7 @@ Lưu ý: GitHub Pages hiện đang phục vụ thư mục `docs/`. Nếu đặt 
 
 ## 14. Quyết định chờ nhóm góp ý
 
-Hướng FastAPI/BYOAI/Virtual Trainer đã được đề nghị cập nhật vào plan; bảng này ghi các lựa chọn triển khai cần review. Không đánh dấu đã chốt hoặc đã xong khi chưa có ý kiến/bằng chứng.
+Bảng dưới đây ghi các phương án cần nhóm góp ý và điều kiện để chốt từng phương án.
 
 | Mã | Nội dung **[CHỜ NHÓM GÓP Ý]** | Người chuẩn bị, giữ quyền sở hữu hiện tại | Điều kiện chốt |
 | --- | --- | --- | --- |
@@ -353,4 +353,4 @@ Hướng FastAPI/BYOAI/Virtual Trainer đã được đề nghị cập nhật v
 | Q6 | Giữ `docs/` làm prototype; đề xuất `frontend/` mới và cách publish | Dũng | Chốt thư mục/hosting; không đổi GitHub Pages trong bản cập nhật này |
 | Q7 | Repo nộp dùng `manhdung1126/UP`, lịch review và giờ họp | Cả nhóm | Giữ hạn Tuần 12 là 25/11/2026; mỗi người review phần của người khác |
 
-Nhóm góp ý theo Q1–Q7 bằng comment/issue hoặc PR chỉnh tài liệu. Bản cập nhật này chỉ thay `plan.md`, chưa tạo nhiệm vụ mới hoặc triển khai connector/trainer. `plan-roadmap.md` tiếp tục được review riêng ở PR #2.
+Các quyết định Q1–Q7 cần được thống nhất trước khi triển khai.

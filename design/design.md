@@ -1,73 +1,187 @@
-# Thiết kế resource và dữ liệu UP
+# Thiết kế Resource Model và Database Schema
 
-Phần D3–D4 của Dũng, Tuần 12. Phạm vi: thiết kế, OpenAPI và mock. Backend FastAPI, migration, phân quyền thật và cơ sở dữ liệu chưa được triển khai trong phần này. Cảnh tiếp tục sở hữu chuẩn chung/Identity/Planner; Hiếu sở hữu Nutrition/Weekly Planner/BYOAI.
+## 1. Resource Model
 
-## 1. Hai loại mô hình
+Resource Model mô tả các tài nguyên được cung cấp thông qua API và mối quan hệ giữa chúng.
+
+![Resource Model](resource-model.png)
+
+Các tài nguyên chính của hệ thống:
+
+| Module | Resource |
+| --- | --- |
+| Identity | User |
+| Planner | Task, Event |
+| Fitness | Exercise, WorkoutSession, WorkoutSet |
+| Nutrition | Food, MealLog, MealLogItem, NutritionProfile, NutritionTarget |
+| Weekly Planner | WeekPlan, WeekPlanItem |
+
+Exercise và Food là tài nguyên dùng chung. Các tài nguyên như Task, Event, WorkoutSession và MealLog thuộc về từng người dùng.
+
+WeekPlan chứa các đề xuất về công việc, tập luyện và dinh dưỡng. Các đề xuất chỉ được chuyển thành bản ghi nghiệp vụ sau khi người dùng xác nhận.
+
+## 2. Entity Relationship Diagram (ERD)
+
+ERD mô tả cấu trúc dữ liệu và mối quan hệ giữa các bảng trong database.
+
+![ERD](erd.png)
+
+Các quan hệ chính:
+
+- User và Task: 1:N.
+- User và Event: 1:N.
+- User và WorkoutSession: 1:N.
+- WorkoutSession và WorkoutSet: 1:N.
+- Exercise và WorkoutSet: 1:N.
+- User và MealLog: 1:N.
+- MealLog và MealLogItem: 1:N.
+- Food và MealLogItem: 1:N.
+- User và NutritionProfile: 1:0..1.
+- User và WeekPlan: 1:N.
+- WeekPlan và WeekPlanItem: 1:N.
+
+Một WorkoutSession có thể chưa có WorkoutSet khi vừa được tạo. Tương tự, một WeekPlan có thể chưa có WeekPlanItem khi đang được xử lý.
+
+Các bảng sử dụng UUID làm khóa chính và khóa ngoại để thể hiện quan hệ giữa các bảng.
+
+## 3. Sự khác nhau giữa Resource Model và Database Schema
 
 | Resource Model | Database Schema |
 | --- | --- |
-| Mô tả dữ liệu consumer nhận và gửi qua API | Mô tả cách backend lưu và bảo vệ dữ liệu |
-| Dùng tên `camelCase`, URI và JSON | Dùng bảng, cột `snake_case`, PK, FK, unique/check constraint |
-| Có thể gộp dữ liệu và có trường tính ra | Tách bảng để tránh lặp và bảo đảm toàn vẹn |
-| Ví dụ `WorkoutSession.sets[]` | Hai bảng `workout_sessions`, `workout_sets` |
+| Mô tả tài nguyên thông qua API | Mô tả cách lưu trữ dữ liệu |
+| Sử dụng URI và JSON | Sử dụng bảng, cột, PK và FK |
+| Tên thuộc tính sử dụng camelCase | Tên cột sử dụng snake_case |
+| Có thể chứa dữ liệu lồng nhau | Dữ liệu được tổ chức thành các bảng |
+| Có thể chứa dữ liệu tính toán | Lưu dữ liệu cần thiết cho hệ thống |
 
-Sơ đồ nguồn chỉnh sửa được: [resource-model.mmd](resource-model.mmd), [erd.mmd](erd.mmd). Bản xuất để đưa vào báo cáo: [resource-model.svg](resource-model.svg), [erd.svg](erd.svg). ERD là thiết kế logic đề xuất, chưa phải migration đã chạy. Bỏ bớt các trường audit khỏi hình để dễ đọc; dữ liệu riêng vẫn cần `created_at`, `updated_at` và version ở aggregate chịu trách nhiệm cập nhật.
+Ví dụ:
 
-## 2. Resource không ánh xạ 1:1 với bảng
+- WorkoutSession trả về danh sách sets trong JSON, nhưng database lưu WorkoutSession và WorkoutSet thành hai bảng riêng.
+- NutritionTarget được tính từ NutritionProfile nên không cần bảng riêng.
+- totalVolumeKg được tính từ các WorkoutSet nên không cần lưu trực tiếp trong database.
+- password_hash được lưu trong bảng User nhưng không trả về thông qua API.
 
-- `WorkoutSession` chứa `sets[]` theo `setNumber`; API không yêu cầu client tự join bảng. Bảng `WORKOUT_SET` lưu FK `session_id`, `exercise_id`.
-- `NutritionTarget` tính từ `NutritionProfile`, không có bảng riêng. Công thức và kiểm tra dinh dưỡng do Hiếu phụ trách.
-- `totalVolumeKg = Σ(reps × weightKg)` tính từ hiệp đã ghi. Ví dụ 10 rep × 50 kg = 500 kg khối lượng tập. Đây không phải kcal, 1RM hoặc cân nặng cơ thể.
-- `WeekPlan.items[]` gộp task/workout/meal; DB lưu `WEEK_PLAN_ITEM.kind` và `payload`. Chỉ sau `:accept` mới gọi nghiệp vụ các module để tạo bản ghi thật.
-- `User` trong DB có `password_hash`; `/users/me` không bao giờ trả giá trị này.
-- `Exercise` và `Food` là thư viện dùng chung. Bản ghi cá nhân có `user_id`; bản ghi con kế thừa quyền từ cha, không cần nhân bản `user_id` ở mọi bảng.
+Resource Model không nhất thiết phải ánh xạ 1:1 với Database Schema.
 
-## 3. Invariant của Fitness
+## 4. Thiết kế Fitness
 
-| Quy tắc | Nơi chịu trách nhiệm |
+### 4.1. Các resource chính
+
+| Resource | Mô tả |
 | --- | --- |
-| Người dùng chỉ đọc/sửa buổi và hiệp của mình; tài nguyên khác chủ trả 404 | Fitness service truy vấn qua chủ sở hữu của `WorkoutSession`; không lấy `userId` từ JSON |
-| UUID của bài API khác slug từ prototype | Khi seed, giữ `source_id` ổn định và map sang UUID; client/Weekly Planner dùng UUID |
-| `reps` nguyên và ≥ 1, `weightKg` ≥ 0, RPE tùy chọn trong [1,10] | Schema đầu vào và DB check constraints |
-| Một buổi có 0..n hiệp, một hiệp chỉ thuộc một buổi | FK và `UNIQUE(session_id, set_number)` |
-| Thời gian có múi giờ; trả UTC; `endedAt >= startedAt` khi có cả hai | Validation nghiệp vụ và DB constraint phù hợp |
-| Thêm hiệp/sửa buổi tăng version của buổi cha | Một transaction kiểm version và ghi; không làm check rồi insert rời nhau |
-| `If-Match` thiếu trả 428, cũ trả 412 | API + thao tác ghi có điều kiện trong DB |
-| Tổng khối lượng không lấy từ client hoặc LLM | Backend tính từ các hiệp thực hiện thật |
+| Exercise | Thông tin bài tập trong thư viện dùng chung |
+| WorkoutSession | Thông tin một buổi tập của người dùng |
+| WorkoutSet | Thông tin một hiệp tập đã thực hiện |
 
-`POST /workout-sessions` chưa hỗ trợ Idempotency-Key và chưa an toàn để tự retry khi mất response. Cần kiểm lịch sử trước. `POST .../sets` sử dụng ETag buổi cha: khi request đầu đã thành công, request lặp cùng ETag phải trả 412. Điều này cần chứng minh bằng test DB/transaction khi làm backend; mock không chứng minh được.
+Mỗi WorkoutSet thuộc về một WorkoutSession và tham chiếu đến một Exercise.
 
-Buổi từ UC5 là kế hoạch: có `scheduledAt`, `startedAt=null`, `sets=[]`. `PATCH /workout-sessions/{id}` ghi thời điểm bắt đầu thực tế; sau đó mới thêm hiệp. Không biến `targetReps` hoặc số hiệp dự kiến thành số liệu đã tập. Lõi Fitness và ghi tay không cần camera hoặc LLM.
+Exercise sử dụng UUID làm định danh trong hệ thống và sourceId để ánh xạ với dữ liệu từ thư viện nguồn.
 
-## 4. Hợp đồng D2
+### 4.2. API Endpoints
 
-Tiền tố production là `/api/v1`. Prism dùng path không tiền tố theo server trong spec.
+| Method | Endpoint | Chức năng | Status |
+| --- | --- | --- | --- |
+| GET | `/exercises` | Lấy danh sách bài tập | 200 |
+| GET | `/exercises/{id}` | Xem chi tiết bài tập | 200 |
+| GET | `/workout-sessions` | Lấy danh sách buổi tập | 200 |
+| POST | `/workout-sessions` | Tạo buổi tập | 201 |
+| GET | `/workout-sessions/{id}` | Xem chi tiết buổi tập | 200 |
+| PATCH | `/workout-sessions/{id}` | Cập nhật buổi tập | 200 |
+| POST | `/workout-sessions/{id}/sets` | Thêm hiệp tập | 201 |
 
-| Method | Path | Thành công |
-| --- | --- | --- |
-| GET | `/exercises` | 200, phân trang/lọc/sort |
-| GET | `/exercises/{id}` | 200 |
-| GET, POST | `/workout-sessions` | 200, 201 |
-| GET, PATCH | `/workout-sessions/{id}` | 200, ETag |
-| POST | `/workout-sessions/{id}/sets` | 201, ETag mới của buổi cha |
+API sử dụng tiền tố `/api/v1`.
 
-Năm path, bảy operation. Ba path của D2 trong plan được giữ; thêm xem chi tiết và PATCH buổi để lấy ETag, xem lại dữ liệu và bắt đầu buổi dự kiến. Chưa thêm xóa buổi, sửa/xóa hiệp, routine, số đo hoặc camera. Mỗi bổ sung sau này cần PR hợp đồng.
+Các API danh sách hỗ trợ phân trang, lọc và sắp xếp.
 
-Spec dùng lại `PageMeta`, Page/Size/IfMatch, ETag schema và response lỗi trong `api/components.yaml` của Cảnh. Giới hạn sort riêng theo resource nhưng vẫn dùng query `sort`; ví dụ `name` cho bài và `-createdAt` cho buổi. Invalid sort trả 422. Tìm/lọc không bỏ qua phân trang.
+### 4.3. Validation
 
-Ví dụ UUID/timestamp là fixture cho mock, không phải dữ liệu người dùng hoặc seed đã nạp. Hướng dẫn bài trong fixture được viết ngắn để demo hình dạng response. Dữ liệu thật giữ nguồn và giấy phép theo [DATA-SOURCES.md](../docs/DATA-SOURCES.md).
+- Exercise ID phải đúng định dạng UUID và tồn tại trong thư viện.
+- reps là số nguyên lớn hơn hoặc bằng 1.
+- weightKg lớn hơn hoặc bằng 0. Bài tập không sử dụng tạ có weightKg bằng 0.
+- rpe có giá trị từ 1 đến 10 hoặc null.
+- endedAt không được trước startedAt.
+- setNumber không được trùng trong cùng một buổi tập.
+- Không thêm WorkoutSet khi buổi tập chưa bắt đầu.
 
-## 5. Điểm cần cả nhóm review
+### 4.4. Buổi tập dự kiến và buổi tập thực tế
 
-1. Hiếu đang có ví dụ `WeekPlanItem.payload.exercises[].exerciseId` là slug. D2 theo plan dùng UUID; cần map khi dựng ngữ cảnh BYOAI/nhận kế hoạch. Không âm thầm đổi payload do Hiếu sở hữu.
-2. Payload workout của WeekPlan hiện mở (`additionalProperties: true`). Khi triển khai `:accept`, cần schema theo từng `kind`, kiểm Exercise UUID và ràng buộc trước transaction; mục tiêu tập không được coi là hiệp đã thực hiện.
-3. Chốt cách liên kết item đã nhận với bản ghi tạo ra và ràng buộc duy nhất để `:accept` không tạo trùng. ERD chưa giả định FK đa hình đã tồn tại.
-4. Chốt tính năng BYOAI `:import` và cập nhật root OpenAPI trước code. Dũng không triển khai connector, inference hoặc sửa phần API của Hiếu trong PR này.
-5. ERD cần Cảnh/Hiếu duyệt trường riêng từng module trước khi tạo Alembic migration. Quan hệ nhiều-người-dùng chia sẻ và Finance nằm ngoài MVP.
+Buổi tập được tạo thủ công có source là manual và có thời điểm startedAt.
 
-## 6. Nguồn kỹ thuật
+Buổi tập được tạo từ kế hoạch tuần có source là week-plan, có scheduledAt nhưng startedAt bằng null.
 
-- Plan nhóm: [plan.md](../plan.md), OpenAPI thực tế trong [api/openapi.yaml](../api/openapi.yaml).
-- [OpenAPI 3.0.3](https://spec.openapis.org/oas/v3.0.3.html): Path Item, Schema, Reference, Example và Header Object.
-- [Swagger UI configuration](https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/): `url`, `dom_id`, `validatorUrl`, `persistAuthorization`.
-- [Prism mock documentation](https://docs.stoplight.io/docs/prism/): mock request/response theo hợp đồng; không thay backend lưu dữ liệu.
+Khi người dùng bắt đầu tập, API PATCH được sử dụng để cập nhật startedAt. Sau đó người dùng mới có thể thêm các hiệp tập đã thực hiện.
+
+Không sử dụng số hiệp hoặc số reps dự kiến để tính kết quả tập luyện thực tế.
+
+### 4.5. Tính tổng khối lượng tập luyện
+
+Tổng khối lượng tập luyện của một buổi được tính theo công thức:
+
+`totalVolumeKg = Σ(reps × weightKg)`
+
+Ví dụ: Một hiệp tập 10 reps với mức tạ 50 kg có volume là 500 kg.
+
+Giá trị này được backend tính từ các WorkoutSet, không lưu thành một cột riêng trong database.
+
+## 5. Authentication và Authorization
+
+API sử dụng JWT để xác thực người dùng.
+
+WorkoutSession thuộc về một người dùng. WorkoutSet kế thừa quyền sở hữu từ WorkoutSession nên không cần lưu thêm userId.
+
+Backend lấy thông tin người dùng từ JWT thay vì nhận userId trong request body.
+
+Nếu tài nguyên không tồn tại hoặc không thuộc người dùng hiện tại, API trả về 404.
+
+## 6. ETag và If-Match
+
+WorkoutSession có thuộc tính version để quản lý phiên bản dữ liệu.
+
+Khi tạo buổi tập, version được khởi tạo bằng 1. Khi cập nhật buổi tập hoặc thêm hiệp, version tăng lên.
+
+API trả ETag tương ứng với version hiện tại. Client sử dụng If-Match khi gửi request cập nhật.
+
+Ví dụ:
+
+- Client nhận ETag: "1".
+- Client gửi request với If-Match: "1".
+- Nếu version không thay đổi, server thực hiện cập nhật và trả ETag: "2".
+- Nếu version đã thay đổi, server trả 412.
+- Nếu thiếu If-Match, server trả 428.
+
+Cơ chế này giúp tránh ghi đè dữ liệu khi có nhiều request cập nhật đồng thời.
+
+Khi thêm WorkoutSet, việc kiểm tra version, thêm hiệp và cập nhật WorkoutSession phải được thực hiện trong cùng một transaction.
+
+Theo thiết kế, database dùng `UNIQUE(session_id, set_number)` để mỗi hiệp có một số thứ tự riêng trong buổi tập.
+
+`POST /workout-sessions` chưa hỗ trợ `Idempotency-Key`. Nếu không nhận được phản hồi, client cần kiểm tra lịch sử tập luyện trước khi gửi lại yêu cầu tạo buổi.
+
+## 7. OpenAPI và Mock Server
+
+API được thiết kế theo phương pháp Design-first bằng OpenAPI 3.0.3.
+
+Các file Fitness:
+
+- `api/paths/fitness.yaml`: định nghĩa endpoint, method, parameter và response.
+- `api/schemas/fitness.yaml`: định nghĩa cấu trúc và ràng buộc dữ liệu.
+- `api/examples/fitness.yaml`: dữ liệu request và response mẫu.
+
+Các schema, parameter và response lỗi dùng chung được tham chiếu từ `api/components.yaml`.
+
+Công cụ sử dụng:
+
+- Spectral: kiểm tra OpenAPI Specification.
+- Redocly: gộp các file OpenAPI.
+- Swagger UI: hiển thị tài liệu và gửi request.
+- Prism: mô phỏng API dựa trên OpenAPI.
+
+Trong Tuần 12, hệ thống mới hoàn thành phần thiết kế API và mock server. Các chức năng lưu trữ, xác thực, phân quyền và xử lý transaction thực tế sẽ được triển khai khi xây dựng backend.
+
+## 8. Phạm vi triển khai tiếp theo
+
+- Triển khai Fitness API bằng FastAPI và PostgreSQL.
+- Kiểm tra validation, quyền sở hữu và cập nhật đồng thời.
+- Tích hợp Fitness với Weekly Planner, sử dụng UUID để tham chiếu Exercise.
+- Kiểm tra cấu trúc payload trước khi chấp nhận kế hoạch tuần.
+- Virtual Trainer là tính năng mở rộng ngoài MVP. Nhóm sẽ xem xét thử nghiệm cục bộ sau khi hoàn thành luồng Fitness chính.

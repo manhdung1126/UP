@@ -1,18 +1,28 @@
-/* Swagger UI 5.32.0; config: https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/ */
-if (typeof SwaggerUIBundle !== 'function') {
-  document.getElementById('load-error').hidden = false;
-} else {
-  window.ui = SwaggerUIBundle({
-    url: './openapi.bundle.json',
-    dom_id: '#swagger-ui',
-    deepLinking: true,
-    validatorUrl: null,
-    persistAuthorization: false,
-    withCredentials: false,
-    docExpansion: 'list',
-    displayRequestDuration: true,
-    onFailure: function () {
-      document.getElementById('load-error').hidden = false;
+window.onload = async function () {
+    const error = document.getElementById("load-error");
+
+    if (typeof SwaggerUIBundle !== "function") {
+        error.hidden = false;
+        return;
     }
-  });
-}
+
+    try {
+        const response = await fetch("./openapi.bundle.json");
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+
+        window.ui = SwaggerUIBundle({
+            spec: await response.json(),
+            dom_id: "#swagger-ui",
+            deepLinking: true,
+            validatorUrl: null,
+            persistAuthorization: false,
+            withCredentials: false,
+            docExpansion: "list",
+            displayRequestDuration: true
+        });
+    } catch {
+        error.hidden = false;
+    }
+};

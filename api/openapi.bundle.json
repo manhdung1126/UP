@@ -3,7 +3,7 @@
   "info": {
     "title": "UP API",
     "version": "1.0.0",
-    "description": "API của UP: công việc, tập luyện, dinh dưỡng và kịch bản tuần do LLM đề xuất.\n\nQuy ước chung (xem `docs` của dự án):\n- Lỗi dùng RFC 7807 (`application/problem+json`).\n- Danh sách dùng `page`, `size`, `sort`; trả `items`, `page`, `size`, `total`.\n- Cập nhật dùng `ETag` ở GET và `If-Match` ở PATCH/PUT.\n- Xác thực bằng JWT Bearer. Tài nguyên của người khác trả 404.\n- Phiên bản nằm trong đường dẫn (`/api/v1`).\n\nCấu trúc file: mỗi người giữ một file trong `paths/`, schema riêng trong `schemas/`,\nphần dùng chung trong `components.yaml`.\n"
+    "description": "API của UP: công việc, tập luyện, dinh dưỡng và kịch bản tuần do BYOAI (hoặc Mock Provider) đề xuất.\n\nQuy ước chung (xem `docs` của dự án):\n- Lỗi dùng RFC 7807 (`application/problem+json`).\n- Danh sách dùng `page`, `size`, `sort`; trả `items`, `page`, `size`, `total`.\n- Cập nhật dùng `ETag` ở GET và `If-Match` ở PATCH/PUT.\n- Xác thực bằng JWT Bearer. Tài nguyên của người khác trả 404.\n- Phiên bản nằm trong đường dẫn (`/api/v1`).\n\nHợp đồng viết tay là nguồn sự thật; OpenAPI do FastAPI sinh phải được đối chiếu\n(lỗi RFC 7807, alias camelCase, mã HTTP, ETag, security).\n\nCấu trúc file: mỗi người giữ một file trong `paths/`, schema riêng trong `schemas/`,\nphần dùng chung trong `components.yaml`.\n"
   },
   "servers": [
     {
@@ -11,8 +11,8 @@
       "description": "Mock server (Prism, không có tiền tố /api/v1)"
     },
     {
-      "url": "http://localhost:5000/api/v1",
-      "description": "Backend chạy local"
+      "url": "http://localhost:8000/api/v1",
+      "description": "Backend FastAPI chạy local (Uvicorn)"
     }
   ],
   "security": [
@@ -59,7 +59,7 @@
     },
     {
       "name": "week-plans",
-      "description": "Kịch bản tuần do LLM đề xuất"
+      "description": "Kịch bản tuần do BYOAI hoặc Mock Provider đề xuất, người dùng xác nhận"
     }
   ],
   "paths": {
@@ -569,8 +569,8 @@
           "exercises"
         ],
         "operationId": "listExercises",
-        "summary": "Danh sách thư viện bài tập",
-        "description": "Thư viện dùng chung, chỉ đọc sau xác thực. q tìm trong tên; muscle lọc primaryMuscles; equipment lọc chính xác. sort chỉ nhận name hoặc -name, mặc định name; phân xử trùng tên theo id tăng dần. Kết quả lọc vẫn phân trang.",
+        "summary": "Danh sách bài tập",
+        "description": "Thư viện dùng chung, chỉ đọc sau xác thực. Hỗ trợ tìm kiếm, lọc, sắp xếp và phân trang. Nếu trùng tên, sắp xếp tiếp theo id tăng dần.\n",
         "parameters": [
           {
             "$ref": "#/components/parameters/Page"
@@ -581,7 +581,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "Sắp xếp tên bài.",
+            "description": "Sắp xếp theo tên bài tập.",
             "schema": {
               "type": "string",
               "enum": [
@@ -594,7 +594,7 @@
           {
             "name": "q",
             "in": "query",
-            "description": "Từ khóa trong tên, không phân biệt hoa thường.",
+            "description": "Tìm theo tên, không phân biệt hoa thường.",
             "schema": {
               "type": "string",
               "minLength": 1,
@@ -604,7 +604,7 @@
           {
             "name": "muscle",
             "in": "query",
-            "description": "Nhóm cơ chính, ví dụ chest.",
+            "description": "Lọc theo nhóm cơ chính.",
             "schema": {
               "type": "string",
               "minLength": 1
@@ -613,7 +613,7 @@
           {
             "name": "equipment",
             "in": "query",
-            "description": "Dụng cụ theo dữ liệu nguồn, ví dụ barbell hoặc body only.",
+            "description": "Lọc chính xác theo dụng cụ tập.",
             "schema": {
               "type": "string",
               "minLength": 1
@@ -622,7 +622,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Một trang thư viện; rỗng trả items: [].",
+            "description": "Danh sách bài tập, trả danh sách rỗng nếu không có kết quả.",
             "content": {
               "application/json": {
                 "schema": {
@@ -651,7 +651,7 @@
           "name": "id",
           "in": "path",
           "required": true,
-          "description": "UUID của tài nguyên. Tài nguyên riêng chỉ truy cập được khi thuộc người dùng hiện tại.",
+          "description": "UUID của bài tập.",
           "schema": {
             "type": "string",
             "format": "uuid"
@@ -663,8 +663,8 @@
           "exercises"
         ],
         "operationId": "getExercise",
-        "summary": "Chi tiết một bài tập",
-        "description": "Tra UUID dùng trong WorkoutSet. Không dùng sourceId của prototype thay path id.",
+        "summary": "Chi tiết bài tập",
+        "description": "Lấy bài tập theo UUID, không sử dụng sourceId.",
         "responses": {
           "200": {
             "description": "Thông tin bài tập.",
@@ -699,8 +699,8 @@
           "workout-sessions"
         ],
         "operationId": "listWorkoutSessions",
-        "summary": "Lịch sử và buổi tập dự kiến của tôi",
-        "description": "Chỉ bản ghi thuộc JWT hiện tại. from/to là thời gian startedAt (buổi đã bắt đầu) hoặc scheduledAt (buổi dự kiến), khoảng [from, to), định dạng ISO 8601 có múi giờ. from >= to trả 422. sort chỉ nhận createdAt hoặc -createdAt; trùng giá trị phân xử theo id tăng dần.",
+        "summary": "Danh sách buổi tập của tôi",
+        "description": "Chỉ trả buổi tập của người dùng hiện tại. Lọc theo startedAt hoặc scheduledAt nếu là buổi dự kiến. Khoảng lọc [from, to), thời gian có múi giờ. Nếu from >= to, API trả 422. Nếu trùng thời điểm tạo, sắp xếp tiếp theo id tăng dần.\n",
         "parameters": [
           {
             "$ref": "#/components/parameters/Page"
@@ -711,7 +711,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "Thứ tự tạo bản ghi.",
+            "description": "Sắp xếp theo thời điểm tạo.",
             "schema": {
               "type": "string",
               "enum": [
@@ -724,7 +724,7 @@
           {
             "name": "from",
             "in": "query",
-            "description": "Từ thời điểm này, gồm cận.",
+            "description": "Thời điểm bắt đầu, gồm cận.",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -733,7 +733,7 @@
           {
             "name": "to",
             "in": "query",
-            "description": "Đến trước thời điểm này, không gồm cận.",
+            "description": "Thời điểm kết thúc, không gồm cận.",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -742,7 +742,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Một trang buổi tập của tôi.",
+            "description": "Danh sách buổi tập của người dùng.",
             "content": {
               "application/json": {
                 "schema": {
@@ -769,8 +769,8 @@
           "workout-sessions"
         ],
         "operationId": "createWorkoutSession",
-        "summary": "Ghi buổi tập đã bắt đầu",
-        "description": "Server lấy chủ sở hữu từ JWT và đặt source=manual, sets=[], version=1. endedAt phải không trước startedAt. Chưa hỗ trợ Idempotency-Key: không tự retry POST khi không biết lần trước đã thành công hay chưa; kiểm lịch sử trước.",
+        "summary": "Tạo buổi tập",
+        "description": "Tạo buổi tập đã bắt đầu. Server lấy chủ sở hữu từ JWT, đặt source=manual, sets=[], version=1. endedAt không được trước startedAt. Chưa hỗ trợ Idempotency-Key, không tự retry khi mất response; cần kiểm tra lịch sử trước.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -788,17 +788,17 @@
         },
         "responses": {
           "201": {
-            "description": "Đã tạo buổi; không tạo hiệp từ mục tiêu dự kiến.",
+            "description": "Tạo buổi tập thành công.",
             "headers": {
               "Location": {
-                "description": "URI xem buổi vừa tạo.",
+                "description": "URI của buổi tập vừa tạo.",
                 "schema": {
                   "type": "string",
                   "example": "/api/v1/workout-sessions/8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21"
                 }
               },
               "ETag": {
-                "description": "ETag mạnh của WorkoutSession, dùng cho If-Match ở lần ghi tiếp theo.",
+                "description": "ETag của buổi tập vừa tạo.",
                 "schema": {
                   "$ref": "#/components/schemas/schema"
                 },
@@ -1540,12 +1540,12 @@
                       "payload": {
                         "exercises": [
                           {
-                            "exerciseId": "Barbell_Bench_Press_-_Medium_Grip",
+                            "exerciseId": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
                             "sets": 3,
                             "targetReps": 10
                           },
                           {
-                            "exerciseId": "Wide-Grip_Lat_Pulldown",
+                            "exerciseId": "5af44b30-3f2e-4c55-86d1-64df1c89bc02",
                             "sets": 3,
                             "targetReps": 12
                           }
@@ -2252,7 +2252,7 @@
       },
       "Exercise": {
         "type": "object",
-        "description": "Bài trong thư viện dùng chung, chỉ đọc. UUID API khác sourceId dạng slug trong prototype.",
+        "description": "Bài tập trong thư viện dùng chung",
         "required": [
           "id",
           "sourceId",
@@ -2270,7 +2270,7 @@
           },
           "sourceId": {
             "type": "string",
-            "description": "ID nguyên gốc để map thư viện hiện có; không dùng thay UUID trong API."
+            "description": "ID gốc của bài tập trong thư viện nguồn."
           },
           "name": {
             "type": "string"
@@ -2293,7 +2293,7 @@
           },
           "source": {
             "type": "string",
-            "description": "Nguồn dữ liệu. Giữ credit/giấy phép theo docs/DATA-SOURCES.md khi nạp dữ liệu."
+            "description": "Nguồn dữ liệu, ghi nguồn và quản lý giấy phép."
           }
         }
       },
@@ -2348,7 +2348,7 @@
             "type": "integer",
             "minimum": 1,
             "readOnly": true,
-            "description": "Thứ tự hiệp trong buổi tập, server cấp duy nhất theo session."
+            "description": "Thứ tự hiệp trong buổi tập, server tự cấp."
           },
           "reps": {
             "type": "integer",
@@ -2441,7 +2441,7 @@
             "type": "integer",
             "minimum": 1,
             "readOnly": true,
-            "description": "ETag mạnh dạng chuỗi có dấu nháy, ví dụ \"2\". Đổi khi sửa buổi hoặc thêm hiệp."
+            "description": "Phiên bản buổi tập, tăng khi sửa buổi hoặc thêm hiệp. Dùng để tạo ETag."
           },
           "createdAt": {
             "type": "string",
@@ -2541,8 +2541,8 @@
       },
       "WorkoutSetCreate": {
         "type": "object",
+        "description": "Ghi dữ liệu một hiệp đã thực hiện. Exercise không tồn tại trả 422.",
         "additionalProperties": false,
-        "description": "Chỉ nhận số liệu đã thực hiện. Không nhận userId/sessionId/setNumber từ client. Bài không tồn tại trả 422.",
         "required": [
           "exerciseId",
           "reps",
@@ -2552,24 +2552,22 @@
           "exerciseId": {
             "type": "string",
             "format": "uuid",
-            "description": "UUID Exercise, không phải slug của prototype hoặc nhãn SVM."
+            "description": "UUID của Exercise."
           },
           "reps": {
             "type": "integer",
-            "minimum": 1,
-            "description": "Số lần thực hiện, đơn vị rep."
+            "minimum": 1
           },
           "weightKg": {
             "type": "number",
             "minimum": 0,
-            "description": "Khối lượng tạ bên ngoài (kg). Bài bodyweight ghi 0, không tự cộng cân nặng cơ thể."
+            "description": "Khối lượng tạ bên ngoài, không tính bodyweight. Nếu bài tập không dùng tạ, ghi 0."
           },
           "rpe": {
             "type": "number",
             "minimum": 1,
             "maximum": 10,
-            "nullable": true,
-            "description": "Mức gắng sức tự đánh giá, 1–10; có thể bỏ trống."
+            "nullable": true
           }
         }
       },
@@ -3279,7 +3277,7 @@
           },
           "payload": {
             "type": "object",
-            "description": "Dữ liệu chi tiết theo schema Pydantic của từng `kind` để tạo bản ghi thật khi `:accept`.",
+            "description": "Dữ liệu chi tiết theo schema Pydantic của từng `kind` để tạo bản ghi thật khi `:accept`.\nVới `kind: workout`, `exercises[].exerciseId` là UUID của Exercise (`GET /exercises`), không phải\n`sourceId` dạng slug của prototype. Backend kiểm UUID tồn tại trước khi `:accept`.\n",
             "additionalProperties": true,
             "example": {
               "priority": "high",
@@ -3699,7 +3697,7 @@
         }
       },
       "Exercise": {
-        "summary": "Bài minh họa; UUID và hướng dẫn là dữ liệu fixture, không phải bản seed.",
+        "summary": "Thông tin bài tập mẫu",
         "value": {
           "id": "5af44b30-3f2e-4c55-86d1-64df1c89bc01",
           "sourceId": "Barbell_Bench_Press_-_Medium_Grip",
@@ -3715,7 +3713,7 @@
         }
       },
       "WorkoutSessionList": {
-        "summary": "Lịch sử minh họa, không có dữ liệu người khác",
+        "summary": "Danh sách buổi tập mẫu",
         "value": {
           "items": [
             {
@@ -3757,7 +3755,7 @@
         }
       },
       "WorkoutSessionCreated": {
-        "summary": "Buổi mới, chưa có hiệp",
+        "summary": "Buổi tập mới",
         "value": {
           "id": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
           "title": "Buổi tập thân trên",
@@ -3774,7 +3772,7 @@
         }
       },
       "WorkoutSession": {
-        "summary": "Buổi có một hiệp thực hiện thật",
+        "summary": "Buổi tập có một hiệp",
         "value": {
           "id": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
           "title": "Buổi tập thân trên",
@@ -3803,18 +3801,18 @@
       },
       "WorkoutSessionPatch": {
         "value": {
-          "note": "Đã kiểm tra thời gian và kỹ thuật với người hướng dẫn."
+          "note": "Tăng mức tạ vào buổi tập tiếp theo."
         }
       },
       "WorkoutSessionUpdated": {
-        "summary": "Sau PATCH thành công",
+        "summary": "Buổi tập sau khi cập nhật",
         "value": {
           "id": "8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21",
           "title": "Buổi tập thân trên",
           "startedAt": "2026-11-25T11:00:00Z",
           "scheduledAt": null,
           "endedAt": null,
-          "note": "Đã kiểm tra thời gian và kỹ thuật với người hướng dẫn.",
+          "note": "Tăng mức tạ vào buổi tập tiếp theo.",
           "source": "manual",
           "sets": [
             {

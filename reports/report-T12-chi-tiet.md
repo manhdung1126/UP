@@ -27,9 +27,11 @@ Tuần 12 tập trung vào giai đoạn **Thiết kế hợp đồng trước (D
 | **Cảnh** | C2 | Đặc tả OpenAPI cho nhóm `identity` (`/auth/register`, `/auth/login`, `/auth/refresh`, `/users/me`) và `planner` (`/tasks`, `/tasks/{id}`, `/events`). | [api/paths/auth-planner.yaml](../api/paths/auth-planner.yaml), [api/schemas/identity.yaml](../api/schemas/identity.yaml), [api/schemas/planner.yaml](../api/schemas/planner.yaml) | Hoàn thành |
 | **Cảnh** | C3 | Cấu hình Spectral lint và GitHub Actions CI tự động kiểm tra hợp đồng OpenAPI khi push / mở PR. | [.spectral.yaml](../.spectral.yaml), [.github/workflows/lint-api.yml](../.github/workflows/lint-api.yml) | Hoàn thành |
 | **Cảnh** | C5 | Viết Project Brief (bài toán, consumers, 5 use case MVP, ranh giới hệ thống và các đánh đổi chính). | [design/brief.md](../design/brief.md) *(cần đồng bộ từ Flask sang FastAPI/BYOAI theo `plan.md` mới)* | Cần cập nhật nhỏ |
-| **Dũng** | D1 | Quản lý repository, cập nhật [plan.md](../plan.md) theo hướng FastAPI/BYOAI/Virtual Trainer (commit `9f5d40a`), tạo nhánh `dung/week12` và PR #2 cho roadmap. | [README.md](../README.md), [plan.md](../plan.md) | Hoàn thành |
-| **Dũng** | D2 | Đặc tả OpenAPI cho nhóm `fitness` (`/exercises`, `/workout-sessions`, `/workout-sessions/{id}/sets`). | [api/paths/fitness.yaml](../api/paths/fitness.yaml) | Đang hoàn thiện / Chờ gộp PR |
-| **Dũng** | D3, D4 | Sơ đồ Resource Model, ERD và giải thích khác biệt giữa Resource Model với Database Schema (`design/design.md`). | [plan.md](../plan.md#L52-L95) | Đang hoàn thiện |
+| **Dũng** | D1 | Tổ chức repository, tạo nhánh `dung/week12` và cập nhật kế hoạch (commit `9f5d40a`). | [README](../README.md), [kế hoạch](../plan.md) | Còn GitHub Issues và Project |
+| **Dũng** | D2 | Thiết kế Fitness OpenAPI với 5 đường dẫn và 7 operation. | [Fitness OpenAPI](../api/paths/fitness.yaml) | Hoàn thành |
+| **Dũng** | D3 | Thiết kế các tài nguyên của MVP và quan hệ giữa các bảng. | [Resource Model](../design/resource-model.png), [ERD](../design/erd.png) | Hoàn thành |
+| **Dũng** | D4 | Viết tài liệu thiết kế, gồm mô hình dữ liệu, quyền sở hữu và quy tắc cập nhật buổi tập. | [Tài liệu thiết kế](../design/design.md) | Hoàn thành |
+| **Dũng** | D5 | Tích hợp Swagger UI và kiểm thử hợp đồng Fitness trên Prism. | [Hướng dẫn chạy](../api/README.md), [kết quả Fitness](dung-T12.md) | Hoàn thành |
 | **Hiếu** | H1 | Đặc tả OpenAPI đầy đủ cho mảng `nutrition`: `/foods`, `/meal-logs`, `/nutrition-profile` (có `ETag`/`If-Match`) và `/nutrition-profile/targets` (tính bằng công thức Mifflin-St Jeor). | [api/paths/nutrition-plans.yaml](../api/paths/nutrition-plans.yaml), [api/schemas/nutrition.yaml](../api/schemas/nutrition.yaml) (nhánh `hieu/week12`) | Hoàn thành |
 | **Hiếu** | H2 | Đặc tả OpenAPI cho mảng `week-plans` (UC5 theo BYOAI/Mock): `POST /week-plans` (`202` + `status: "pending"`), `GET /week-plans/{id}` (bản nháp cố định `draft` gắn nhãn `source: "mock"`, hỗ trợ `awaiting-input`/`failed`), `POST /week-plans/{id}:accept` (idempotent transaction + đủ lỗi `401`, `404`, `409`, `412`, `422`, `429`). | [api/paths/nutrition-plans.yaml](../api/paths/nutrition-plans.yaml), [api/schemas/plans.yaml](../api/schemas/plans.yaml) | Hoàn thành |
 | **Hiếu** | H3 | Vẽ sơ đồ Use Case (MVP / Mở rộng / Ngoài MVP), sơ đồ kiến trúc FastAPI + BYOAI + Virtual Trainer PoC, và sơ đồ tuần tự luồng UC5. | [design/use-case.svg](../design/use-case.svg), [design/architecture.svg](../design/architecture.svg), [design/uc5-sequence.svg](../design/uc5-sequence.svg) | Hoàn thành |
@@ -62,10 +64,10 @@ Tuần 12 tập trung vào giai đoạn **Thiết kế hợp đồng trước (D
 
 ## 3. Công việc còn lại & Quyết định chờ nhóm góp ý (Mục 14 của `plan.md`)
 
-1. **Công việc cần hoàn tất trước hạn nộp 25/11/2026:**
-   - Hoàn thiện OpenAPI `fitness` (Dũng), `design/design.md` (Dũng ghép cùng H4 của Hiếu), cập nhật `design/brief.md` (Cảnh đồng bộ FastAPI/BYOAI).
-   - Gộp các PR (`canh/week12`, `dung/week12`, `hieu/week12`) vào `main` sau khi duyệt chéo.
-   - Chốt slide (6–8 trang) và tổng duyệt demo Prism mock + trả lời câu hỏi chéo.
+1. **Tiến độ và công việc trước hạn nộp 25/11/2026:**
+   - Dũng bổ sung GitHub Issues và Project từ backlog. Nhóm đối chiếu phần BYOAI ở mục 2.3 với tài liệu thiết kế. Cảnh phụ trách đồng bộ `design/brief.md` với kế hoạch FastAPI/BYOAI.
+   - Phần thiết kế Fitness của Dũng đã được gộp qua [PR #5](https://github.com/manhdung1126/UP/pull/5).
+   - Nhóm đã có [slide Tuần 12](slides/UP-slide-T12.pdf). Công việc còn lại là tổng duyệt demo Prism và phần hỏi đáp.
 2. **Các điểm [CHỜ NHÓM GÓP Ý] cần thống nhất trước Tuần 13 (`Q1`–`Q7`):**
    - `Q1` (Cả nhóm): Thống nhất giữ 5 UC MVP, demo UC5 bằng Mock + Xuất/Nhập; Virtual Trainer chỉ là PoC mở rộng.
    - `Q2` (Cảnh): Chốt phiên bản tương thích của FastAPI, Pydantic, SQLAlchemy 2.x, Alembic và cách ánh xạ lỗi RFC 7807 / `ETag`.

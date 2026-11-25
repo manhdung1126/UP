@@ -1,33 +1,80 @@
-# Tiến độ phần Dũng — Tuần 12
+# Báo cáo tiến độ cá nhân - Tuần 12
 
-Ngày: 25/11/2026. Nhánh làm việc: `dung/week12`. Trạng thái: phần thiết kế sẵn sàng cho Cảnh/Hiếu review, chưa phải cả nhóm đã duyệt hoặc backend đã hoàn thành.
+**Thành viên:** Dũng
 
-## Sản phẩm D2–D5
+**Phụ trách:** Fitness API, Resource Model, ERD và Swagger UI.
 
-| Mục | Sản phẩm | Bằng chứng |
-| --- | --- | --- |
-| D2 — Fitness OpenAPI | 5 path, 7 operation; request/response schema, UUID, đơn vị, pagination, lỗi và ETag | `api/paths/fitness.yaml`, `api/schemas/fitness.yaml`, `api/examples/fitness.yaml`; commit `4866f53` |
-| D3 — Resource Model và ERD | Toàn bộ MVP, quan hệ 0..n phù hợp buổi mới/kế hoạch đang xử lý; nguồn chỉnh sửa và ảnh xuất | `design/resource-model.mmd/.svg/.png`, `design/erd.mmd/.svg/.png`; commit `e2cf45b` |
-| D4 — Design Documentation | Resource khác DB, quyền sở hữu, UUID/sourceId, công thức, transaction và điểm nhóm cần chốt | `design/design.md`; commit `e2cf45b` |
-| D5 — Swagger UI | UI local, bundle tự chứa và Swagger UI 5.32.0 kèm LICENSE; hướng dẫn chạy | `api/index.html`, `api/README.md`, các ảnh kiểm tra dưới đây |
+## 1. Công việc đã thực hiện
 
-## Kiểm tra đã chạy
+| Công việc | Nội dung                                       |
+| --------- | ---------------------------------------------- |
+| D1        | Tổ chức repository và nhánh làm việc           |
+| D2        | Thiết kế OpenAPI cho Fitness                   |
+| D3        | Thiết kế Resource Model và ERD                 |
+| D4        | Viết tài liệu thiết kế                         |
+| D5        | Tích hợp Swagger UI và kiểm thử API trên Prism |
 
-- Spectral 6.17.1: không có lỗi ở mức error trên toàn bộ OpenAPI đã ghép.
-- Redocly CLI 1.34.5: bundle spec nhiều file thành `api/openapi.bundle.json` thành công.
-- `python3 api/verify-fitness.py`: 21 ca mock đạt. Có 7 operation thành công, kiểm UUID/giá trị/field lạ/minProperties và thiếu authorization; 404/412/428 là ca ép response bằng Prefer, được ghi rõ trong script.
-- Chrome headless với profile kiểm thử riêng: Swagger hiển thị 27 operation toàn nhóm, bao gồm 7 operation Fitness. Bấm Authorize/Apply credentials/Try it out/Execute cho `GET /exercises` nhận 200 và JSON fixture.
-- Kiểm khung desktop 1440×1000 và mobile 390×844: trang tải, không có lỗi trang/console/request bị lỗi trong luồng đã chạy. Authorization mock không còn sau reload.
-- Đã render và xem hai sơ đồ. Chưa kiểm trực tiếp trên iPhone thật.
+## 2. Fitness API
 
-Ảnh bằng chứng: [Swagger desktop](swagger-ui-desktop.png), [Swagger mobile](swagger-ui-mobile.png), [request Fitness 200](swagger-fitness-request.png).
+Fitness gồm ba resource chính: Exercise, WorkoutSession và WorkoutSet.
 
-## Phụ thuộc và phần chưa chứng minh
+Đã thiết kế 5 paths và 7 operations:
 
-- Nhánh Dũng cập nhật fast-forward tới `51e065e` của Hiếu; giữ nguyên commit Cảnh `273d0f9`, plan mới và phần Hiếu. Không sửa `api/components.yaml`, auth/planner hoặc nutrition/plans. PR phần Dũng nên đặt trên `hieu/week12` để reviewer chỉ thấy thay đổi của Dũng, rồi retarget main sau khi các PR phụ thuộc được duyệt/merge.
-- Chưa có backend/DB: chưa chứng minh persistence, JWT thật, quyền A/B, FK, quan hệ thời gian, transaction, chống ghi trùng đồng thời hoặc kiểm ETag thật.
-- Cần Hiếu đồng bộ UUID bài trong payload Weekly Planner, chốt schema theo kind và đường `:import`; các điểm này nằm trong `design/design.md`.
-- D1 đã có nhánh và README hướng dẫn; chưa tạo thêm GitHub Project/Issues hoặc mời thành viên. Hoàn thiện sau phần bắt buộc như thứ tự người dùng yêu cầu.
-- Chưa triển khai FastAPI, BYOAI connector hay Virtual Trainer; đây là phạm vi giai đoạn sau trong plan.
+| Method | Endpoint                      |
+| ------ | ----------------------------- |
+| GET    | `/exercises`                  |
+| GET    | `/exercises/{id}`             |
+| GET    | `/workout-sessions`           |
+| POST   | `/workout-sessions`           |
+| GET    | `/workout-sessions/{id}`      |
+| PATCH  | `/workout-sessions/{id}`      |
+| POST   | `/workout-sessions/{id}/sets` |
 
-- D6 tạm hoãn theo yêu cầu: đã bỏ các file slide và lời trình bày khỏi bản local; chỉ làm lại khi được yêu cầu.
+Hợp đồng quy định định danh UUID, xác thực JWT Bearer và cập nhật buổi tập bằng `ETag`/`If-Match`. Hai API danh sách hỗ trợ phân trang, lọc và sắp xếp.
+
+Các file:
+
+- [Đường dẫn và phương thức](../api/paths/fitness.yaml)
+- [Schema Fitness](../api/schemas/fitness.yaml)
+- [Dữ liệu mẫu](../api/examples/fitness.yaml)
+
+## 3. Resource Model và ERD
+
+Thiết kế các resource và quan hệ dữ liệu của hệ thống trong phạm vi MVP.
+
+- [Resource Model](../design/resource-model.png)
+- [ERD](../design/erd.png)
+- [Tài liệu thiết kế](../design/design.md)
+
+## 4. Swagger UI và kiểm thử
+
+Swagger UI hiển thị 27 operation của hệ thống. Khi gửi `GET /exercises` từ Swagger UI với token thử nghiệm, Prism trả về `200 OK` và danh sách bài tập mẫu.
+
+Ngày 25/11/2026, Spectral kiểm tra hợp đồng OpenAPI với 0 lỗi ở mức error. Sau khi tạo lại bundle, [bộ kiểm thử Fitness](../api/verify-fitness.py) đạt **21/21 ca** trên Prism. Trong đó có 7 ca thành công, 11 ca kiểm tra dữ liệu đầu vào hoặc thiếu token và 3 ca mô phỏng phản hồi `404`, `412`, `428` bằng header `Prefer`.
+
+Bằng chứng:
+
+- [Swagger UI](swagger-ui-desktop.png)
+- [Phản hồi của Fitness API](swagger-fitness-request.png)
+
+## 5. Công việc chưa hoàn thành
+
+- Triển khai Fitness API với FastAPI.
+- Kết nối PostgreSQL.
+- Kiểm tra xác thực, phân quyền và transaction trên backend.
+- Hoàn thiện tích hợp Fitness với Weekly Planner.
+- Tìm hiểu khả năng tích hợp Virtual Trainer.
+- Tạo GitHub Issues và Project từ backlog của nhóm.
+
+## 6. Kế hoạch tiếp theo
+
+- Tham gia xây dựng frontend theo từng luồng nghiệp vụ.
+- Triển khai Fitness API theo OpenAPI Specification.
+- Viết kiểm thử cho các chức năng Fitness.
+- Tích hợp Fitness với các module khác.
+
+## 7. GitHub
+
+- Branch: `dung/week12`
+- Pull request phần thiết kế ban đầu: [#5](https://github.com/manhdung1126/UP/pull/5)
+- Repository: [https://github.com/manhdung1126/UP](https://github.com/manhdung1126/UP)
