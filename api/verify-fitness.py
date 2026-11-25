@@ -1,4 +1,4 @@
-"""Smoke test hợp đồng Fitness trên Prism; không chứng minh backend có lưu state."""
+"""Kiểm thử Fitness API trên Prism Mock Server."""
 
 import json
 import os
@@ -48,14 +48,14 @@ created, headers = request("POST", "/workout-sessions", 201,
 assert created["sets"] == [] and created["version"] == 1 and headers["ETag"] == '"1"'
 assert SESSION in headers["Location"]
 updated, headers = request("PATCH", f"/workout-sessions/{SESSION}", 200,
-                           {"note": "Đã kiểm tra thời gian và kỹ thuật với người hướng dẫn."},
+                           {"note": "Tăng mức tạ vào buổi tập tiếp theo."},
                            {"If-Match": '"2"'})
 assert updated["version"] == 3 and headers["ETag"] == '"3"'
 valid_set = {"exerciseId": EXERCISE, "reps": 10, "weightKg": 50, "rpe": 7}
 set_, headers = request("POST", f"/workout-sessions/{SESSION}/sets", 201,
                         valid_set, {"If-Match": '"1"'})
 assert set_["sessionId"] == SESSION and headers["ETag"] == '"2"'
-# Validation của mock dựa trên schema, không ép status bằng Prefer.
+# Kiểm thử dữ liệu đầu vào không hợp lệ
 request("GET", "/exercises?size=101", 422)
 request("GET", "/exercises?sort=invalid", 422)
 request("GET", "/exercises/not-a-uuid", 422)
@@ -65,8 +65,9 @@ for invalid in [{"reps": -1}, {"reps": 1.5}, {"weightKg": -2}, {"rpe": 11},
     request("POST", f"/workout-sessions/{SESSION}/sets", 422,
             valid_set | invalid, {"If-Match": '"1"'})
 request("PATCH", f"/workout-sessions/{SESSION}", 422, {}, {"If-Match": '"2"'})
-# Chỉ kiểm ví dụ response của hợp đồng. Prism không có ownership/transaction/version thật.
+# Kiểm tra response lỗi được mô phỏng bằng Prefer.
+# Phân quyền và phiên bản dữ liệu cần được kiểm tra trên backend thật.
 for status in [404, 412, 428]:
     request("POST", f"/workout-sessions/{SESSION}/sets", status, valid_set,
             {"If-Match": '"1"', "Prefer": f"code={status}"})
-print(f"\n{checks} ca mock đạt. Phân quyền, persistence và chống ghi trùng cần test backend Tuần 13–15.")
+print(f"\n{checks} test cases passed.")

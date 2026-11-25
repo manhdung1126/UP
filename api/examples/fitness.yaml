@@ -1,5 +1,5 @@
 Exercise:
-  summary: Bài minh họa; UUID và hướng dẫn là dữ liệu fixture, không phải bản seed.
+  summary: Thông tin bài tập mẫu
   value:
     id: 5af44b30-3f2e-4c55-86d1-64df1c89bc01
     sourceId: Barbell_Bench_Press_-_Medium_Grip
@@ -27,7 +27,7 @@ ExerciseList:
     size: 20
     total: 1
 WorkoutSession:
-  summary: Buổi có một hiệp thực hiện thật
+  summary: Buổi tập có một hiệp
   value:
     id: 8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21
     title: Buổi tập thân trên
@@ -50,7 +50,7 @@ WorkoutSession:
     createdAt: '2026-11-25T11:00:00Z'
     updatedAt: '2026-11-25T11:05:00Z'
 WorkoutSessionCreated:
-  summary: Buổi mới, chưa có hiệp
+  summary: Buổi tập mới
   value:
     id: 8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21
     title: Buổi tập thân trên
@@ -65,14 +65,14 @@ WorkoutSessionCreated:
     createdAt: '2026-11-25T11:00:00Z'
     updatedAt: '2026-11-25T11:00:00Z'
 WorkoutSessionUpdated:
-  summary: Sau PATCH thành công
+  summary: Buổi tập sau khi cập nhật
   value:
     id: 8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21
     title: Buổi tập thân trên
     startedAt: '2026-11-25T11:00:00Z'
     scheduledAt: null
     endedAt: null
-    note: Đã kiểm tra thời gian và kỹ thuật với người hướng dẫn.
+    note: Tăng mức tạ vào buổi tập tiếp theo.
     source: manual
     sets:
       - id: 76edfd54-4df6-4a4b-8a5c-6b03ccf65d01
@@ -88,7 +88,7 @@ WorkoutSessionUpdated:
     createdAt: '2026-11-25T11:00:00Z'
     updatedAt: '2026-11-25T11:10:00Z'
 WorkoutSessionList:
-  summary: Lịch sử minh họa, không có dữ liệu người khác
+  summary: Danh sách buổi tập mẫu
   value:
     items:
       - id: 8c2e5d63-1d4f-4a4c-9b67-3e6e0b4f7c21
@@ -121,7 +121,7 @@ WorkoutSessionCreate:
     note: null
 WorkoutSessionPatch:
   value:
-    note: Đã kiểm tra thời gian và kỹ thuật với người hướng dẫn.
+    note: Tăng mức tạ vào buổi tập tiếp theo.
 WorkoutSetCreate:
   value:
     exerciseId: 5af44b30-3f2e-4c55-86d1-64df1c89bc01
